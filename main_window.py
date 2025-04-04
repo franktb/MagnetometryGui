@@ -163,20 +163,9 @@ class MainWindow(QMainWindow):
                             )
 
             self.threadpool.start(worker)
-
-            # self.time_series_ax.plot(survey_frame.data_frame["GPS_Longitude"].astype(float),
-            #                     survey_frame.data_frame["GPS_Latitude"].astype(float), color="black")
-
-            # cx.add_basemap(self.mapping_2D_canvas.figure.get_axes()[0], crs="EPSG:4326", source=cx.providers.OpenStreetMap.Mapnik)
-            # self.mapping_2D_canvas.draw_idle()
-
         else:
             QMessageBox.critical(self, "File IO Error", "No text file selected!", )
 
-        # else:
-        #    ok = self.create_new_project()
-        #    if ok:
-        #        self.select_BOB_CSV()
 
     def select_SeaLINKFolder(self):
         selected_folder = QFileDialog.getExistingDirectory(parent=self,
@@ -188,11 +177,6 @@ class MainWindow(QMainWindow):
                         )
 
         self.threadpool.start(worker)
-
-        # else:
-        #    ok = self.create_new_project()
-        #    if ok:
-        #        self.select_SeaLINKFolder()
 
 
 

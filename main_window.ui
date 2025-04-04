@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>963</width>
+    <height>889</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Magnetometry</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>530</y>
+      <width>931</width>
+      <height>271</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayoutTimeSeriesCanvas"/>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>10</y>
+      <width>931</width>
+      <height>501</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout2DMappingCanvas"/>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>520</y>
+      <width>88</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
+   <widget class="QTreeWidget" name="treeWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>291</width>
+      <height>501</height>
+     </rect>
+    </property>
+    <column>
+     <property name="text">
+      <string notr="true">File Tree</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QListWidget" name="listWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>580</y>
+      <width>291</width>
+      <height>221</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>560</y>
+      <width>291</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Display Layers</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>963</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <widget class="QMenu" name="menuOpen_Survey">
+     <property name="title">
+      <string>Import Survey</string>
+     </property>
+     <addaction name="actionFrom_BOB_CSV"/>
+     <addaction name="actionFrom_Sealink_Folder"/>
+     <addaction name="separator"/>
+     <addaction name="actionFrom_Custom_CSV"/>
+    </widget>
+    <addaction name="actionNew_Project"/>
+    <addaction name="actionOpen_Project"/>
+    <addaction name="actionSave_Project"/>
+    <addaction name="separator"/>
+    <addaction name="menuOpen_Survey"/>
+   </widget>
+   <addaction name="menuFile"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="separator"/>
+   <addaction name="actionDinuralCorrection"/>
+   <addaction name="actionSmoothSurvey"/>
+   <addaction name="separator"/>
+   <addaction name="actioncalcResiduals"/>
+   <addaction name="separator"/>
+   <addaction name="separator"/>
+   <addaction name="actionDrawSelect"/>
+   <addaction name="actionRemoveOutlier"/>
+  </widget>
+  <action name="actionblubb">
+   <property name="text">
+    <string>blubb</string>
+   </property>
+  </action>
+  <action name="actionDinuralCorrection">
+   <property name="text">
+    <string>DinuralCorrection</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt; font-weight:600;&quot;&gt;DC&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionSmoothSurvey">
+   <property name="text">
+    <string>SmoothSurvey</string>
+   </property>
+  </action>
+  <action name="actioncalcResiduals">
+   <property name="text">
+    <string>calcResiduals</string>
+   </property>
+  </action>
+  <action name="actionSomething_Else">
+   <property name="text">
+    <string>Something Else</string>
+   </property>
+  </action>
+  <action name="actionNew_Project">
+   <property name="text">
+    <string>New Project</string>
+   </property>
+  </action>
+  <action name="actionSave_Project">
+   <property name="text">
+    <string>Save Project</string>
+   </property>
+  </action>
+  <action name="actionOpen_Project">
+   <property name="text">
+    <string>Open Project</string>
+   </property>
+  </action>
+  <action name="actionFrom_BOB_CSV">
+   <property name="text">
+    <string>From BOB CSV</string>
+   </property>
+  </action>
+  <action name="actionFrom_Sealink_Folder">
+   <property name="text">
+    <string>From Sealink Folder</string>
+   </property>
+  </action>
+  <action name="actionFrom_Custom_CSV">
+   <property name="text">
+    <string>From Custom CSV</string>
+   </property>
+  </action>
+  <action name="actionDrawSelect">
+   <property name="text">
+    <string>DrawSelect</string>
+   </property>
+  </action>
+  <action name="actionRemoveOutlier">
+   <property name="text">
+    <string>RemoveOutlier</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
