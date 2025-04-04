@@ -1,11 +1,9 @@
 import sys
 import os
 
-from PyQt6.QtWidgets import QTreeWidgetItem
-
 from TreeWidget import TreeUtil
 from ui_main_window import Ui_MainWindow
-from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QInputDialog, QTreeWidget
+from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QInputDialog, QTreeWidget, QTreeWidgetItem
 from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem, QColor, QFont
 from PySide6.QtCore import Qt, QRunnable, QThreadPool, Slot, QObject, Signal
 import contextily as cx
@@ -63,26 +61,19 @@ class MainWindow(QMainWindow):
 
         self.ui.pushButton.clicked.connect(self.debugTree)
 
-        #self.selected_df = pd.DataFrame()
-        #self.TreeUtil = TreeUtil(self.ui.treeWidget, self.selected_df)
+        #self.TreeUtil = TreeUtil(self.ui.treeWidget)
+
+        self.selected_df = pd.DataFrame()
+        self.TreeUtil = TreeUtil(self.ui.treeWidget, self.selected_df)
+        self.ui.treeWidget.itemChanged[QTreeWidgetItem, int].connect(self.update_selected_df)
+
         self.magCSV = MagCSV()
-
-
-        #self.ui.treeWidget.itemChanged[QTreeWidgetItem, int].connect(self.update_selected_df)
-
-
         #self.ui.treeWidget.setHeaderHidden(True)
-        # self.tree_model = QStandardItemModel()
-        # self.root_node = self.tree_model.invisibleRootItem()
-        # self.ui.treeView.setModel(self.project)
-
         self.threadpool = QThreadPool()
-
 
     def update_selected_df(self):
         worker = Worker(self.TreeUtil.checked_items)
         self.threadpool.start(worker)
-
 
 
     def draw_selection(self):
@@ -186,6 +177,7 @@ class MainWindow(QMainWindow):
                         )
 
         self.threadpool.start(worker)
+
 
 
     def draw_1d_selected(self):
