@@ -19,8 +19,9 @@ class SurveyFrame(QTreeWidgetItem):
         self.df = df
 
 class TreeUtil():
-    def __init__(self, tree):
+    def __init__(self, tree, selected_df):
         self.tree = tree
+        self.selected_df = selected_df
 
     def checked_items(self):
         checked_items = []
@@ -35,5 +36,11 @@ class TreeUtil():
                         checked_items.append(child)
 
         recurse(self.tree.invisibleRootItem())
-        return checked_items
+
+        survey_combined = pd.DataFrame()
+        for item in checked_items:
+            print(item.text(0))
+            survey_combined = pd.concat([survey_combined, item.data_frame])
+
+        self.selected_df = survey_combined
 

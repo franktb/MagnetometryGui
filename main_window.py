@@ -1,6 +1,8 @@
 import sys
 import os
 
+from PyQt6.QtWidgets import QTreeWidgetItem
+
 from TreeWidget import TreeUtil
 from ui_main_window import Ui_MainWindow
 from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QInputDialog, QTreeWidget
@@ -61,8 +63,14 @@ class MainWindow(QMainWindow):
 
         self.ui.pushButton.clicked.connect(self.debugTree)
 
-        self.TreeUtil = TreeUtil(self.ui.treeWidget)
+        #self.selected_df = pd.DataFrame()
+        #self.TreeUtil = TreeUtil(self.ui.treeWidget, self.selected_df)
         self.magCSV = MagCSV()
+
+
+        #self.ui.treeWidget.itemChanged[QTreeWidgetItem, int].connect(self.update_selected_df)
+
+
         #self.ui.treeWidget.setHeaderHidden(True)
         # self.tree_model = QStandardItemModel()
         # self.root_node = self.tree_model.invisibleRootItem()
@@ -70,14 +78,15 @@ class MainWindow(QMainWindow):
 
         self.threadpool = QThreadPool()
 
+
+    def update_selected_df(self):
+        worker = Worker(self.TreeUtil.checked_items)
+        self.threadpool.start(worker)
+
+
+
     def draw_selection(self):
-        checked_items = self.TreeUtil.checked_items()
-
-        survey_combined = pd.DataFrame()
-        for item in checked_items:
-            print(item.text(0))
-            survey_combined = pd.concat([survey_combined, item.data_frame])
-
+        survey_combined = self.selected_df
         survey_combined.astype({"Magnetic_Field": "float32"})
         survey_combined = survey_combined.sort_values(by='datetime')
         survey_combined.loc[survey_combined["Longitude"].astype(float) < -8.6, "Longitude"] = np.nan
@@ -178,6 +187,14 @@ class MainWindow(QMainWindow):
 
         self.threadpool.start(worker)
 
+
+    def draw_1d_selected(self):
+        checked_items = self.TreeUtil.checked_items()
+
+        survey_combined = pd.DataFrame()
+        for item in checked_items:
+            print(item.text(0))
+            survey_combined = pd.concat([survey_combined, item.data_frame])
 
 
     def remove_outlier(self):
