@@ -43,4 +43,6 @@ class TreeUtil():
             survey_combined = pd.concat([survey_combined, item.data_frame])
 
         self.selected_df = survey_combined
+        print(survey_combined)
+
 

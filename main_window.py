@@ -119,7 +119,8 @@ class MainWindow(QMainWindow):
         self.threadpool.start(worker)
 
     def draw_selection(self):
-        survey_combined = self.selected_df
+        survey_combined = self.TreeUtil.selected_df
+        print(survey_combined)
         survey_combined.astype({"Magnetic_Field": "float32"})
         survey_combined = survey_combined.sort_values(by='datetime')
         survey_combined.loc[survey_combined["Longitude"].astype(float) < -8.6, "Longitude"] = np.nan
@@ -226,9 +227,22 @@ class MainWindow(QMainWindow):
         def retrieve_user_input(inputs):
             print(inputs)
 
+            worker = Worker(self.magCSV.read_from_customCSV,
+                            inputs[0],
+                            delimiter=",",
+                            skiprows=5,
+                            usecols = [int(x)-1 for x in inputs[1:]],
+                            project=self.ui.treeWidget
+                            )
+
+            self.threadpool.start(worker)
+
+
         dlg = ColumnselectDlg(self)
         dlg.data_signal.connect(retrieve_user_input)
         dlg.exec()
+
+
 
 
     def draw_1d_selected(self):
