@@ -32,19 +32,38 @@ from util.filter import running_mean_uniform_filter1d
 
 
 class ColumnselectDlg(QDialog):
+    data_signal = Signal(list)
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_ColumnSelectDialog()
         self.ui.setupUi(self)
 
-        #self.data_signal = Signal(str,str,str,str,str,str,str)
+
         self.ui.selectFileButton.clicked.connect(self.open_file_dialog)
+
+        self.ui.submitButton.clicked.connect(self.send_data)
 
 
     def open_file_dialog(self):
         selected_survey = QFileDialog.getOpenFileName(filter="All Files(*);;Text files(*.csv *.txt)")
         if selected_survey[0].endswith((".txt", ".csv")):
             self.ui.lineEdit_file_path.setText(selected_survey[0])
+
+    def send_data(self):
+        inputs = [
+            self.ui.lineEdit_file_path.text(),
+            self.ui.lineEdit_day.text(),
+            self.ui.lineEdit_time.text(),
+            self.ui.lineEdit_mag_field.text(),
+            self.ui.lineEdit_Gps_lat.text(),
+            self.ui.lineEdit_Gps_long.text(),
+            self.ui.lineEdit_Gps_easting.text(),
+            self.ui.lineEdit_Gps_northing.text()
+        ]
+
+        self.data_signal.emit(inputs)
+        self.accept()
 
 
 
@@ -66,7 +85,7 @@ class MainWindow(QMainWindow):
         self.ui.actionNew_Project.triggered.connect(self.create_new_project)
         self.ui.actionFrom_BOB_CSV.triggered.connect(self.select_BOB_CSV)
         self.ui.actionFrom_Sealink_Folder.triggered.connect(self.select_SeaLINKFolder)
-        #self.ui.actionFrom_Custom_CSV.connect(self.select_custom_CSV)
+        self.ui.actionFrom_Custom_CSV.triggered.connect(self.select_custom_CSV)
 
 
         self.ui.actionDrawSelect.triggered.connect(self.draw_selection)
@@ -159,9 +178,12 @@ class MainWindow(QMainWindow):
         self.mapping_2D_canvas.draw_idle()
 
     def debugTree(self):
-        print("hello")
-        # print(self.project.findItems("CV16_02_23042016.txt"))
+        @Slot(list)
+        def retrieve_user_input(inputs):
+            print(inputs)
+
         dlg = ColumnselectDlg(self)
+        dlg.data_signal.connect(retrieve_user_input)
         dlg.exec()
 
     def create_new_project(self):
@@ -200,7 +222,14 @@ class MainWindow(QMainWindow):
         self.threadpool.start(worker)
 
     def select_custom_CSV(self):
-        return 0
+        @Slot(list)
+        def retrieve_user_input(inputs):
+            print(inputs)
+
+        dlg = ColumnselectDlg(self)
+        dlg.data_signal.connect(retrieve_user_input)
+        dlg.exec()
+
 
     def draw_1d_selected(self):
         checked_items = self.TreeUtil.checked_items()
