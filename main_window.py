@@ -37,7 +37,16 @@ class ColumnselectDlg(QDialog):
         self.ui = Ui_ColumnSelectDialog()
         self.ui.setupUi(self)
 
-        self.data_signal = Signal(str,str,str,str,str,str,str)
+        #self.data_signal = Signal(str,str,str,str,str,str,str)
+        self.ui.selectFileButton.clicked.connect(self.open_file_dialog)
+
+
+    def open_file_dialog(self):
+        selected_survey = QFileDialog.getOpenFileName(filter="All Files(*);;Text files(*.csv *.txt)")
+        if selected_survey[0].endswith((".txt", ".csv")):
+            self.ui.lineEdit_file_path.setText(selected_survey[0])
+
+
 
 class MplCanvas(FigureCanvas):
     def __init__(self, parent=None, width=5, height=3, dpi=150):
@@ -57,7 +66,7 @@ class MainWindow(QMainWindow):
         self.ui.actionNew_Project.triggered.connect(self.create_new_project)
         self.ui.actionFrom_BOB_CSV.triggered.connect(self.select_BOB_CSV)
         self.ui.actionFrom_Sealink_Folder.triggered.connect(self.select_SeaLINKFolder)
-        self.ui.actionFrom_Custom_CSV.connect(self.select_custom_CSV)
+        #self.ui.actionFrom_Custom_CSV.connect(self.select_custom_CSV)
 
 
         self.ui.actionDrawSelect.triggered.connect(self.draw_selection)
