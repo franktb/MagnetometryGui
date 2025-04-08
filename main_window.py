@@ -18,6 +18,7 @@ import numpy as np
 
 
 from ui_elements.select_column_dialog import  Ui_ColumnSelectDialog
+from ui_elements.remove_outlier_dialog import Ui_RemoveOutlierDialog
 import matplotlib.colors as colors
 
 from worker import Worker
@@ -38,7 +39,6 @@ class ColumnselectDlg(QDialog):
 
 
         self.ui.selectFileButton.clicked.connect(self.open_file_dialog)
-
         self.ui.submitButton.clicked.connect(self.send_data)
 
 
@@ -62,6 +62,26 @@ class ColumnselectDlg(QDialog):
         self.data_signal.emit(inputs)
         self.accept()
 
+
+class RemoveOutlierDlg(QDialog):
+    data_signal = Signal(list)
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.ui = Ui_RemoveOutlierDialog()
+        self.ui.setupUi(self)
+        self.ui.submitButton.clicked.connect(self.send_data)
+
+    def send_data(self):
+        inputs = [
+            self.ui.lineEdit_maxMagField.text(),
+            self.ui.lineEdit_minMagField.text(),
+            self.ui.lineEdit_maxLongVal.text(),
+            self.ui.lineEdit_minLongVal.text(),
+            self.ui.lineEdit_maxLatVal.text(),
+            self.ui.lineEdit_minLatVal.text()
+        ]
+        self.data_signal.emit(inputs)
+        self.accept()
 
 
 class MplCanvas(FigureCanvas):
@@ -251,7 +271,21 @@ class MainWindow(QMainWindow):
             survey_combined = pd.concat([survey_combined, item.data_frame])
 
     def remove_outlier(self):
-        return 0
+        @Slot(list)
+        def retrieve_user_input(inputs):
+            print(inputs)
+
+        dlg = RemoveOutlierDlg(self)
+        dlg.data_signal.connect(retrieve_user_input)
+        dlg.exec()
+
+        #survey_combined = self.TreeUtil.selected_df
+        #print(survey_combined)
+        #survey_combined.astype({"Magnetic_Field": "float32"})
+        #survey_combined = survey_combined.sort_values(by='datetime')
+        #survey_combined.loc[survey_combined["Longitude"].astype(float) < -8.6, "Longitude"] = np.nan
+        #survey_combined.loc[survey_combined["Magnetic_Field"].astype(float) < 45000., "Magnetic_Field"] = np.nan
+
 
 
 if __name__ == "__main__":
