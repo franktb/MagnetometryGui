@@ -1,0 +1,8 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="icons">
+        <file alias="drawingIcon.png">drawingIcon.png</file>
+        <file alias="calculator-icon.png">calculator-icon.png</file>
+        <file alias="eraser-icon.png">eraser-icon.png</file>
+    </qresource>
+</RCC>

@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (QApplication, QHeaderView, QLabel, QListWidget,
     QListWidgetItem, QMainWindow, QMenu, QMenuBar,
     QPushButton, QSizePolicy, QStatusBar, QToolBar,
     QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
+import resources_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -34,6 +35,9 @@ class Ui_MainWindow(object):
         self.actionSmoothSurvey.setObjectName(u"actionSmoothSurvey")
         self.actioncalcResiduals = QAction(MainWindow)
         self.actioncalcResiduals.setObjectName(u"actioncalcResiduals")
+        icon = QIcon()
+        icon.addFile(u":/icons/calculator-icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.actioncalcResiduals.setIcon(icon)
         self.actionSomething_Else = QAction(MainWindow)
         self.actionSomething_Else.setObjectName(u"actionSomething_Else")
         self.actionNew_Project = QAction(MainWindow)
@@ -50,11 +54,14 @@ class Ui_MainWindow(object):
         self.actionFrom_Custom_CSV.setObjectName(u"actionFrom_Custom_CSV")
         self.actionDrawSelect = QAction(MainWindow)
         self.actionDrawSelect.setObjectName(u"actionDrawSelect")
-        icon = QIcon()
-        icon.addFile(u"../icons/drawingIcon.png", QSize(), QIcon.Mode.Normal, QIcon.State.On)
-        self.actionDrawSelect.setIcon(icon)
+        icon1 = QIcon()
+        icon1.addFile(u":/icons/drawingIcon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.actionDrawSelect.setIcon(icon1)
         self.actionRemoveOutlier = QAction(MainWindow)
         self.actionRemoveOutlier.setObjectName(u"actionRemoveOutlier")
+        icon2 = QIcon()
+        icon2.addFile(u":/icons/eraser-icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.actionRemoveOutlier.setIcon(icon2)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayoutWidget = QWidget(self.centralwidget)

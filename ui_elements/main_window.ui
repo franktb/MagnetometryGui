@@ -158,6 +158,10 @@
    </property>
   </action>
   <action name="actioncalcResiduals">
+   <property name="icon">
+    <iconset resource="icons/resources.qrc">
+     <normaloff>:/icons/calculator-icon.png</normaloff>:/icons/calculator-icon.png</iconset>
+   </property>
    <property name="text">
     <string>calcResiduals</string>
    </property>
@@ -199,20 +203,25 @@
   </action>
   <action name="actionDrawSelect">
    <property name="icon">
-    <iconset>
-     <normalon>../icons/drawingIcon.png</normalon>
-    </iconset>
+    <iconset resource="icons/resources.qrc">
+     <normaloff>:/icons/drawingIcon.png</normaloff>:/icons/drawingIcon.png</iconset>
    </property>
    <property name="text">
     <string>DrawSelect</string>
    </property>
   </action>
   <action name="actionRemoveOutlier">
+   <property name="icon">
+    <iconset resource="icons/resources.qrc">
+     <normaloff>:/icons/eraser-icon.png</normaloff>:/icons/eraser-icon.png</iconset>
+   </property>
    <property name="text">
     <string>RemoveOutlier</string>
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="icons/resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
