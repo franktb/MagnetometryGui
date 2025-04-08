@@ -198,6 +198,11 @@
    </property>
   </action>
   <action name="actionDrawSelect">
+   <property name="icon">
+    <iconset>
+     <normalon>../icons/drawingIcon.png</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>DrawSelect</string>
    </property>

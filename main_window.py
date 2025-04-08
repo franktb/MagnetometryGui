@@ -1,12 +1,10 @@
 import sys
-import os
 
 from TreeWidget import TreeUtil
-from ui_main_window import Ui_MainWindow
+from ui_elements.ui_main_window import Ui_MainWindow
 from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QInputDialog, QTreeWidget, \
     QTreeWidgetItem, QDialog
-from PySide6.QtGui import QAction, QStandardItemModel, QStandardItem, QColor, QFont
-from PySide6.QtCore import Qt, QRunnable, QThreadPool, Slot, QObject, Signal
+from PySide6.QtCore import QThreadPool, Slot, Signal
 import contextily as cx
 
 from matplotlib.backends.backend_qtagg import FigureCanvas
@@ -19,11 +17,10 @@ import pandas as pd
 import numpy as np
 
 
-from select_column_dialog import  Ui_ColumnSelectDialog
+from ui_elements.select_column_dialog import  Ui_ColumnSelectDialog
 import matplotlib.colors as colors
 
 from worker import Worker
-import time
 
 from util.gridding import grid
 from util.filter import running_mean_uniform_filter1d
