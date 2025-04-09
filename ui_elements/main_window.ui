@@ -145,6 +145,10 @@
    </property>
   </action>
   <action name="actionDinuralCorrection">
+   <property name="icon">
+    <iconset resource="icons/resources.qrc">
+     <normaloff>:/icons/magnetic-icon.png</normaloff>:/icons/magnetic-icon.png</iconset>
+   </property>
    <property name="text">
     <string>DinuralCorrection</string>
    </property>
@@ -153,6 +157,10 @@
    </property>
   </action>
   <action name="actionSmoothSurvey">
+   <property name="icon">
+    <iconset resource="icons/resources.qrc">
+     <normaloff>:/icons/improvement-performance-icon.png</normaloff>:/icons/improvement-performance-icon.png</iconset>
+   </property>
    <property name="text">
     <string>SmoothSurvey</string>
    </property>
