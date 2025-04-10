@@ -3,8 +3,8 @@ import sys
 from TreeWidget import TreeUtil
 from ui_elements.ui_main_window import Ui_MainWindow
 from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QInputDialog, QTreeWidget, \
-    QTreeWidgetItem, QDialog
-from PySide6.QtCore import QThreadPool, Slot, Signal
+    QTreeWidgetItem, QDialog, QListWidgetItem
+from PySide6.QtCore import QThreadPool, Slot, Signal, Qt
 import contextily as cx
 
 from matplotlib.backends.backend_qtagg import FigureCanvas
@@ -114,18 +114,34 @@ class MainWindow(QMainWindow):
         self.ui.verticalLayout2DMappingCanvas.addWidget(self.mapping_2D_canvas)
         self.mapping_2D_ax = self.mapping_2D_canvas.figure.subplots()
 
+
+
         self.time_series_canvas = FigureCanvas(Figure(figsize=(5, 3)))
         self.ui.verticalLayoutTimeSeriesCanvas.addWidget(NavigationToolbar(self.time_series_canvas))
         self.ui.verticalLayoutTimeSeriesCanvas.addWidget(self.time_series_canvas)
         self.time_series_ax = self.time_series_canvas.figure.subplots()
 
-        self.ui.pushButton.clicked.connect(self.debugTree)
+        #self.ui.pushButton.clicked.connect(self.debugTree)
 
         # self.TreeUtil = TreeUtil(self.ui.treeWidget)
 
         self.selected_df = pd.DataFrame()
         self.TreeUtil = TreeUtil(self.ui.treeWidget, self.selected_df)
         self.ui.treeWidget.itemChanged[QTreeWidgetItem, int].connect(self.update_selected_df)
+
+        firstlayer = QListWidgetItem("Context map")
+        firstlayer.setCheckState(Qt.Checked)
+        self.ui.layerWidget.addItem(firstlayer)
+
+
+        secondlayer = QListWidgetItem("Anomaly map")
+        secondlayer.setCheckState(Qt.Checked)
+        self.ui.layerWidget.addItem(secondlayer)
+
+
+        thirdlayer = QListWidgetItem("Anomaly annotation")
+        thirdlayer.setCheckState(Qt.Unchecked)
+        self.ui.layerWidget.addItem(thirdlayer)
 
         self.magCSV = MagCSV()
         # self.ui.treeWidget.setHeaderHidden(True)
@@ -142,10 +158,11 @@ class MainWindow(QMainWindow):
         survey_combined = survey_combined.sort_values(by='datetime')
         survey_combined.loc[survey_combined["Longitude"].astype(float) < -8.6, "Longitude"] = np.nan
         survey_combined.loc[survey_combined["Magnetic_Field"].astype(float) < 45000., "Magnetic_Field"] = np.nan
-
+        survey_combined.loc[survey_combined["Magnetic_Field"].astype(float) > 49500., "Magnetic_Field"] = np.nan
         survey_combined.ffill(inplace=True)
 
         self.time_series_ax.plot(survey_combined["datetime"], survey_combined["Magnetic_Field"].astype(float))
+        self.time_series_ax.set_ylabel("Total anomaly [nT]")
         self.time_series_canvas.draw_idle()
 
         data_coordinates = np.array(
@@ -177,22 +194,28 @@ class MainWindow(QMainWindow):
         # self.mapping_2D_ax.imshow(grid_z.T, origin='lower', extent=(x_min , x_max, y_min, y_max ))
         self.mapping_2D_ax.set_xlim([x_min, x_max])
         self.mapping_2D_ax.set_ylim([y_min, y_max])
+
+
         cx.add_basemap(self.mapping_2D_ax, crs="EPSG:4326", source=cx.providers.OpenStreetMap.Mapnik)
+        self.mapping_2D_ax.set_xlabel("Long [°]")
+        self.mapping_2D_ax.set_ylabel("Lat [°]")
         # self.mapping_2D_ax.imshow(grid_z.T, origin='lower', extent=(x_min, x_max, y_min, y_max))
 
-        bounds = np.array([-200, -100, -50, -20, -10., -5, 0, 5, 10, 20, 50, 100, 200])
+        bounds = np.array([-300,-200, -100, -50, -20, -10., -5, 0, 5, 10, 20, 50, 100, 200,300])
         norm = colors.BoundaryNorm(boundaries=bounds, ncolors=256)
-        # self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', extent=(x_min, x_max, y_min, y_max),
-        #           cmap='RdBu_r', )
+        #self.contourf = self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', extent=(x_min, x_max, y_min, y_max),
+        #           cmap='RdBu_r' )
 
-        self.contourf = self.mapping_2D_ax.contourf(grid_x, grid_y, grid_z, 200, origin='lower',
+        self.contourf = self.mapping_2D_ax.contourf(grid_x, grid_y, grid_z, 250, origin='lower',
                                                     extent=(x_min, x_max, y_min, y_max),
+                                                    #cmap='RdBu_r', norm=norm)
                                                     cmap='RdBu_r', norm="symlog")
 
         # self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', levels=10,
         #                            norm=colors.SymLogNorm(linthresh=10, linscale=1,
         #                                                   vmin=np.nanmin(grid_z), vmax=np.nanmax(grid_z), base=10))
-        self.mapping_2D_canvas.figure.colorbar(self.contourf, ax=self.mapping_2D_ax, orientation="vertical")
+        cbar = self.mapping_2D_canvas.figure.colorbar(self.contourf, ax=self.mapping_2D_ax, orientation="vertical")
+        cbar.set_label('Anomaly [nT]')
         self.mapping_2D_canvas.draw_idle()
 
     def debugTree(self):

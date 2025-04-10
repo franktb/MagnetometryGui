@@ -18,15 +18,15 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QHeaderView, QLabel, QListWidget,
     QListWidgetItem, QMainWindow, QMenu, QMenuBar,
-    QPushButton, QSizePolicy, QStatusBar, QToolBar,
-    QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
+    QSizePolicy, QStatusBar, QToolBar, QTreeWidget,
+    QTreeWidgetItem, QVBoxLayout, QWidget)
 import resources_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(963, 889)
+        MainWindow.resize(1117, 889)
         self.actionblubb = QAction(MainWindow)
         self.actionblubb.setObjectName(u"actionblubb")
         self.actionDinuralCorrection = QAction(MainWindow)
@@ -82,29 +82,28 @@ class Ui_MainWindow(object):
         self.verticalLayout2DMappingCanvas = QVBoxLayout(self.verticalLayoutWidget_2)
         self.verticalLayout2DMappingCanvas.setObjectName(u"verticalLayout2DMappingCanvas")
         self.verticalLayout2DMappingCanvas.setContentsMargins(0, 0, 0, 0)
-        self.pushButton = QPushButton(self.centralwidget)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setGeometry(QRect(10, 520, 88, 27))
         self.treeWidget = QTreeWidget(self.centralwidget)
         __qtreewidgetitem = QTreeWidgetItem()
         __qtreewidgetitem.setText(0, u"File Tree");
         self.treeWidget.setHeaderItem(__qtreewidgetitem)
         self.treeWidget.setObjectName(u"treeWidget")
         self.treeWidget.setGeometry(QRect(10, 10, 291, 501))
-        self.listWidget = QListWidget(self.centralwidget)
-        self.listWidget.setObjectName(u"listWidget")
-        self.listWidget.setGeometry(QRect(10, 580, 291, 221))
+        self.layerWidget = QListWidget(self.centralwidget)
+        self.layerWidget.setObjectName(u"layerWidget")
+        self.layerWidget.setGeometry(QRect(10, 550, 291, 251))
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(10, 560, 291, 19))
+        self.label.setGeometry(QRect(10, 520, 291, 19))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 963, 24))
+        self.menubar.setGeometry(QRect(0, 0, 1117, 24))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         self.menuOpen_Survey = QMenu(self.menuFile)
         self.menuOpen_Survey.setObjectName(u"menuOpen_Survey")
+        self.menuEdit = QMenu(self.menubar)
+        self.menuEdit.setObjectName(u"menuEdit")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -114,6 +113,7 @@ class Ui_MainWindow(object):
         MainWindow.addToolBar(Qt.ToolBarArea.TopToolBarArea, self.toolBar)
 
         self.menubar.addAction(self.menuFile.menuAction())
+        self.menubar.addAction(self.menuEdit.menuAction())
         self.menuFile.addAction(self.actionNew_Project)
         self.menuFile.addAction(self.actionOpen_Project)
         self.menuFile.addAction(self.actionSave_Project)
@@ -156,10 +156,10 @@ class Ui_MainWindow(object):
         self.actionFrom_Custom_CSV.setText(QCoreApplication.translate("MainWindow", u"From Custom CSV", None))
         self.actionDrawSelect.setText(QCoreApplication.translate("MainWindow", u"DrawSelect", None))
         self.actionRemoveOutlier.setText(QCoreApplication.translate("MainWindow", u"RemoveOutlier", None))
-        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Display Layers", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Display Layers:", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"&File", None))
         self.menuOpen_Survey.setTitle(QCoreApplication.translate("MainWindow", u"Import Survey", None))
+        self.menuEdit.setTitle(QCoreApplication.translate("MainWindow", u"&Edit", None))
         self.toolBar.setWindowTitle(QCoreApplication.translate("MainWindow", u"toolBar", None))
     # retranslateUi
 
