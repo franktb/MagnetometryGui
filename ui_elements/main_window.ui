@@ -131,6 +131,7 @@
    <addaction name="separator"/>
    <addaction name="actionDrawSelect"/>
    <addaction name="actionRemoveOutlier"/>
+   <addaction name="actionDraw1D"/>
   </widget>
   <action name="actionblubb">
    <property name="text">
@@ -218,6 +219,18 @@
    </property>
    <property name="text">
     <string>RemoveOutlier</string>
+   </property>
+  </action>
+  <action name="actionDraw1D">
+   <property name="icon">
+    <iconset resource="icons/resources.qrc">
+     <normaloff>:/icons/area-chart-icon.png</normaloff>:/icons/area-chart-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Draw1D</string>
+   </property>
+   <property name="toolTip">
+    <string>Draw1D</string>
    </property>
   </action>
  </widget>

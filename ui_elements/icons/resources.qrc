@@ -6,5 +6,6 @@
         <file alias="eraser-icon.png">eraser-icon.png</file>
         <file alias="magnetic-icon.png">magnetic-icon.png</file>
         <file alias="improvement-performance-icon.png">improvement-performance-icon.png</file>
+        <file alias="area-chart-icon.png">area-chart-icon.png</file>
     </qresource>
 </RCC>
