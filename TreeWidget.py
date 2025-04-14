@@ -37,10 +37,12 @@ class TreeUtil():
 
         recurse(self.tree.invisibleRootItem())
 
-        survey_combined = pd.DataFrame()
-        for item in checked_items:
-            print(item.text(0))
-            survey_combined = pd.concat([survey_combined, item.data_frame])
+        #survey_combined = pd.DataFrame()
+        #for item in checked_items:
+        #    print(item.text(0))
+        #    survey_combined = pd.concat([survey_combined, item.data_frame])
+
+        survey_combined = pd.concat([item.data_frame for item in checked_items])
 
         self.selected_df = survey_combined
         print(survey_combined)
