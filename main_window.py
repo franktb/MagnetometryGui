@@ -221,7 +221,16 @@ class MainWindow(QMainWindow):
     def debugTree(self):
         @Slot(list)
         def retrieve_user_input(inputs):
-            print(inputs)
+            max_mag, min_mag, max_long, min_long, max_lat, min_lat = inputs
+
+            self.TreeUtil.selected_df.sort_values(by='datetime')
+            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Magnetic_Field"] < max_mag, "Magnetic_Field"] = np.nan
+            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Magnetic_Field"] > min_mag, "Magnetic_Field"] = np.nan
+            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] < -8.6, "Longitude"] = np.nan
+            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] < -8.6, "Longitude"] = np.nan
+            #survey_combined.ffill(inplace=True)
+
+
 
         dlg = ColumnselectDlg(self)
         dlg.data_signal.connect(retrieve_user_input)
@@ -293,21 +302,30 @@ class MainWindow(QMainWindow):
             print(item.text(0))
             survey_combined = pd.concat([survey_combined, item.data_frame])
 
+
+
     def remove_outlier(self):
         @Slot(list)
         def retrieve_user_input(inputs):
             print(inputs)
+            max_mag, min_mag, max_long, min_long, max_lat, min_lat = inputs
+
+            self.TreeUtil.selected_df.sort_values(by='datetime')
+            self.TreeUtil.selected_df.loc[
+                self.TreeUtil.selected_df["Magnetic_Field"] < max_mag, "Magnetic_Field"] = np.nan
+            self.TreeUtil.selected_df.loc[
+                self.TreeUtil.selected_df["Magnetic_Field"] > min_mag, "Magnetic_Field"] = np.nan
+            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] < max_long, "Longitude"] = np.nan
+            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] > min_long, "Longitude"] = np.nan
+            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] < max_lat, "Latitude"] = np.nan
+            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] > min_lat, "Latitude"] = np.nan
+            self.TreeUtil.selected_df.ffill(inplace=True)
+
+
 
         dlg = RemoveOutlierDlg(self)
         dlg.data_signal.connect(retrieve_user_input)
         dlg.exec()
-
-        #survey_combined = self.TreeUtil.selected_df
-        #print(survey_combined)
-        #survey_combined.astype({"Magnetic_Field": "float32"})
-        #survey_combined = survey_combined.sort_values(by='datetime')
-        #survey_combined.loc[survey_combined["Longitude"].astype(float) < -8.6, "Longitude"] = np.nan
-        #survey_combined.loc[survey_combined["Magnetic_Field"].astype(float) < 45000., "Magnetic_Field"] = np.nan
 
 
 
