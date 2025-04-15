@@ -36,15 +36,22 @@ class TreeUtil():
                         checked_items.append(child)
 
         recurse(self.tree.invisibleRootItem())
-
-        #survey_combined = pd.DataFrame()
-        #for item in checked_items:
-        #    print(item.text(0))
-        #    survey_combined = pd.concat([survey_combined, item.data_frame])
-
         survey_combined = pd.concat([item.data_frame for item in checked_items])
-
         self.selected_df = survey_combined
         print(survey_combined)
 
+    def remove_outlier_from_select(self):
+        checked_items = []
+
+        def recurse(parent_item):
+            for i in range(parent_item.childCount()):
+                child = parent_item.child(i)
+                grand_children = child.childCount()
+                if grand_children > 0:
+                    recurse(child)
+                else:
+                    if child.checkState(0) == Qt.Checked:
+                        checked_items.append(child)
+
+        recurse(self.tree.invisibleRootItem())
 

@@ -12,7 +12,7 @@ from slippy_map_util import slippyMapNavigationToolbar
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
-from file_io.read_mag_data import MagCSV
+from file_io.read_mag_data import ReadMagCSV
 import pandas as pd
 import numpy as np
 
@@ -80,7 +80,7 @@ class MainWindow(QMainWindow):
         thirdlayer.setCheckState(Qt.Unchecked)
         self.ui.layerWidget.addItem(thirdlayer)
 
-        self.magCSV = MagCSV()
+        self.magCSV = ReadMagCSV()
         # self.ui.treeWidget.setHeaderHidden(True)
         self.threadpool = QThreadPool()
 

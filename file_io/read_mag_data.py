@@ -3,7 +3,7 @@ import os
 from data_model import Survey, SurveyFrame
 from PySide6.QtCore import Qt
 
-class MagCSV():
+class ReadMagCSV():
     def read_from_BOBCSV(self, filename, delimiter, skiprows, project):
         survey_frame_raw = pd.read_csv(filename,
                                        delimiter=delimiter,
