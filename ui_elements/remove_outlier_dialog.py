@@ -70,11 +70,17 @@ class Ui_RemoveOutlierDialog(object):
 
     def retranslateUi(self, RemoveOutlierDialog):
         RemoveOutlierDialog.setWindowTitle(QCoreApplication.translate("RemoveOutlierDialog", u"Remove Outlier", None))
+        self.lineEdit_maxMagField.setText(QCoreApplication.translate("RemoveOutlierDialog", u"49000", None))
+        self.lineEdit_minMagField.setText(QCoreApplication.translate("RemoveOutlierDialog", u"48000", None))
+        self.lineEdit_maxLongVal.setText(QCoreApplication.translate("RemoveOutlierDialog", u"-7.2", None))
+        self.lineEdit_minLongVal.setText(QCoreApplication.translate("RemoveOutlierDialog", u"-8.7", None))
         self.label.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Max Magnetic Field", None))
         self.label_2.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Min Magnetic Field", None))
         self.label_3.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Max Long Val", None))
         self.label_4.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Min Long Val", None))
         self.submitButton.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Submit", None))
+        self.lineEdit_minLatVal.setText(QCoreApplication.translate("RemoveOutlierDialog", u"51.", None))
+        self.lineEdit_maxLatVal.setText(QCoreApplication.translate("RemoveOutlierDialog", u"52.", None))
         self.label_5.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Min Lat Val", None))
         self.label_6.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Max Lat Val", None))
     # retranslateUi

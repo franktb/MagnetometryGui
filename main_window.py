@@ -16,7 +16,6 @@ from file_io.read_mag_data import MagCSV
 import pandas as pd
 import numpy as np
 
-
 import matplotlib.colors as colors
 
 from worker import Worker
@@ -47,7 +46,6 @@ class MainWindow(QMainWindow):
         self.ui.actionFrom_Custom_CSV.triggered.connect(self.select_custom_CSV)
         self.ui.actionDraw1D.triggered.connect(self.draw_1d_selected)
 
-
         self.ui.actionDrawSelect.triggered.connect(self.draw_selection)
         self.ui.actionRemoveOutlier.triggered.connect(self.remove_outlier)
 
@@ -57,14 +55,12 @@ class MainWindow(QMainWindow):
         self.ui.verticalLayout2DMappingCanvas.addWidget(self.mapping_2D_canvas)
         self.mapping_2D_ax = self.mapping_2D_canvas.figure.subplots()
 
-
-
         self.time_series_canvas = FigureCanvas(Figure(figsize=(5, 3)))
         self.ui.verticalLayoutTimeSeriesCanvas.addWidget(NavigationToolbar(self.time_series_canvas))
         self.ui.verticalLayoutTimeSeriesCanvas.addWidget(self.time_series_canvas)
         self.time_series_ax = self.time_series_canvas.figure.subplots()
 
-        #self.ui.pushButton.clicked.connect(self.debugTree)
+        # self.ui.pushButton.clicked.connect(self.debugTree)
 
         # self.TreeUtil = TreeUtil(self.ui.treeWidget)
 
@@ -76,11 +72,9 @@ class MainWindow(QMainWindow):
         firstlayer.setCheckState(Qt.Checked)
         self.ui.layerWidget.addItem(firstlayer)
 
-
         secondlayer = QListWidgetItem("Anomaly map")
         secondlayer.setCheckState(Qt.Checked)
         self.ui.layerWidget.addItem(secondlayer)
-
 
         thirdlayer = QListWidgetItem("Anomaly annotation")
         thirdlayer.setCheckState(Qt.Unchecked)
@@ -99,10 +93,10 @@ class MainWindow(QMainWindow):
         print(survey_combined)
         survey_combined.astype({"Magnetic_Field": "float32"})
         survey_combined = survey_combined.sort_values(by='datetime')
-        survey_combined.loc[survey_combined["Longitude"].astype(float) < -8.6, "Longitude"] = np.nan
-        survey_combined.loc[survey_combined["Magnetic_Field"].astype(float) < 45000., "Magnetic_Field"] = np.nan
-        survey_combined.loc[survey_combined["Magnetic_Field"].astype(float) > 49500., "Magnetic_Field"] = np.nan
-        survey_combined.ffill(inplace=True)
+        #survey_combined.loc[survey_combined["Longitude"].astype(float) < -8.6, "Longitude"] = np.nan
+        #survey_combined.loc[survey_combined["Magnetic_Field"].astype(float) < 45000., "Magnetic_Field"] = np.nan
+        #survey_combined.loc[survey_combined["Magnetic_Field"].astype(float) > 49500., "Magnetic_Field"] = np.nan
+        #survey_combined.ffill(inplace=True)
 
         self.time_series_ax.plot(survey_combined["datetime"], survey_combined["Magnetic_Field"].astype(float))
         self.time_series_ax.set_ylabel("Total anomaly [nT]")
@@ -138,20 +132,19 @@ class MainWindow(QMainWindow):
         self.mapping_2D_ax.set_xlim([x_min, x_max])
         self.mapping_2D_ax.set_ylim([y_min, y_max])
 
-
         cx.add_basemap(self.mapping_2D_ax, crs="EPSG:4326", source=cx.providers.OpenStreetMap.Mapnik)
         self.mapping_2D_ax.set_xlabel("Long [°]")
         self.mapping_2D_ax.set_ylabel("Lat [°]")
         # self.mapping_2D_ax.imshow(grid_z.T, origin='lower', extent=(x_min, x_max, y_min, y_max))
 
-        bounds = np.array([-300,-200, -100, -50, -20, -10., -5, 0, 5, 10, 20, 50, 100, 200,300])
+        bounds = np.array([-300, -200, -100, -50, -20, -10., -5, 0, 5, 10, 20, 50, 100, 200, 300])
         norm = colors.BoundaryNorm(boundaries=bounds, ncolors=256)
-        #self.contourf = self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', extent=(x_min, x_max, y_min, y_max),
+        # self.contourf = self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', extent=(x_min, x_max, y_min, y_max),
         #           cmap='RdBu_r' )
 
         self.contourf = self.mapping_2D_ax.contourf(grid_x, grid_y, grid_z, 250, origin='lower',
                                                     extent=(x_min, x_max, y_min, y_max),
-                                                    #cmap='RdBu_r', norm=norm)
+                                                    # cmap='RdBu_r', norm=norm)
                                                     cmap='RdBu_r', norm="symlog")
 
         # self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', levels=10,
@@ -167,13 +160,13 @@ class MainWindow(QMainWindow):
             max_mag, min_mag, max_long, min_long, max_lat, min_lat = inputs
 
             self.TreeUtil.selected_df.sort_values(by='datetime')
-            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Magnetic_Field"] < max_mag, "Magnetic_Field"] = np.nan
-            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Magnetic_Field"] > min_mag, "Magnetic_Field"] = np.nan
+            self.TreeUtil.selected_df.loc[
+                self.TreeUtil.selected_df["Magnetic_Field"] < max_mag, "Magnetic_Field"] = np.nan
+            self.TreeUtil.selected_df.loc[
+                self.TreeUtil.selected_df["Magnetic_Field"] > min_mag, "Magnetic_Field"] = np.nan
             self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] < -8.6, "Longitude"] = np.nan
             self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] < -8.6, "Longitude"] = np.nan
-            #survey_combined.ffill(inplace=True)
-
-
+            # survey_combined.ffill(inplace=True)
 
         dlg = ColumnSelectDlg(self)
         dlg.data_signal.connect(retrieve_user_input)
@@ -195,7 +188,7 @@ class MainWindow(QMainWindow):
                             selected_survey[0],
                             delimiter=",",
                             skiprows=5,
-                            project=self.ui.treeWidget
+                            project=self.TreeUtil
                             )
 
             self.threadpool.start(worker)
@@ -209,7 +202,7 @@ class MainWindow(QMainWindow):
         print(selected_folder)
         worker = Worker(self.magCSV.read_from_SeaLINKFolderXYZ,
                         selected_folder,
-                        project=self.ui.treeWidget,
+                        project=self.TreeUtil,
                         )
 
         self.threadpool.start(worker)
@@ -225,19 +218,15 @@ class MainWindow(QMainWindow):
                             inputs[0],
                             delimiter=",",
                             skiprows=int(inputs[-1]),
-                            usecols = [int(x)-1 for x in inputs[1:-1]],
-                            project=self.ui.treeWidget
+                            usecols=[int(x) - 1 for x in inputs[1:-1]],
+                            project=self.TreeUtil
                             )
 
             self.threadpool.start(worker)
 
-
         dlg = ColumnSelectDlg(self)
         dlg.data_signal.connect(retrieve_user_input)
         dlg.exec()
-
-
-
 
     def draw_1d_selected(self):
         checked_items = self.TreeUtil.selected_df
@@ -248,15 +237,11 @@ class MainWindow(QMainWindow):
         self.time_series_ax.set_ylabel("Total anomaly [nT]")
         self.time_series_canvas.draw_idle()
 
-
-
-
-
     def remove_outlier(self):
         @Slot(list)
         def retrieve_user_input(inputs):
             print(inputs)
-            print(type(self.TreeUtil.selected_df["Longitude"][0] ))
+            print(type(self.TreeUtil.selected_df["Longitude"][0]))
             try:
                 inputs = [float(i) for i in inputs]
 
@@ -267,23 +252,18 @@ class MainWindow(QMainWindow):
                     self.TreeUtil.selected_df["Magnetic_Field"] > max_mag, "Magnetic_Field"] = np.nan
                 self.TreeUtil.selected_df.loc[
                     self.TreeUtil.selected_df["Magnetic_Field"] < min_mag, "Magnetic_Field"] = np.nan
-                #self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] > max_long, "Longitude"] = np.nan
-                #self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] < min_long, "Longitude"] = np.nan
-                #self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] > max_lat, "Latitude"] = np.nan
-                #self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] < min_lat, "Latitude"] = np.nan
+                self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] > max_long, "Longitude"] = np.nan
+                self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] < min_long, "Longitude"] = np.nan
+                self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] > max_lat, "Latitude"] = np.nan
+                self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] < min_lat, "Latitude"] = np.nan
                 self.TreeUtil.selected_df.ffill(inplace=True)
 
             except ValueError:
                 QMessageBox.critical(self, "Input Error", "Please specify a valid number.", )
 
-
-
-
-
         dlg = RemoveOutlierDlg(self)
         dlg.data_signal.connect(retrieve_user_input)
         dlg.exec()
-
 
 
 if __name__ == "__main__":
