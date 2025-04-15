@@ -103,6 +103,7 @@ class MainWindow(QMainWindow):
         self.ui.actionFrom_BOB_CSV.triggered.connect(self.select_BOB_CSV)
         self.ui.actionFrom_Sealink_Folder.triggered.connect(self.select_SeaLINKFolder)
         self.ui.actionFrom_Custom_CSV.triggered.connect(self.select_custom_CSV)
+        self.ui.actionDraw1D.triggered.connect(self.draw_1d_selected)
 
 
         self.ui.actionDrawSelect.triggered.connect(self.draw_selection)
@@ -295,12 +296,15 @@ class MainWindow(QMainWindow):
 
 
     def draw_1d_selected(self):
-        checked_items = self.TreeUtil.checked_items()
+        checked_items = self.TreeUtil.selected_df
+        checked_items = checked_items.sort_values(by='datetime')
+        self.time_series_ax.cla()
 
-        survey_combined = pd.DataFrame()
-        for item in checked_items:
-            print(item.text(0))
-            survey_combined = pd.concat([survey_combined, item.data_frame])
+        self.time_series_ax.plot(checked_items["datetime"], checked_items["Magnetic_Field"])
+        self.time_series_ax.set_ylabel("Total anomaly [nT]")
+        self.time_series_canvas.draw_idle()
+
+
 
 
 
@@ -308,18 +312,27 @@ class MainWindow(QMainWindow):
         @Slot(list)
         def retrieve_user_input(inputs):
             print(inputs)
-            max_mag, min_mag, max_long, min_long, max_lat, min_lat = inputs
+            print(type(self.TreeUtil.selected_df["Longitude"][0] ))
+            try:
+                inputs = [float(i) for i in inputs]
 
-            self.TreeUtil.selected_df.sort_values(by='datetime')
-            self.TreeUtil.selected_df.loc[
-                self.TreeUtil.selected_df["Magnetic_Field"] < max_mag, "Magnetic_Field"] = np.nan
-            self.TreeUtil.selected_df.loc[
-                self.TreeUtil.selected_df["Magnetic_Field"] > min_mag, "Magnetic_Field"] = np.nan
-            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] < max_long, "Longitude"] = np.nan
-            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] > min_long, "Longitude"] = np.nan
-            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] < max_lat, "Latitude"] = np.nan
-            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] > min_lat, "Latitude"] = np.nan
-            self.TreeUtil.selected_df.ffill(inplace=True)
+                max_mag, min_mag, max_long, min_long, max_lat, min_lat = inputs
+
+                self.TreeUtil.selected_df.sort_values(by='datetime')
+                self.TreeUtil.selected_df.loc[
+                    self.TreeUtil.selected_df["Magnetic_Field"] > max_mag, "Magnetic_Field"] = np.nan
+                self.TreeUtil.selected_df.loc[
+                    self.TreeUtil.selected_df["Magnetic_Field"] < min_mag, "Magnetic_Field"] = np.nan
+                #self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] > max_long, "Longitude"] = np.nan
+                #self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] < min_long, "Longitude"] = np.nan
+                #self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] > max_lat, "Latitude"] = np.nan
+                #self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] < min_lat, "Latitude"] = np.nan
+                self.TreeUtil.selected_df.ffill(inplace=True)
+
+            except ValueError:
+                QMessageBox.critical(self, "Input Error", "Please specify a valid number.", )
+
+
 
 
 

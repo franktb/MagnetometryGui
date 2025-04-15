@@ -97,11 +97,20 @@
      <addaction name="separator"/>
      <addaction name="actionFrom_Custom_CSV"/>
     </widget>
+    <widget class="QMenu" name="menuExport_Grid">
+     <property name="title">
+      <string>Export Grid</string>
+     </property>
+     <addaction name="actionCSV"/>
+     <addaction name="actionGeoTiff"/>
+    </widget>
     <addaction name="actionNew_Project"/>
     <addaction name="actionOpen_Project"/>
     <addaction name="actionSave_Project"/>
     <addaction name="separator"/>
     <addaction name="menuOpen_Survey"/>
+    <addaction name="separator"/>
+    <addaction name="menuExport_Grid"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -167,6 +176,9 @@
    <property name="text">
     <string>calcResiduals</string>
    </property>
+   <property name="toolTip">
+    <string>Calculate residuals based on ambient field</string>
+   </property>
   </action>
   <action name="actionSomething_Else">
    <property name="text">
@@ -230,7 +242,17 @@
     <string>Draw1D</string>
    </property>
    <property name="toolTip">
-    <string>Draw1D</string>
+    <string>Draw a timeseries representation of selected surveys</string>
+   </property>
+  </action>
+  <action name="actionCSV">
+   <property name="text">
+    <string>CSV</string>
+   </property>
+  </action>
+  <action name="actionGeoTiff">
+   <property name="text">
+    <string>GeoTiff</string>
    </property>
   </action>
  </widget>
