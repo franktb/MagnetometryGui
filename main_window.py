@@ -17,71 +17,13 @@ import pandas as pd
 import numpy as np
 
 
-from ui_elements.select_column_dialog import  Ui_ColumnSelectDialog
-from ui_elements.remove_outlier_dialog import Ui_RemoveOutlierDialog
 import matplotlib.colors as colors
 
 from worker import Worker
 
 from util.gridding import grid
 from util.filter import running_mean_uniform_filter1d
-
-
-
-
-class ColumnselectDlg(QDialog):
-    data_signal = Signal(list)
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.ui = Ui_ColumnSelectDialog()
-        self.ui.setupUi(self)
-
-
-        self.ui.selectFileButton.clicked.connect(self.open_file_dialog)
-        self.ui.submitButton.clicked.connect(self.send_data)
-
-
-    def open_file_dialog(self):
-        selected_survey = QFileDialog.getOpenFileName(filter="All Files(*);;Text files(*.csv *.txt)")
-        if selected_survey[0].endswith((".txt", ".csv")):
-            self.ui.lineEdit_file_path.setText(selected_survey[0])
-
-    def send_data(self):
-        inputs = [
-            self.ui.lineEdit_file_path.text(),
-            self.ui.lineEdit_day.text(),
-            self.ui.lineEdit_time.text(),
-            self.ui.lineEdit_mag_field.text(),
-            self.ui.lineEdit_Gps_lat.text(),
-            self.ui.lineEdit_Gps_long.text(),
-            self.ui.lineEdit_Gps_easting.text(),
-            self.ui.lineEdit_Gps_northing.text()
-        ]
-
-        self.data_signal.emit(inputs)
-        self.accept()
-
-
-class RemoveOutlierDlg(QDialog):
-    data_signal = Signal(list)
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.ui = Ui_RemoveOutlierDialog()
-        self.ui.setupUi(self)
-        self.ui.submitButton.clicked.connect(self.send_data)
-
-    def send_data(self):
-        inputs = [
-            self.ui.lineEdit_maxMagField.text(),
-            self.ui.lineEdit_minMagField.text(),
-            self.ui.lineEdit_maxLongVal.text(),
-            self.ui.lineEdit_minLongVal.text(),
-            self.ui.lineEdit_maxLatVal.text(),
-            self.ui.lineEdit_minLatVal.text()
-        ]
-        self.data_signal.emit(inputs)
-        self.accept()
+from ui_elements.dialogs import *
 
 
 class MplCanvas(FigureCanvas):
@@ -233,7 +175,7 @@ class MainWindow(QMainWindow):
 
 
 
-        dlg = ColumnselectDlg(self)
+        dlg = ColumnSelectDlg(self)
         dlg.data_signal.connect(retrieve_user_input)
         dlg.exec()
 
@@ -277,18 +219,20 @@ class MainWindow(QMainWindow):
         def retrieve_user_input(inputs):
             print(inputs)
 
+            print(inputs[-1])
+            print(inputs[1:-1])
             worker = Worker(self.magCSV.read_from_customCSV,
                             inputs[0],
                             delimiter=",",
-                            skiprows=5,
-                            usecols = [int(x)-1 for x in inputs[1:]],
+                            skiprows=int(inputs[-1]),
+                            usecols = [int(x)-1 for x in inputs[1:-1]],
                             project=self.ui.treeWidget
                             )
 
             self.threadpool.start(worker)
 
 
-        dlg = ColumnselectDlg(self)
+        dlg = ColumnSelectDlg(self)
         dlg.data_signal.connect(retrieve_user_input)
         dlg.exec()
 

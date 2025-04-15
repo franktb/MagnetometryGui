@@ -26,7 +26,7 @@ class Ui_ColumnSelectDialog(object):
         ColumnSelectDialog.resize(548, 451)
         self.buttonBox = QDialogButtonBox(ColumnSelectDialog)
         self.buttonBox.setObjectName(u"buttonBox")
-        self.buttonBox.setGeometry(QRect(130, 390, 341, 32))
+        self.buttonBox.setGeometry(QRect(110, 400, 341, 32))
         self.buttonBox.setOrientation(Qt.Horizontal)
         self.buttonBox.setStandardButtons(QDialogButtonBox.Cancel|QDialogButtonBox.Ok)
         self.label = QLabel(ColumnSelectDialog)
@@ -82,7 +82,13 @@ class Ui_ColumnSelectDialog(object):
         self.selectFileButton.setGeometry(QRect(330, 40, 88, 27))
         self.submitButton = QPushButton(ColumnSelectDialog)
         self.submitButton.setObjectName(u"submitButton")
-        self.submitButton.setGeometry(QRect(390, 340, 88, 27))
+        self.submitButton.setGeometry(QRect(370, 340, 88, 27))
+        self.lineEdit_skipHeaderRows = QLineEdit(ColumnSelectDialog)
+        self.lineEdit_skipHeaderRows.setObjectName(u"lineEdit_skipHeaderRows")
+        self.lineEdit_skipHeaderRows.setGeometry(QRect(170, 350, 113, 27))
+        self.label_9 = QLabel(ColumnSelectDialog)
+        self.label_9.setObjectName(u"label_9")
+        self.label_9.setGeometry(QRect(60, 350, 101, 19))
 
         self.retranslateUi(ColumnSelectDialog)
         self.buttonBox.accepted.connect(ColumnSelectDialog.accept)
@@ -103,5 +109,6 @@ class Ui_ColumnSelectDialog(object):
         self.label_7.setText(QCoreApplication.translate("ColumnSelectDialog", u"TextLabel", None))
         self.selectFileButton.setText(QCoreApplication.translate("ColumnSelectDialog", u"Select", None))
         self.submitButton.setText(QCoreApplication.translate("ColumnSelectDialog", u"Submit", None))
+        self.label_9.setText(QCoreApplication.translate("ColumnSelectDialog", u"Skip rows", None))
     # retranslateUi
 
