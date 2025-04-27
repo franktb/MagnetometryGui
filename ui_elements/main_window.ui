@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1117</width>
+    <width>1569</width>
     <height>889</height>
    </rect>
   </property>
@@ -17,10 +17,10 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>10</x>
       <y>530</y>
-      <width>931</width>
-      <height>271</height>
+      <width>741</width>
+      <height>241</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayoutTimeSeriesCanvas"/>
@@ -30,7 +30,7 @@
      <rect>
       <x>320</x>
       <y>10</y>
-      <width>931</width>
+      <width>911</width>
       <height>501</height>
      </rect>
     </property>
@@ -54,8 +54,8 @@
    <widget class="QListWidget" name="layerWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>550</y>
+      <x>1250</x>
+      <y>40</y>
       <width>291</width>
       <height>251</height>
      </rect>
@@ -64,8 +64,8 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>520</y>
+      <x>1250</x>
+      <y>10</y>
       <width>291</width>
       <height>19</height>
      </rect>
@@ -74,13 +74,24 @@
      <string>Display Layers:</string>
     </property>
    </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>530</y>
+      <width>731</width>
+      <height>241</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayoutTimeSeriesCanvas_2"/>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1117</width>
+     <width>1569</width>
      <height>24</height>
     </rect>
    </property>

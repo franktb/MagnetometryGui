@@ -14,6 +14,7 @@ from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as Navigation
 
 from file_io.read_mag_data import ReadMagCSV
 import pandas as pd
+pd.options.mode.copy_on_write = True
 import numpy as np
 
 import matplotlib.colors as colors
@@ -59,6 +60,11 @@ class MainWindow(QMainWindow):
         self.ui.verticalLayoutTimeSeriesCanvas.addWidget(NavigationToolbar(self.time_series_canvas))
         self.ui.verticalLayoutTimeSeriesCanvas.addWidget(self.time_series_canvas)
         self.time_series_ax = self.time_series_canvas.figure.subplots()
+
+        self.time_series_canvas_res = FigureCanvas(Figure(figsize=(5, 3)))
+        self.ui.verticalLayoutTimeSeriesCanvas_2.addWidget(NavigationToolbar(self.time_series_canvas_res))
+        self.ui.verticalLayoutTimeSeriesCanvas_2.addWidget(self.time_series_canvas_res)
+        self.time_series_ax_res = self.time_series_canvas_res.figure.subplots()
 
         # self.ui.pushButton.clicked.connect(self.debugTree)
 
@@ -231,11 +237,25 @@ class MainWindow(QMainWindow):
     def draw_1d_selected(self):
         checked_items = self.TreeUtil.selected_df
         checked_items = checked_items.sort_values(by='datetime')
-        self.time_series_ax.cla()
 
+
+        checked_items .loc[:, "Magnetic_Field_Smoothed"] = running_mean_uniform_filter1d(
+            checked_items.loc[:, "Magnetic_Field"].astype(float), 20)
+        checked_items .loc[:, "Magnetic_Field_Ambient"] = running_mean_uniform_filter1d(
+            checked_items.loc[:, "Magnetic_Field"].astype(float), 500)
+        checked_items.loc[:, "Magnetic_Field_residual"] = checked_items.loc[:,
+                                                            "Magnetic_Field_Smoothed"] - checked_items .loc[:,
+                                                                                         "Magnetic_Field_Ambient"]
+
+        self.time_series_ax.cla()
         self.time_series_ax.plot(checked_items["datetime"], checked_items["Magnetic_Field"])
-        self.time_series_ax.set_ylabel("Total anomaly [nT]")
+        self.time_series_ax.set_ylabel("Total mag field $B$ [nT]")
         self.time_series_canvas.draw_idle()
+
+        self.time_series_ax_res.cla()
+        self.time_series_ax_res.plot(checked_items["datetime"], checked_items["Magnetic_Field_residual"])
+        self.time_series_ax_res.set_ylabel(r"Res $B_0 - \bar{B}$ [nT]")
+        self.time_series_canvas_res.draw_idle()
 
     def remove_outlier(self):
         @Slot(list)
