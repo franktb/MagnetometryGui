@@ -14,6 +14,9 @@ from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as Navigation
 
 from file_io.read_mag_data import ReadMagCSV
 import pandas as pd
+
+from util.data_manipulation import DataManipulator
+
 pd.options.mode.copy_on_write = True
 import numpy as np
 
@@ -85,6 +88,8 @@ class MainWindow(QMainWindow):
         thirdlayer = QListWidgetItem("Anomaly annotation")
         thirdlayer.setCheckState(Qt.Unchecked)
         self.ui.layerWidget.addItem(thirdlayer)
+
+        self.data_manipulator = DataManipulator()
 
         self.magCSV = ReadMagCSV()
         # self.ui.treeWidget.setHeaderHidden(True)
@@ -263,30 +268,22 @@ class MainWindow(QMainWindow):
             print(inputs)
             #print(type(self.TreeUtil.selected_df["Longitude"][0]))
             print(inputs[-1])
+            print(inputs[-1]  == "Use last value")
+            print(inputs[-1] == "Remove entry")
             try:
-                inputs = [float(i) for i in inputs[:-1]]
-                max_mag, min_mag, max_long, min_long, max_lat, min_lat = inputs
-
-
+                max_mag, min_mag, max_long, min_long, max_lat, min_lat = [float(i) for i in inputs[:-1]]
                 if inputs[-1] == "Remove entry":
-                    raise ("not implemnted")
+                    print("not implmented")
                 elif inputs[-1]  == "Use last value":
-                    self.TreeUtil.selected_df.sort_values(by='datetime')
-                    self.TreeUtil.selected_df.loc[
-                        self.TreeUtil.selected_df["Magnetic_Field"] > max_mag, "Magnetic_Field"] = np.nan
-                    self.TreeUtil.selected_df.loc[
-                        self.TreeUtil.selected_df["Magnetic_Field"] < min_mag, "Magnetic_Field"] = np.nan
-                    self.TreeUtil.selected_df.loc[
-                        self.TreeUtil.selected_df["Magnetic_Field"] > max_mag, "Magnetic_Field"] = np.nan
-                    self.TreeUtil.selected_df.loc[
-                        self.TreeUtil.selected_df["Magnetic_Field"] < min_mag, "Magnetic_Field"] = np.nan
-                    self.TreeUtil.selected_df.loc[
-                        self.TreeUtil.selected_df["Longitude"] > max_long, "Longitude"] = np.nan
-                    self.TreeUtil.selected_df.loc[
-                        self.TreeUtil.selected_df["Longitude"] < min_long, "Longitude"] = np.nan
-                    self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] > max_lat, "Latitude"] = np.nan
-                    self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] < min_lat, "Latitude"] = np.nan
-                    self.TreeUtil.selected_df.ffill(inplace=True)
+                    worker = Worker(self.data_manipulator.remove_outlier_from_df,
+                                    self.TreeUtil.selected_df,
+                                    max_mag, min_mag, max_long, min_long, max_lat, min_lat
+                                    )
+                    self.threadpool.start(worker)
+
+
+                    self.TreeUtil.remove_outlier_from_select(max_mag, min_mag, max_long, min_long, max_lat, min_lat)
+
                 elif  inputs[-1]  == "Interpolate neighbours":
                     raise("not implemnted")
 

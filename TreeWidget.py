@@ -6,6 +6,8 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QTreeWidget,QTreeWidget
 from PySide6.QtGui import QStandardItemModel,QStandardItem, QFont, QColor
 from PySide6.QtCore import Qt
 
+from util.data_manipulation import DataManipulator
+from threading import Thread
 
 class Survey(QTreeWidgetItem):
     def __init__( self, name):
@@ -23,6 +25,7 @@ class TreeUtil():
         self.tree = tree
         self.selected_df = selected_df
         self.checked_items_list = []
+        self.data_manipulator = DataManipulator
 
     def checked_items(self):
         checked_items = []
@@ -41,18 +44,11 @@ class TreeUtil():
         self.selected_df = survey_combined
         print(survey_combined)
 
-    def remove_outlier_from_select(self):
-        checked_items = []
+    def remove_outlier_from_select(self, max_mag, min_mag, max_long, min_long, max_lat, min_lat):
+        for item in self.checked_items_list:
+            print("HaLLO")
+            thread = Thread(target=self.data_manipulator.remove_outlier_from_df,
+                            args=(item.data_frame,max_mag, min_mag, max_long, min_long, max_lat, min_lat))
+            thread.start()
 
-        def recurse(parent_item):
-            for i in range(parent_item.childCount()):
-                child = parent_item.child(i)
-                grand_children = child.childCount()
-                if grand_children > 0:
-                    recurse(child)
-                else:
-                    if child.checkState(0) == Qt.Checked:
-                        checked_items.append(child)
-
-        recurse(self.tree.invisibleRootItem())
 
