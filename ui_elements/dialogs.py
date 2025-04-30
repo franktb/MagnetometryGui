@@ -55,6 +55,7 @@ class RemoveOutlierDlg(QDialog):
             self.ui.lineEdit_minLongVal.text(),
             self.ui.lineEdit_maxLatVal.text(),
             self.ui.lineEdit_minLatVal.text(),
+            self.ui.comboBox.currentText()
         ]
         self.data_signal.emit(inputs)
         self.accept()

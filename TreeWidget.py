@@ -22,7 +22,7 @@ class TreeUtil():
     def __init__(self, tree, selected_df):
         self.tree = tree
         self.selected_df = selected_df
-        self.checked_items = []
+        self.checked_items_list = []
 
     def checked_items(self):
         checked_items = []
@@ -35,7 +35,7 @@ class TreeUtil():
                 else:
                     if child.checkState(0) == Qt.Checked:
                         checked_items.append(child)
-        self.checked_items = checked_items
+        self.checked_items_list = checked_items
         recurse(self.tree.invisibleRootItem())
         survey_combined = pd.concat([item.data_frame for item in checked_items])
         self.selected_df = survey_combined

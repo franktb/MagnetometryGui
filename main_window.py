@@ -261,22 +261,35 @@ class MainWindow(QMainWindow):
         @Slot(list)
         def retrieve_user_input(inputs):
             print(inputs)
-            print(type(self.TreeUtil.selected_df["Longitude"][0]))
+            #print(type(self.TreeUtil.selected_df["Longitude"][0]))
+            print(inputs[-1])
             try:
-                inputs = [float(i) for i in inputs]
-
+                inputs = [float(i) for i in inputs[:-1]]
                 max_mag, min_mag, max_long, min_long, max_lat, min_lat = inputs
 
-                self.TreeUtil.selected_df.sort_values(by='datetime')
-                self.TreeUtil.selected_df.loc[
-                    self.TreeUtil.selected_df["Magnetic_Field"] > max_mag, "Magnetic_Field"] = np.nan
-                self.TreeUtil.selected_df.loc[
-                    self.TreeUtil.selected_df["Magnetic_Field"] < min_mag, "Magnetic_Field"] = np.nan
-                self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] > max_long, "Longitude"] = np.nan
-                self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] < min_long, "Longitude"] = np.nan
-                self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] > max_lat, "Latitude"] = np.nan
-                self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] < min_lat, "Latitude"] = np.nan
-                self.TreeUtil.selected_df.ffill(inplace=True)
+
+                if inputs[-1] == "Remove entry":
+                    raise ("not implemnted")
+                elif inputs[-1]  == "Use last value":
+                    self.TreeUtil.selected_df.sort_values(by='datetime')
+                    self.TreeUtil.selected_df.loc[
+                        self.TreeUtil.selected_df["Magnetic_Field"] > max_mag, "Magnetic_Field"] = np.nan
+                    self.TreeUtil.selected_df.loc[
+                        self.TreeUtil.selected_df["Magnetic_Field"] < min_mag, "Magnetic_Field"] = np.nan
+                    self.TreeUtil.selected_df.loc[
+                        self.TreeUtil.selected_df["Magnetic_Field"] > max_mag, "Magnetic_Field"] = np.nan
+                    self.TreeUtil.selected_df.loc[
+                        self.TreeUtil.selected_df["Magnetic_Field"] < min_mag, "Magnetic_Field"] = np.nan
+                    self.TreeUtil.selected_df.loc[
+                        self.TreeUtil.selected_df["Longitude"] > max_long, "Longitude"] = np.nan
+                    self.TreeUtil.selected_df.loc[
+                        self.TreeUtil.selected_df["Longitude"] < min_long, "Longitude"] = np.nan
+                    self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] > max_lat, "Latitude"] = np.nan
+                    self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Latitude"] < min_lat, "Latitude"] = np.nan
+                    self.TreeUtil.selected_df.ffill(inplace=True)
+                elif  inputs[-1]  == "Interpolate neighbours":
+                    raise("not implemnted")
+
 
             except ValueError:
                 QMessageBox.critical(self, "Input Error", "Please specify a valid number.", )
