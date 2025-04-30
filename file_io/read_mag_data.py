@@ -96,8 +96,9 @@ class ReadMagCSV():
         survey_frame_raw['datetime'] = pd.to_datetime(
             survey_frame_raw['Reading_Date'] + ' ' + survey_frame_raw['Reading_Time'])
 
-        survey_frame_raw.rename(columns={r"GPS_Latitude": r"Latitude", r"GPS_Longitude": r"Longitude"},
-                                inplace=True)
+        #survey_frame_raw.rename(columns={r"GPS_Latitude": r"Latitude", r"GPS_Longitude": r"Longitude"},
+        #                        inplace=True)
+        survey_frame_raw.columns = ['Date', 'Time', 'Easting', 'Northing', 'Magnetic_Field']
         survey_frame_raw.astype({"Magnetic_Field": "float32",
                                  "Latitude": "float32",
                                  "Longitude": "float32",

@@ -6,209 +6,37 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>548</width>
-    <height>451</height>
+    <width>448</width>
+    <height>445</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Column Select Dialog</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
-   <property name="geometry">
-    <rect>
-     <x>110</x>
-     <y>400</y>
-     <width>341</width>
-     <height>32</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>80</y>
-     <width>101</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Reading Time</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>160</y>
-     <width>101</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Magnetic Field</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>200</y>
-     <width>91</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Gps Latitude</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>240</y>
-     <width>101</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Gps Longitude</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>280</y>
-     <width>91</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Gps Easting</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit_time">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>80</y>
-     <width>113</width>
-     <height>27</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit_mag_field">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>160</y>
-     <width>113</width>
-     <height>27</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit_Gps_lat">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>200</y>
-     <width>113</width>
-     <height>27</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit_Gps_long">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>240</y>
-     <width>113</width>
-     <height>27</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit_Gps_easting">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>280</y>
-     <width>113</width>
-     <height>27</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>320</y>
-     <width>101</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Gps Northing</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit_Gps_northing">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>320</y>
-     <width>113</width>
-     <height>27</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_8">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>120</y>
-     <width>101</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Reading Day</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit_day">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>120</y>
-     <width>113</width>
-     <height>27</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>40</y>
+     <x>40</x>
+     <y>20</y>
      <width>66</width>
      <height>19</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string>File:</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit_file_path">
    <property name="geometry">
     <rect>
-     <x>170</x>
-     <y>40</y>
-     <width>113</width>
+     <x>40</x>
+     <y>60</y>
+     <width>350</width>
      <height>27</height>
     </rect>
    </property>
@@ -216,8 +44,8 @@
   <widget class="QPushButton" name="selectFileButton">
    <property name="geometry">
     <rect>
-     <x>330</x>
-     <y>40</y>
+     <x>300</x>
+     <y>20</y>
      <width>88</width>
      <height>27</height>
     </rect>
@@ -229,8 +57,8 @@
   <widget class="QPushButton" name="submitButton">
    <property name="geometry">
     <rect>
-     <x>370</x>
-     <y>340</y>
+     <x>300</x>
+     <y>370</y>
      <width>88</width>
      <height>27</height>
     </rect>
@@ -239,63 +67,139 @@
     <string>Submit</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit_skipHeaderRows">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>170</x>
-     <y>350</y>
-     <width>113</width>
-     <height>27</height>
+     <x>40</x>
+     <y>100</y>
+     <width>351</width>
+     <height>260</height>
     </rect>
    </property>
-  </widget>
-  <widget class="QLabel" name="label_9">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>350</y>
-     <width>101</width>
-     <height>19</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Skip rows</string>
-   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Reading Time</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLineEdit" name="lineEdit_time"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_8">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Reading Day</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="lineEdit_day"/>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Magnetic Field</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="lineEdit_mag_field"/>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Gps Latitude</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLineEdit" name="lineEdit_Gps_lat"/>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_4">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Gps Longitude</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="lineEdit_Gps_long"/>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_5">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Gps Easting</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QLineEdit" name="lineEdit_Gps_easting"/>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Gps Northing</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QLineEdit" name="lineEdit_Gps_northing"/>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLabel" name="label_9">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Skip rows</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QLineEdit" name="lineEdit_skipHeaderRows"/>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>ColumnSelectDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>ColumnSelectDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

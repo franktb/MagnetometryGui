@@ -15,53 +15,97 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QDialog, QLabel, QLineEdit,
-    QPushButton, QSizePolicy, QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QDialog, QGridLayout,
+    QLabel, QLineEdit, QPushButton, QSizePolicy,
+    QWidget)
 
 class Ui_RemoveOutlierDialog(object):
     def setupUi(self, RemoveOutlierDialog):
         if not RemoveOutlierDialog.objectName():
             RemoveOutlierDialog.setObjectName(u"RemoveOutlierDialog")
-        RemoveOutlierDialog.resize(471, 419)
-        self.lineEdit_maxMagField = QLineEdit(RemoveOutlierDialog)
-        self.lineEdit_maxMagField.setObjectName(u"lineEdit_maxMagField")
-        self.lineEdit_maxMagField.setGeometry(QRect(190, 20, 113, 27))
-        self.lineEdit_minMagField = QLineEdit(RemoveOutlierDialog)
-        self.lineEdit_minMagField.setObjectName(u"lineEdit_minMagField")
-        self.lineEdit_minMagField.setGeometry(QRect(190, 60, 113, 27))
-        self.lineEdit_maxLongVal = QLineEdit(RemoveOutlierDialog)
-        self.lineEdit_maxLongVal.setObjectName(u"lineEdit_maxLongVal")
-        self.lineEdit_maxLongVal.setGeometry(QRect(190, 100, 113, 27))
-        self.lineEdit_minLongVal = QLineEdit(RemoveOutlierDialog)
-        self.lineEdit_minLongVal.setObjectName(u"lineEdit_minLongVal")
-        self.lineEdit_minLongVal.setGeometry(QRect(190, 140, 113, 27))
-        self.label = QLabel(RemoveOutlierDialog)
-        self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(50, 20, 141, 19))
-        self.label_2 = QLabel(RemoveOutlierDialog)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setGeometry(QRect(50, 60, 131, 20))
-        self.label_3 = QLabel(RemoveOutlierDialog)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setGeometry(QRect(50, 100, 101, 20))
-        self.label_4 = QLabel(RemoveOutlierDialog)
-        self.label_4.setObjectName(u"label_4")
-        self.label_4.setGeometry(QRect(50, 140, 91, 19))
+        RemoveOutlierDialog.resize(437, 345)
         self.submitButton = QPushButton(RemoveOutlierDialog)
         self.submitButton.setObjectName(u"submitButton")
-        self.submitButton.setGeometry(QRect(340, 220, 88, 27))
-        self.lineEdit_minLatVal = QLineEdit(RemoveOutlierDialog)
-        self.lineEdit_minLatVal.setObjectName(u"lineEdit_minLatVal")
-        self.lineEdit_minLatVal.setGeometry(QRect(190, 220, 113, 27))
-        self.lineEdit_maxLatVal = QLineEdit(RemoveOutlierDialog)
-        self.lineEdit_maxLatVal.setObjectName(u"lineEdit_maxLatVal")
-        self.lineEdit_maxLatVal.setGeometry(QRect(190, 180, 113, 27))
-        self.label_5 = QLabel(RemoveOutlierDialog)
-        self.label_5.setObjectName(u"label_5")
-        self.label_5.setGeometry(QRect(50, 220, 91, 20))
-        self.label_6 = QLabel(RemoveOutlierDialog)
+        self.submitButton.setGeometry(QRect(290, 260, 88, 27))
+        self.widget = QWidget(RemoveOutlierDialog)
+        self.widget.setObjectName(u"widget")
+        self.widget.setGeometry(QRect(50, 20, 329, 227))
+        self.gridLayout = QGridLayout(self.widget)
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+        self.label = QLabel(self.widget)
+        self.label.setObjectName(u"label")
+
+        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
+
+        self.lineEdit_maxMagField = QLineEdit(self.widget)
+        self.lineEdit_maxMagField.setObjectName(u"lineEdit_maxMagField")
+
+        self.gridLayout.addWidget(self.lineEdit_maxMagField, 0, 1, 1, 1)
+
+        self.label_2 = QLabel(self.widget)
+        self.label_2.setObjectName(u"label_2")
+
+        self.gridLayout.addWidget(self.label_2, 1, 0, 1, 1)
+
+        self.lineEdit_minMagField = QLineEdit(self.widget)
+        self.lineEdit_minMagField.setObjectName(u"lineEdit_minMagField")
+
+        self.gridLayout.addWidget(self.lineEdit_minMagField, 1, 1, 1, 1)
+
+        self.label_3 = QLabel(self.widget)
+        self.label_3.setObjectName(u"label_3")
+
+        self.gridLayout.addWidget(self.label_3, 2, 0, 1, 1)
+
+        self.lineEdit_maxLongVal = QLineEdit(self.widget)
+        self.lineEdit_maxLongVal.setObjectName(u"lineEdit_maxLongVal")
+
+        self.gridLayout.addWidget(self.lineEdit_maxLongVal, 2, 1, 1, 1)
+
+        self.label_4 = QLabel(self.widget)
+        self.label_4.setObjectName(u"label_4")
+
+        self.gridLayout.addWidget(self.label_4, 3, 0, 1, 1)
+
+        self.lineEdit_minLongVal = QLineEdit(self.widget)
+        self.lineEdit_minLongVal.setObjectName(u"lineEdit_minLongVal")
+
+        self.gridLayout.addWidget(self.lineEdit_minLongVal, 3, 1, 1, 1)
+
+        self.label_6 = QLabel(self.widget)
         self.label_6.setObjectName(u"label_6")
-        self.label_6.setGeometry(QRect(50, 180, 91, 20))
+
+        self.gridLayout.addWidget(self.label_6, 4, 0, 1, 1)
+
+        self.lineEdit_maxLatVal = QLineEdit(self.widget)
+        self.lineEdit_maxLatVal.setObjectName(u"lineEdit_maxLatVal")
+
+        self.gridLayout.addWidget(self.lineEdit_maxLatVal, 4, 1, 1, 1)
+
+        self.label_5 = QLabel(self.widget)
+        self.label_5.setObjectName(u"label_5")
+
+        self.gridLayout.addWidget(self.label_5, 5, 0, 1, 1)
+
+        self.lineEdit_minLatVal = QLineEdit(self.widget)
+        self.lineEdit_minLatVal.setObjectName(u"lineEdit_minLatVal")
+
+        self.gridLayout.addWidget(self.lineEdit_minLatVal, 5, 1, 1, 1)
+
+        self.label_7 = QLabel(self.widget)
+        self.label_7.setObjectName(u"label_7")
+
+        self.gridLayout.addWidget(self.label_7, 6, 0, 1, 1)
+
+        self.comboBox = QComboBox(self.widget)
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.setObjectName(u"comboBox")
+
+        self.gridLayout.addWidget(self.comboBox, 6, 1, 1, 1)
+
 
         self.retranslateUi(RemoveOutlierDialog)
 
@@ -70,18 +114,23 @@ class Ui_RemoveOutlierDialog(object):
 
     def retranslateUi(self, RemoveOutlierDialog):
         RemoveOutlierDialog.setWindowTitle(QCoreApplication.translate("RemoveOutlierDialog", u"Remove Outlier", None))
-        self.lineEdit_maxMagField.setText(QCoreApplication.translate("RemoveOutlierDialog", u"49000", None))
-        self.lineEdit_minMagField.setText(QCoreApplication.translate("RemoveOutlierDialog", u"48000", None))
-        self.lineEdit_maxLongVal.setText(QCoreApplication.translate("RemoveOutlierDialog", u"-7.2", None))
-        self.lineEdit_minLongVal.setText(QCoreApplication.translate("RemoveOutlierDialog", u"-8.7", None))
-        self.label.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Max Magnetic Field", None))
-        self.label_2.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Min Magnetic Field", None))
-        self.label_3.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Max Long Val", None))
-        self.label_4.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Min Long Val", None))
         self.submitButton.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Submit", None))
-        self.lineEdit_minLatVal.setText(QCoreApplication.translate("RemoveOutlierDialog", u"51.", None))
+        self.label.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Max Magnetic Field:", None))
+        self.lineEdit_maxMagField.setText(QCoreApplication.translate("RemoveOutlierDialog", u"49000", None))
+        self.label_2.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Min Magnetic Field:", None))
+        self.lineEdit_minMagField.setText(QCoreApplication.translate("RemoveOutlierDialog", u"48000", None))
+        self.label_3.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Max Long Val:", None))
+        self.lineEdit_maxLongVal.setText(QCoreApplication.translate("RemoveOutlierDialog", u"-7.2", None))
+        self.label_4.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Min Long Val:", None))
+        self.lineEdit_minLongVal.setText(QCoreApplication.translate("RemoveOutlierDialog", u"-8.7", None))
+        self.label_6.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Max Lat Val:", None))
         self.lineEdit_maxLatVal.setText(QCoreApplication.translate("RemoveOutlierDialog", u"52.", None))
-        self.label_5.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Min Lat Val", None))
-        self.label_6.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Max Lat Val", None))
+        self.label_5.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Min Lat Val:", None))
+        self.lineEdit_minLatVal.setText(QCoreApplication.translate("RemoveOutlierDialog", u"51.", None))
+        self.label_7.setText(QCoreApplication.translate("RemoveOutlierDialog", u"Action:", None))
+        self.comboBox.setItemText(0, QCoreApplication.translate("RemoveOutlierDialog", u"Remove entry", None))
+        self.comboBox.setItemText(1, QCoreApplication.translate("RemoveOutlierDialog", u"Use last value", None))
+        self.comboBox.setItemText(2, QCoreApplication.translate("RemoveOutlierDialog", u"Interpolate neighbours", None))
+
     # retranslateUi
 
