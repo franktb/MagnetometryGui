@@ -268,21 +268,25 @@ class MainWindow(QMainWindow):
             print(inputs)
             #print(type(self.TreeUtil.selected_df["Longitude"][0]))
             print(inputs[-1])
-            print(inputs[-1]  == "Use last value")
-            print(inputs[-1] == "Remove entry")
+
             try:
                 max_mag, min_mag, max_long, min_long, max_lat, min_lat = [float(i) for i in inputs[:-1]]
                 if inputs[-1] == "Remove entry":
-                    print("not implmented")
-                elif inputs[-1]  == "Use last value":
-                    worker = Worker(self.data_manipulator.remove_outlier_from_df,
+                    print(("Here"))
+                    #print(self.TreeUtil.selected_df.shape)
+                    worker = Worker(self.data_manipulator.dropna_outlier_from_df,
                                     self.TreeUtil.selected_df,
                                     max_mag, min_mag, max_long, min_long, max_lat, min_lat
                                     )
                     self.threadpool.start(worker)
-
-
-                    self.TreeUtil.remove_outlier_from_select(max_mag, min_mag, max_long, min_long, max_lat, min_lat)
+                    self.TreeUtil.dropna_outlier(max_mag, min_mag, max_long, min_long, max_lat, min_lat)
+                elif inputs[-1]  == "Use last value":
+                    worker = Worker(self.data_manipulator.ffill_outlier_from_df,
+                                    self.TreeUtil.selected_df,
+                                    max_mag, min_mag, max_long, min_long, max_lat, min_lat
+                                    )
+                    self.threadpool.start(worker)
+                    self.TreeUtil.ffill_outlier(max_mag, min_mag, max_long, min_long, max_lat, min_lat)
 
                 elif  inputs[-1]  == "Interpolate neighbours":
                     raise("not implemnted")

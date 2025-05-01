@@ -44,11 +44,17 @@ class TreeUtil():
         self.selected_df = survey_combined
         print(survey_combined)
 
-    def remove_outlier_from_select(self, max_mag, min_mag, max_long, min_long, max_lat, min_lat):
+    def ffill_outlier(self, max_mag, min_mag, max_long, min_long, max_lat, min_lat):
         for item in self.checked_items_list:
             print("HaLLO")
-            thread = Thread(target=self.data_manipulator.remove_outlier_from_df,
+            thread = Thread(target=self.data_manipulator.ffill_outlier_from_df,
                             args=(item.data_frame,max_mag, min_mag, max_long, min_long, max_lat, min_lat))
             thread.start()
 
 
+    def dropna_outlier(self, max_mag, min_mag, max_long, min_long, max_lat, min_lat):
+        for item in self.checked_items_list:
+            print("HaLLO")
+            thread = Thread(target=self.data_manipulator.dropna_outlier_from_df,
+                            args=(item.data_frame,max_mag, min_mag, max_long, min_long, max_lat, min_lat))
+            thread.start()
