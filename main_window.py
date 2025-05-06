@@ -98,6 +98,8 @@ class MainWindow(QMainWindow):
 
 
         self.data_manipulator = DataManipulator()
+        self.data_coordinates = None
+        self.track_lines = None
 
         self.magCSV = ReadMagCSV()
         # self.ui.treeWidget.setHeaderHidden(True)
@@ -105,6 +107,19 @@ class MainWindow(QMainWindow):
 
     def layer_update(self):
         print("hello")
+        for i in range(self.ui.layerWidget.count()):
+            if self.ui.layerWidget.item(i).checkState() == Qt.Checked:
+                print(self.ui.layerWidget.item(i).text())
+
+        if self.ui.layerWidget.item(3).checkState() == Qt.Checked and self.track_lines !=None:
+            print("YES")
+
+            self.track_lines.set_visible(True)
+            self.mapping_2D_canvas.draw_idle()
+
+        if self.ui.layerWidget.item(3).checkState() != Qt.Checked and self.track_lines != None:
+            self.track_lines.set_visible(False)
+            self.mapping_2D_canvas.draw_idle()
 
     def update_selected_df(self):
         worker = Worker(self.TreeUtil.checked_items)
@@ -124,7 +139,7 @@ class MainWindow(QMainWindow):
         self.time_series_ax.set_ylabel("Total anomaly [nT]")
         self.time_series_canvas.draw_idle()
 
-        data_coordinates = np.array(
+        self.data_coordinates = np.array(
             (survey_combined["Longitude"].astype(float), survey_combined["Latitude"].astype(float)))
 
         x_min = -8.7
@@ -142,7 +157,7 @@ class MainWindow(QMainWindow):
                                                             "Magnetic_Field_Smoothed"] - survey_combined.loc[:,
                                                                                          "Magnetic_Field_Ambient"]
 
-        grid_x, grid_y, grid_z = grid(survey_combined["Magnetic_Field_residual"].astype(float), data_coordinates,
+        grid_x, grid_y, grid_z = grid(survey_combined["Magnetic_Field_residual"].astype(float), self.data_coordinates,
                                       x_min,
                                       x_max,
                                       2000j,
@@ -172,6 +187,14 @@ class MainWindow(QMainWindow):
         # self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', levels=10,
         #                            norm=colors.SymLogNorm(linthresh=10, linscale=1,
         #                                                   vmin=np.nanmin(grid_z), vmax=np.nanmax(grid_z), base=10))
+
+        self.track_lines = self.mapping_2D_ax.scatter(self.data_coordinates[0, :],
+                                                      self.data_coordinates[1, :], color="black", s=1)
+        if self.ui.layerWidget.item(3).checkState() == Qt.Checked:
+            self.track_lines.set_visible(True)
+        else:
+            self.track_lines.set_visible(False)
+
         cbar = self.mapping_2D_canvas.figure.colorbar(self.contourf, ax=self.mapping_2D_ax, orientation="vertical")
         cbar.set_label('Anomaly [nT]')
         self.mapping_2D_canvas.draw_idle()
