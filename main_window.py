@@ -89,11 +89,22 @@ class MainWindow(QMainWindow):
         thirdlayer.setCheckState(Qt.Unchecked)
         self.ui.layerWidget.addItem(thirdlayer)
 
+        forthlayer = QListWidgetItem("Track Lines")
+        forthlayer.setCheckState(Qt.Unchecked)
+        self.ui.layerWidget.addItem(forthlayer)
+
+
+        self.ui.layerWidget.itemChanged.connect(self.layer_update)
+
+
         self.data_manipulator = DataManipulator()
 
         self.magCSV = ReadMagCSV()
         # self.ui.treeWidget.setHeaderHidden(True)
         self.threadpool = QThreadPool()
+
+    def layer_update(self):
+        print("hello")
 
     def update_selected_df(self):
         worker = Worker(self.TreeUtil.checked_items)

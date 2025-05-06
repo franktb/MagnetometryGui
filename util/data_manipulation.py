@@ -31,4 +31,3 @@ class DataManipulator():
         df.loc[df["Latitude"] > max_lat, "Latitude"] = np.nan
         df.loc[df["Latitude"] < min_lat, "Latitude"] = np.nan
         df.dropna(inplace=True)
-        
