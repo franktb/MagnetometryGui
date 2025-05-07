@@ -59,6 +59,7 @@ class MainWindow(QMainWindow):
         self.ui.verticalLayout2DMappingCanvas.addWidget(slippyMapNavigationToolbar(self.mapping_2D_canvas, self))
         self.ui.verticalLayout2DMappingCanvas.addWidget(self.mapping_2D_canvas)
         self.mapping_2D_ax = self.mapping_2D_canvas.figure.subplots()
+        self.cbar = None
 
         self.time_series_canvas = FigureCanvas(Figure(figsize=(5, 3)))
         self.ui.verticalLayoutTimeSeriesCanvas.addWidget(NavigationToolbar(self.time_series_canvas))
@@ -123,17 +124,10 @@ class MainWindow(QMainWindow):
             self.mapping_2D_canvas.draw_idle()
 
     def update_selected_df(self):
-        worker = Worker(self.TreeUtil.self.TreeUtil.selected_df)
+        worker = Worker(self.TreeUtil.checked_items)
         self.threadpool.start(worker)
 
     def draw_selection(self):
-        self.mapping_2D_ax.cla()
-        #self.TreeUtil.selected_df.sort_values(by='datetime')
-
-        #self.time_series_ax.plot(self.TreeUtil.selected_df["datetime"], self.TreeUtil.selected_df["Magnetic_Field"].astype(float))
-        #self.time_series_ax.set_ylabel("Total anomaly [nT]")
-        #self.time_series_canvas.draw_idle()
-
         self.data_coordinates = np.array(
             (self.TreeUtil.selected_df["Longitude"].astype(float), self.TreeUtil.selected_df["Latitude"].astype(float)))
 
@@ -192,8 +186,14 @@ class MainWindow(QMainWindow):
         else:
             self.track_lines.set_visible(False)
 
-        cbar = self.mapping_2D_canvas.figure.colorbar(self.contourf, ax=self.mapping_2D_ax, orientation="vertical")
-        cbar.set_label('Anomaly [nT]')
+        try:
+            self.cbar.remove()
+        except:
+            pass
+
+
+        self.cbar = self.mapping_2D_canvas.figure.colorbar(self.contourf, ax=self.mapping_2D_ax, orientation="vertical")
+        self.cbar.set_label('Anomaly [nT]')
         self.mapping_2D_canvas.draw_idle()
 
     def debugTree(self):
