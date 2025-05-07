@@ -27,6 +27,7 @@ from worker import Worker
 from util.gridding import grid
 from util.filter import running_mean_uniform_filter1d
 from ui_elements.dialogs import *
+import time
 
 
 class MplCanvas(FigureCanvas):
@@ -122,48 +123,39 @@ class MainWindow(QMainWindow):
             self.mapping_2D_canvas.draw_idle()
 
     def update_selected_df(self):
-        worker = Worker(self.TreeUtil.checked_items)
+        worker = Worker(self.TreeUtil.self.TreeUtil.selected_df)
         self.threadpool.start(worker)
 
     def draw_selection(self):
-        survey_combined = self.TreeUtil.selected_df
-        print(survey_combined)
-        survey_combined.astype({"Magnetic_Field": "float32"})
-        survey_combined = survey_combined.sort_values(by='datetime')
-        #survey_combined.loc[survey_combined["Longitude"].astype(float) < -8.6, "Longitude"] = np.nan
-        #survey_combined.loc[survey_combined["Magnetic_Field"].astype(float) < 45000., "Magnetic_Field"] = np.nan
-        #survey_combined.loc[survey_combined["Magnetic_Field"].astype(float) > 49500., "Magnetic_Field"] = np.nan
-        #survey_combined.ffill(inplace=True)
+        self.mapping_2D_ax.cla()
+        #self.TreeUtil.selected_df.sort_values(by='datetime')
 
-        self.time_series_ax.plot(survey_combined["datetime"], survey_combined["Magnetic_Field"].astype(float))
-        self.time_series_ax.set_ylabel("Total anomaly [nT]")
-        self.time_series_canvas.draw_idle()
+        #self.time_series_ax.plot(self.TreeUtil.selected_df["datetime"], self.TreeUtil.selected_df["Magnetic_Field"].astype(float))
+        #self.time_series_ax.set_ylabel("Total anomaly [nT]")
+        #self.time_series_canvas.draw_idle()
 
         self.data_coordinates = np.array(
-            (survey_combined["Longitude"].astype(float), survey_combined["Latitude"].astype(float)))
+            (self.TreeUtil.selected_df["Longitude"].astype(float), self.TreeUtil.selected_df["Latitude"].astype(float)))
 
-        x_min = -8.7
-        x_max = -7.3
-        y_min = 51.3
-        y_max = 51.99
+        x_min = np.min(self.TreeUtil.selected_df ["Longitude"])
+        x_max = np.max(self.TreeUtil.selected_df ["Longitude"])
 
-        # aspect = ((x_max - x_min) / 2000) / ((y_max - y_min) / 2000)
+        y_min = np.min(self.TreeUtil.selected_df ["Latitude"])
+        y_max = np.max(self.TreeUtil.selected_df ["Latitude"])
 
-        survey_combined.loc[:, "Magnetic_Field_Smoothed"] = running_mean_uniform_filter1d(
-            survey_combined.loc[:, "Magnetic_Field"].astype(float), 20)
-        survey_combined.loc[:, "Magnetic_Field_Ambient"] = running_mean_uniform_filter1d(
-            survey_combined.loc[:, "Magnetic_Field"].astype(float), 500)
-        survey_combined.loc[:, "Magnetic_Field_residual"] = survey_combined.loc[:,
-                                                            "Magnetic_Field_Smoothed"] - survey_combined.loc[:,
-                                                                                         "Magnetic_Field_Ambient"]
 
-        grid_x, grid_y, grid_z = grid(survey_combined["Magnetic_Field_residual"].astype(float), self.data_coordinates,
+
+        start = time.time()
+        grid_x, grid_y, grid_z = grid(self.TreeUtil.selected_df["Magnetic_Field_residual"].astype(float), self.data_coordinates,
                                       x_min,
                                       x_max,
                                       2000j,
                                       y_max,
                                       y_min,
                                       2000j, "linear")
+
+        end = time.time()
+        print(end - start)
 
         # self.mapping_2D_ax.imshow(grid_z.T, origin='lower', extent=(x_min , x_max, y_min, y_max ))
         self.mapping_2D_ax.set_xlim([x_min, x_max])
@@ -179,10 +171,15 @@ class MainWindow(QMainWindow):
         # self.contourf = self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', extent=(x_min, x_max, y_min, y_max),
         #           cmap='RdBu_r' )
 
+
+        start = time.time()
         self.contourf = self.mapping_2D_ax.contourf(grid_x, grid_y, grid_z, 250, origin='lower',
                                                     extent=(x_min, x_max, y_min, y_max),
                                                     # cmap='RdBu_r', norm=norm)
                                                     cmap='RdBu_r', norm="symlog")
+
+        end = time.time()
+        print(end - start)
 
         # self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', levels=10,
         #                            norm=colors.SymLogNorm(linthresh=10, linscale=1,
@@ -211,7 +208,7 @@ class MainWindow(QMainWindow):
                 self.TreeUtil.selected_df["Magnetic_Field"] > min_mag, "Magnetic_Field"] = np.nan
             self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] < -8.6, "Longitude"] = np.nan
             self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] < -8.6, "Longitude"] = np.nan
-            # survey_combined.ffill(inplace=True)
+            # self.TreeUtil.selected_df.ffill(inplace=True)
 
         dlg = ColumnSelectDlg(self)
         dlg.data_signal.connect(retrieve_user_input)
@@ -274,25 +271,24 @@ class MainWindow(QMainWindow):
         dlg.exec()
 
     def draw_1d_selected(self):
-        checked_items = self.TreeUtil.selected_df
-        checked_items = checked_items.sort_values(by='datetime')
+        self.TreeUtil.selected_df = self.TreeUtil.selected_df.sort_values(by='datetime')
 
 
-        checked_items .loc[:, "Magnetic_Field_Smoothed"] = running_mean_uniform_filter1d(
-            checked_items.loc[:, "Magnetic_Field"].astype(float), 20)
-        checked_items .loc[:, "Magnetic_Field_Ambient"] = running_mean_uniform_filter1d(
-            checked_items.loc[:, "Magnetic_Field"].astype(float), 500)
-        checked_items.loc[:, "Magnetic_Field_residual"] = checked_items.loc[:,
-                                                            "Magnetic_Field_Smoothed"] - checked_items .loc[:,
+        self.TreeUtil.selected_df.loc[:, "Magnetic_Field_Smoothed"] = running_mean_uniform_filter1d(
+            self.TreeUtil.selected_df.loc[:, "Magnetic_Field"].astype(float), 20)
+        self.TreeUtil.selected_df.loc[:, "Magnetic_Field_Ambient"] = running_mean_uniform_filter1d(
+            self.TreeUtil.selected_df.loc[:, "Magnetic_Field"].astype(float), 500)
+        self.TreeUtil.selected_df.loc[:, "Magnetic_Field_residual"] = self.TreeUtil.selected_df.loc[:,
+                                                            "Magnetic_Field_Smoothed"] - self.TreeUtil.selected_df .loc[:,
                                                                                          "Magnetic_Field_Ambient"]
 
         self.time_series_ax.cla()
-        self.time_series_ax.plot(checked_items["datetime"], checked_items["Magnetic_Field"])
+        self.time_series_ax.plot(self.TreeUtil.selected_df["datetime"], self.TreeUtil.selected_df["Magnetic_Field"])
         self.time_series_ax.set_ylabel("Total mag field $B$ [nT]")
         self.time_series_canvas.draw_idle()
 
         self.time_series_ax_res.cla()
-        self.time_series_ax_res.plot(checked_items["datetime"], checked_items["Magnetic_Field_residual"])
+        self.time_series_ax_res.plot(self.TreeUtil.selected_df["datetime"], self.TreeUtil.selected_df["Magnetic_Field_residual"])
         self.time_series_ax_res.set_ylabel(r"Res $B_0 - \bar{B}$ [nT]")
         self.time_series_canvas_res.draw_idle()
 
