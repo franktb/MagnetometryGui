@@ -8,7 +8,7 @@ from PySide6.QtCore import QThreadPool, Slot, Signal, Qt
 import contextily as cx
 
 from matplotlib.backends.backend_qtagg import FigureCanvas
-from slippy_map_util import slippyMapNavigationToolbar
+from slippy_map_util import SlippyMapNavigationToolbar
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
@@ -56,7 +56,8 @@ class MainWindow(QMainWindow):
 
         self.mapping_2D_canvas = FigureCanvas(Figure(figsize=(5, 3)))
         # self.mapping_2D_canvas = MplCanvas(self, 5,3,150)
-        self.ui.verticalLayout2DMappingCanvas.addWidget(slippyMapNavigationToolbar(self.mapping_2D_canvas, self))
+
+        self.ui.verticalLayout2DMappingCanvas.addWidget(SlippyMapNavigationToolbar(self.mapping_2D_canvas, self))
         self.ui.verticalLayout2DMappingCanvas.addWidget(self.mapping_2D_canvas)
         self.mapping_2D_ax = self.mapping_2D_canvas.figure.subplots()
         self.cbar = None
