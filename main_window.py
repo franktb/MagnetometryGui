@@ -57,7 +57,7 @@ class MainWindow(QMainWindow):
         self.mapping_2D_canvas = FigureCanvas(Figure(figsize=(5, 3)))
         # self.mapping_2D_canvas = MplCanvas(self, 5,3,150)
 
-        self.ui.verticalLayout2DMappingCanvas.addWidget(SlippyMapNavigationToolbar(self.mapping_2D_canvas, self))
+        self.ui.verticalLayout2DMappingCanvas.addWidget(SlippyMapNavigationToolbar(self.mapping_2D_canvas, self,))
         self.ui.verticalLayout2DMappingCanvas.addWidget(self.mapping_2D_canvas)
         self.mapping_2D_ax = self.mapping_2D_canvas.figure.subplots()
         self.cbar = None
@@ -144,13 +144,13 @@ class MainWindow(QMainWindow):
         grid_x, grid_y, grid_z = grid(self.TreeUtil.selected_df["Magnetic_Field_residual"].astype(float), self.data_coordinates,
                                       x_min,
                                       x_max,
-                                      2000j,
+                                      1000j,
                                       y_max,
                                       y_min,
-                                      2000j, "linear")
+                                      1000j, "linear")
 
         end = time.time()
-        print(end - start)
+        print("I am here", end - start)
 
         # self.mapping_2D_ax.imshow(grid_z.T, origin='lower', extent=(x_min , x_max, y_min, y_max ))
         self.mapping_2D_ax.set_xlim([x_min, x_max])
@@ -196,6 +196,7 @@ class MainWindow(QMainWindow):
         self.cbar = self.mapping_2D_canvas.figure.colorbar(self.contourf, ax=self.mapping_2D_ax, orientation="vertical")
         self.cbar.set_label('Anomaly [nT]')
         self.mapping_2D_canvas.draw_idle()
+
 
     def debugTree(self):
         @Slot(list)
