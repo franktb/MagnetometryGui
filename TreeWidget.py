@@ -58,3 +58,12 @@ class TreeUtil():
             thread = Thread(target=self.data_manipulator.dropna_outlier_from_df,
                             args=(item.data_frame,max_mag, min_mag, max_long, min_long, max_lat, min_lat))
             thread.start()
+
+    def drop_from_lasso_select(self, selected_points):
+        for item in self.checked_items_list:
+            thread = Thread(target=self.data_manipulator.drop_from_lasso_select,
+                            args=(item.data_frame,
+                                  selected_points))
+            thread.start()
+
+

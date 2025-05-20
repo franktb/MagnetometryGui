@@ -1,15 +1,17 @@
+from PySide6.QtWidgets import QMessageBox
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 import contextily as cx
 from PySide6.QtGui import QIcon
 from matplotlib.widgets import LassoSelector
 import numpy as np
 from matplotlib.path import Path
+from threading import Thread
 
 class SlippyMapNavigationToolbar(NavigationToolbar):
     def __init__(self, canvas, parent=None):
         super(SlippyMapNavigationToolbar, self).__init__(canvas, parent)
         self.parent = parent
-
+        self.selected_points = None
 
         self.lasso_selector = None
         self.lasso_active = False
@@ -29,7 +31,7 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
             "Custom Tool",
             self.toggle_lasso
         )
-
+        self.lasso_action.setToolTip("Lasso removal")
         self.lasso_action.setCheckable(True)
         self.insertAction(self.actions()[spacer_index], self.lasso_action)
 
@@ -81,6 +83,29 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
 
         self.canvas.draw_idle()
 
+        dlg = QMessageBox(self)
+        dlg.setWindowTitle("Conformation")
+        dlg.setText("Remove marked track line points?")
+        dlg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        dlg.setIcon(QMessageBox.Question)
+        button = dlg.exec()
+
+        if button == QMessageBox.Yes:
+            #print("Yes!")
+            #print(self.selected_points)
+            #if self.selected_points !=None:
+
+            thread = Thread(target=self.parent.data_manipulator.drop_from_lasso_select,
+                                args=(self.parent.TreeUtil.selected_df,
+                                      self.selected_points))
+            thread.start()
+        else:
+            print("No!")
+
+
+
+
+
     def on_select(self, verts):
         ax = self.canvas.figure.axes[0]
         path = Path(verts)
@@ -94,9 +119,9 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
         visible_points = points[visible]
 
         selected = path.contains_points(visible_points)
-        selected_points = visible_points[selected]
+        self.selected_points = visible_points[selected]
 
-        print("Selected points:", selected_points)
+        print("Selected points:", self.selected_points)
 
 
     def release_pan(self, *args):

@@ -11,7 +11,9 @@ class ReadMagCSV():
                                        usecols=["Reading_Date", "Reading_Time", "Magnetic_Field", "GPS_Latitude",
                                                 "GPS_Longitude", "GPS_Easting", "GPS_Northing"],
                                        engine="c",
-                                       low_memory=False)
+                                       low_memory=False,
+                                       dtype=str
+                                       )
 
         # The BOB software indicated missing GPS locations by "*"
         survey_frame_raw = survey_frame_raw[survey_frame_raw["GPS_Longitude"].str.contains(r"\*") == False]

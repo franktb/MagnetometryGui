@@ -1,3 +1,5 @@
+from unittest.mock import inplace
+
 import pandas as pd
 import numpy as np
 
@@ -31,3 +33,12 @@ class DataManipulator():
         df.loc[df["Latitude"] > max_lat, "Latitude"] = np.nan
         df.loc[df["Latitude"] < min_lat, "Latitude"] = np.nan
         df.dropna(inplace=True)
+
+    @staticmethod
+    def drop_from_lasso_select(df, selected_lat_long, tol=1e-5):
+        mask_long = df['Longitude'].apply(
+            lambda x: any(np.isclose(x, val, atol=tol) for val in selected_lat_long[:,0]))
+        mask_lat = df['Latitude'].apply(
+            lambda x: any(np.isclose(x, val, atol=tol) for val in selected_lat_long[:,1]))
+        mask =  ~(mask_long & mask_lat)
+        df.drop(df[~mask].index, inplace=True)
