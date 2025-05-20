@@ -1,9 +1,16 @@
 # fastmask.pyx
 
 from libc.math cimport fabs
+from cython.parallel import prange
 import numpy as np
 cimport numpy as np
+cimport cython
+from cython.parallel cimport parallel
 
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+@cython.cdivision(True)
 def compute_mask(double[:] coord_array,
                  double[:] targets,
                  double tol):
@@ -15,7 +22,7 @@ def compute_mask(double[:] coord_array,
     cdef double current
 
     with nogil:
-        for i in range(coord_len):
+        for i in prange(coord_len, schedule='static'):
             current = coord_array[i]
             for j in range(target_len):
                 if fabs(current - targets[j]) <= tol:
