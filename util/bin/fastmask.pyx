@@ -32,8 +32,10 @@ def compute_mask(double[:] coord_array,
     return mask.astype(np.bool_)
 
 def compute_pairwise_mask(
-                        np.ndarray[np.float64_t, ndim=2] coords,
-                        np.ndarray[np.float64_t, ndim=2] selected,
+                        double[:, ::1] coords,
+                        double[:, ::1] selected,
+                        #np.ndarray[np.float64_t, ndim=2] coords,
+                        #np.ndarray[np.float64_t, ndim=2] selected,
                         double tol):
     cdef Py_ssize_t i, j
     cdef Py_ssize_t n_coords = coords.shape[0]
