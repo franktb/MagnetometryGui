@@ -62,6 +62,7 @@ class MainWindow(QMainWindow):
         self.ui.verticalLayout2DMappingCanvas.addWidget(self.mapping_2D_canvas)
         self.mapping_2D_ax = self.mapping_2D_canvas.figure.subplots()
         self.cbar = None
+        self.contourfplot = None
 
         self.time_series_canvas = FigureCanvas(Figure(figsize=(5, 3)))
         self.ui.verticalLayoutTimeSeriesCanvas.addWidget(NavigationToolbar(self.time_series_canvas))
@@ -94,7 +95,7 @@ class MainWindow(QMainWindow):
         self.ui.layerWidget.addItem(thirdlayer)
 
         forthlayer = QListWidgetItem("Track Lines")
-        forthlayer.setCheckState(Qt.Unchecked)
+        forthlayer.setCheckState(Qt.Checked)
         self.ui.layerWidget.addItem(forthlayer)
 
 
@@ -130,8 +131,16 @@ class MainWindow(QMainWindow):
         self.threadpool.start(worker)
 
     def draw_selection(self):
+
+        try:
+            self.cbar.remove()
+        except:
+            pass
+
+        self.mapping_2D_ax.cla()
         self.data_coordinates = np.array(
-            (self.TreeUtil.selected_df["Longitude"].astype(float), self.TreeUtil.selected_df["Latitude"].astype(float)))
+            (self.TreeUtil.selected_df["Longitude"],
+             self.TreeUtil.selected_df["Latitude"]))
 
         x_min = np.min(self.TreeUtil.selected_df ["Longitude"])
         x_max = np.max(self.TreeUtil.selected_df ["Longitude"])
@@ -142,7 +151,8 @@ class MainWindow(QMainWindow):
 
 
         start = time.time()
-        grid_x, grid_y, grid_z = grid(self.TreeUtil.selected_df["Magnetic_Field_residual"].astype(float), self.data_coordinates,
+        grid_x, grid_y, grid_z = grid(self.TreeUtil.selected_df["Magnetic_Field_residual"],
+                                      self.data_coordinates,
                                       x_min,
                                       x_max,
                                       1000j,
@@ -154,8 +164,8 @@ class MainWindow(QMainWindow):
         print("I am here", end - start)
 
         # self.mapping_2D_ax.imshow(grid_z.T, origin='lower', extent=(x_min , x_max, y_min, y_max ))
-        self.mapping_2D_ax.set_xlim([x_min, x_max])
-        self.mapping_2D_ax.set_ylim([y_min, y_max])
+        self.mapping_2D_ax.set_xlim([x_min-0.1, x_max+0.1])
+        self.mapping_2D_ax.set_ylim([y_min-0.1, y_max+0.1])
 
         cx.add_basemap(self.mapping_2D_ax, crs="EPSG:4326", source=cx.providers.OpenStreetMap.Mapnik)
         self.mapping_2D_ax.set_xlabel("Long [°]")
@@ -164,15 +174,42 @@ class MainWindow(QMainWindow):
 
         bounds = np.array([-300, -200, -100, -50, -20, -10., -5, 0, 5, 10, 20, 50, 100, 200, 300])
         norm = colors.BoundaryNorm(boundaries=bounds, ncolors=256)
-        # self.contourf = self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', extent=(x_min, x_max, y_min, y_max),
+        # self.contourfplot = self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', extent=(x_min, x_max, y_min, y_max),
         #           cmap='RdBu_r' )
 
 
         start = time.time()
-        self.contourf = self.mapping_2D_ax.contourf(grid_x, grid_y, grid_z, 250, origin='lower',
-                                                    extent=(x_min, x_max, y_min, y_max),
+
+        
+
+        #if self.contourfplot is not None:
+        #    print("HELOO")
+        #    self.contourfplot.remove()
+            #for child in self.contourfplot.get_children():
+            #    try:
+            #        print(type(child))
+            #        child.remove()
+            #    except Exception:
+            #        pass
+
+        #try:
+        #    self.cbar.remove()
+        #except:
+        #    pass
+
+        #norm = colors.SymLogNorm(linthresh=1e-3, linscale=1.0, vmin=grid_z.min(), vmax=grid_z.max())
+
+
+
+        masked_grid_z = np.ma.masked_invalid(grid_z)
+        self.contourfplot = self.mapping_2D_ax.pcolormesh(grid_x, grid_y, masked_grid_z, #250,
+                                                    #origin='lower',
+                                                    #extent=(x_min, x_max, y_min, y_max),
                                                     # cmap='RdBu_r', norm=norm)
-                                                    cmap='RdBu_r', norm="symlog")
+                                                    cmap='RdBu_r',
+                                                    norm="symlog"
+                                                    )
+
 
         end = time.time()
         print(end - start)
@@ -181,6 +218,12 @@ class MainWindow(QMainWindow):
         #                            norm=colors.SymLogNorm(linthresh=10, linscale=1,
         #                                                   vmin=np.nanmin(grid_z), vmax=np.nanmax(grid_z), base=10))
 
+
+        try:
+            self.track_lines.remove()
+        except:
+            pass
+
         self.track_lines = self.mapping_2D_ax.scatter(self.data_coordinates[0, :],
                                                       self.data_coordinates[1, :], color="black", s=1)
         if self.ui.layerWidget.item(3).checkState() == Qt.Checked:
@@ -188,15 +231,13 @@ class MainWindow(QMainWindow):
         else:
             self.track_lines.set_visible(False)
 
-        try:
-            self.cbar.remove()
-        except:
-            pass
 
 
-        self.cbar = self.mapping_2D_canvas.figure.colorbar(self.contourf, ax=self.mapping_2D_ax, orientation="vertical")
+
+        self.cbar = self.mapping_2D_canvas.figure.colorbar(self.contourfplot, ax=self.mapping_2D_ax, orientation="vertical")
         self.cbar.set_label('Anomaly [nT]')
         self.mapping_2D_canvas.draw_idle()
+        #print("Number of collections:", len(self.contourfplot.collections))
 
 
     def debugTree(self):
@@ -278,9 +319,9 @@ class MainWindow(QMainWindow):
 
 
         self.TreeUtil.selected_df.loc[:, "Magnetic_Field_Smoothed"] = running_mean_uniform_filter1d(
-            self.TreeUtil.selected_df.loc[:, "Magnetic_Field"].astype(float), 20)
+            self.TreeUtil.selected_df.loc[:, "Magnetic_Field"], 20)
         self.TreeUtil.selected_df.loc[:, "Magnetic_Field_Ambient"] = running_mean_uniform_filter1d(
-            self.TreeUtil.selected_df.loc[:, "Magnetic_Field"].astype(float), 500)
+            self.TreeUtil.selected_df.loc[:, "Magnetic_Field"], 500)
         self.TreeUtil.selected_df.loc[:, "Magnetic_Field_residual"] = self.TreeUtil.selected_df.loc[:,
                                                             "Magnetic_Field_Smoothed"] - self.TreeUtil.selected_df .loc[:,
                                                                                          "Magnetic_Field_Ambient"]

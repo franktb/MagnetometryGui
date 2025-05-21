@@ -99,7 +99,7 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
                                 args=(self.parent.TreeUtil.selected_df,
                                       self.selected_points))
             thread.start()
-            self.parent.TreeUtil.drop_from_lasso_select(self.selected_points)
+            #self.parent.TreeUtil.drop_from_lasso_select(self.selected_points)
         else:
             print("No!")
 
