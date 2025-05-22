@@ -9,7 +9,8 @@ class ReadMagCSV():
                                        delimiter=delimiter,
                                        skiprows=skiprows,
                                        usecols=["Reading_Date", "Reading_Time", "Magnetic_Field", "GPS_Latitude",
-                                                "GPS_Longitude", "GPS_Easting", "GPS_Northing"],
+                                                "GPS_Longitude", #"GPS_Easting", "GPS_Northing"
+                                                ],
                                        engine="c",
                                        low_memory=False,
                                        dtype=str
@@ -26,8 +27,9 @@ class ReadMagCSV():
         survey_frame_raw = survey_frame_raw.astype({"Magnetic_Field":"float64",
                                  "Latitude":"float64",
                                  "Longitude":"float64",
-                                 "GPS_Easting":"float64",
-                                 "GPS_Northing":"float64"})
+                                 #"GPS_Easting":"float64",
+                                 #"GPS_Northing":"float64"
+                                                    })
 
         survey_id = os.path.basename(filename)
         new_survey = Survey(survey_id)

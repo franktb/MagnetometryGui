@@ -155,10 +155,10 @@ class MainWindow(QMainWindow):
                                       self.data_coordinates,
                                       x_min,
                                       x_max,
-                                      1000j,
+                                      2000j,
                                       y_max,
                                       y_min,
-                                      1000j, "linear")
+                                      2000j, "linear")
 
         end = time.time()
         print("I am here", end - start)
@@ -180,27 +180,8 @@ class MainWindow(QMainWindow):
 
         start = time.time()
 
-        
-
-        #if self.contourfplot is not None:
-        #    print("HELOO")
-        #    self.contourfplot.remove()
-            #for child in self.contourfplot.get_children():
-            #    try:
-            #        print(type(child))
-            #        child.remove()
-            #    except Exception:
-            #        pass
-
-        #try:
-        #    self.cbar.remove()
-        #except:
-        #    pass
 
         #norm = colors.SymLogNorm(linthresh=1e-3, linscale=1.0, vmin=grid_z.min(), vmax=grid_z.max())
-
-
-
         masked_grid_z = np.ma.masked_invalid(grid_z)
         self.contourfplot = self.mapping_2D_ax.pcolormesh(grid_x, grid_y, masked_grid_z, #250,
                                                     #origin='lower',
@@ -375,6 +356,7 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
+    pd.set_option('display.max_columns', None)
     app = QApplication(sys.argv)
     widget = MainWindow()
     widget.show()
