@@ -7,7 +7,7 @@ from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBo
     QTreeWidgetItem, QDialog, QListWidgetItem
 from PySide6.QtCore import QThreadPool, Slot, Signal, Qt
 import contextily as cx
-
+from PySide6.QtGui import QIntValidator
 from matplotlib.backends.backend_qtagg import FigureCanvas
 from slippy_map_util import SlippyMapNavigationToolbar
 from matplotlib.figure import Figure
@@ -106,9 +106,28 @@ class MainWindow(QMainWindow):
         self.data_coordinates = None
         self.track_lines = None
 
+        self.validator_smooth = QIntValidator(0, 100000, self)
+        self.ui.lineEdit_smoothingWindow.setValidator(self.validator_smooth)
+        self.validator_ambient = QIntValidator(0, 1000000, self)
+        self.ui.lineEdit_ambientWindow.setValidator(self.validator_ambient)
+
+        self.smoothing_window_length = int(self.ui.lineEdit_smoothingWindow.text())
+        self.ambient_window_length = int(self.ui.lineEdit_ambientWindow.text())
+        self.ui.lineEdit_ambientWindow.editingFinished.connect(self.ambient_lineEdit_change)
+
         self.magCSV = ReadMagCSV()
         # self.ui.treeWidget.setHeaderHidden(True)
         self.threadpool = QThreadPool()
+
+    def ambient_lineEdit_change(self):
+        text = self.ui.lineEdit_ambientWindow.text()
+        state, _, _ = self.ui.lineEdit_ambientWindow.validator().validate(text, 0)
+        if state == QIntValidator.Acceptable:
+            print("Valid integer:", text)
+            self.ambient_window_length = int(text)
+        else:
+            self.ui.lineEdit_ambientWindow.setText(int(self.ambient_window_length))
+            
 
     def layer_update(self):
         print("hello")
@@ -356,7 +375,7 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
-    pd.set_option('display.max_columns', None)
+    #pd.set_option('display.max_columns', None)
     app = QApplication(sys.argv)
     widget = MainWindow()
     widget.show()

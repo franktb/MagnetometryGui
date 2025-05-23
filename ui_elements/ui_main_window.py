@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'main_window.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.9.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -16,10 +16,10 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QHeaderView, QLabel, QListWidget,
-    QListWidgetItem, QMainWindow, QMenu, QMenuBar,
-    QSizePolicy, QStatusBar, QToolBar, QTreeWidget,
-    QTreeWidgetItem, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QHeaderView, QLabel, QLineEdit,
+    QListWidget, QListWidgetItem, QMainWindow, QMenu,
+    QMenuBar, QSizePolicy, QStatusBar, QToolBar,
+    QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
 import resources_rc
 
 class Ui_MainWindow(object):
@@ -99,7 +99,7 @@ class Ui_MainWindow(object):
         self.treeWidget.setGeometry(QRect(10, 10, 291, 501))
         self.layerWidget = QListWidget(self.centralwidget)
         self.layerWidget.setObjectName(u"layerWidget")
-        self.layerWidget.setGeometry(QRect(1250, 40, 291, 251))
+        self.layerWidget.setGeometry(QRect(1250, 40, 291, 111))
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(1250, 10, 291, 19))
@@ -109,6 +109,18 @@ class Ui_MainWindow(object):
         self.verticalLayoutTimeSeriesCanvas_2 = QVBoxLayout(self.verticalLayoutWidget_3)
         self.verticalLayoutTimeSeriesCanvas_2.setObjectName(u"verticalLayoutTimeSeriesCanvas_2")
         self.verticalLayoutTimeSeriesCanvas_2.setContentsMargins(0, 0, 0, 0)
+        self.label_2 = QLabel(self.centralwidget)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setGeometry(QRect(1250, 160, 291, 19))
+        self.label_3 = QLabel(self.centralwidget)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setGeometry(QRect(1250, 220, 291, 19))
+        self.lineEdit_smoothingWindow = QLineEdit(self.centralwidget)
+        self.lineEdit_smoothingWindow.setObjectName(u"lineEdit_smoothingWindow")
+        self.lineEdit_smoothingWindow.setGeometry(QRect(1250, 190, 291, 27))
+        self.lineEdit_ambientWindow = QLineEdit(self.centralwidget)
+        self.lineEdit_ambientWindow.setObjectName(u"lineEdit_ambientWindow")
+        self.lineEdit_ambientWindow.setGeometry(QRect(1250, 240, 291, 27))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -188,6 +200,10 @@ class Ui_MainWindow(object):
         self.actionCSV.setText(QCoreApplication.translate("MainWindow", u"CSV", None))
         self.actionGeoTiff.setText(QCoreApplication.translate("MainWindow", u"GeoTiff", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Display Layers:", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Smoothing window size:", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Ambient estimation window size:", None))
+        self.lineEdit_smoothingWindow.setText(QCoreApplication.translate("MainWindow", u"20", None))
+        self.lineEdit_ambientWindow.setText(QCoreApplication.translate("MainWindow", u"500", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"&File", None))
         self.menuOpen_Survey.setTitle(QCoreApplication.translate("MainWindow", u"Import Survey", None))
         self.menuExport_Grid.setTitle(QCoreApplication.translate("MainWindow", u"Export Grid", None))
