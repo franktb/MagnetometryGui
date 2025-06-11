@@ -180,8 +180,14 @@
      <string>&amp;Edit</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuExperimental">
+    <property name="title">
+     <string>Experimental</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuExperimental"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -219,7 +225,7 @@
     <string>DinuralCorrection</string>
    </property>
    <property name="toolTip">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:20pt; font-weight:600;&quot;&gt;DC&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>Diurnal correction</string>
    </property>
   </action>
   <action name="actionSmoothSurvey">

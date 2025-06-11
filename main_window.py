@@ -55,6 +55,8 @@ class MainWindow(QMainWindow):
         self.ui.actionDrawSelect.triggered.connect(self.draw_selection)
         self.ui.actionRemoveOutlier.triggered.connect(self.remove_outlier)
 
+        self.ui.actioncalcResiduals.triggered.connect(self.calc_residuals)
+
         self.mapping_2D_canvas = FigureCanvas(Figure(figsize=(5, 3)))
         # self.mapping_2D_canvas = MplCanvas(self, 5,3,150)
 
@@ -119,6 +121,9 @@ class MainWindow(QMainWindow):
         # self.ui.treeWidget.setHeaderHidden(True)
         self.threadpool = QThreadPool()
 
+    def diurnal_correction(self):
+        return 0
+
     def ambient_lineEdit_change(self):
         text = self.ui.lineEdit_ambientWindow.text()
         state, _, _ = self.ui.lineEdit_ambientWindow.validator().validate(text, 0)
@@ -127,7 +132,7 @@ class MainWindow(QMainWindow):
             self.ambient_window_length = int(text)
         else:
             self.ui.lineEdit_ambientWindow.setText(int(self.ambient_window_length))
-            
+
 
     def layer_update(self):
         print("hello")
@@ -240,24 +245,6 @@ class MainWindow(QMainWindow):
         #print("Number of collections:", len(self.contourfplot.collections))
 
 
-    def debugTree(self):
-        @Slot(list)
-        def retrieve_user_input(inputs):
-            max_mag, min_mag, max_long, min_long, max_lat, min_lat = inputs
-
-            self.TreeUtil.selected_df.sort_values(by='datetime')
-            self.TreeUtil.selected_df.loc[
-                self.TreeUtil.selected_df["Magnetic_Field"] < max_mag, "Magnetic_Field"] = np.nan
-            self.TreeUtil.selected_df.loc[
-                self.TreeUtil.selected_df["Magnetic_Field"] > min_mag, "Magnetic_Field"] = np.nan
-            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] < -8.6, "Longitude"] = np.nan
-            self.TreeUtil.selected_df.loc[self.TreeUtil.selected_df["Longitude"] < -8.6, "Longitude"] = np.nan
-            # self.TreeUtil.selected_df.ffill(inplace=True)
-
-        dlg = ColumnSelectDlg(self)
-        dlg.data_signal.connect(retrieve_user_input)
-        dlg.exec()
-
     def create_new_project(self):
         project_name, ok = QInputDialog.getText(self, 'Input Dialog', 'Enter project name:')
         if ok:
@@ -314,18 +301,18 @@ class MainWindow(QMainWindow):
         dlg.data_signal.connect(retrieve_user_input)
         dlg.exec()
 
-    def draw_1d_selected(self):
+    def calc_residuals(self):
         self.TreeUtil.selected_df = self.TreeUtil.selected_df.sort_values(by='datetime')
-
-
         self.TreeUtil.selected_df.loc[:, "Magnetic_Field_Smoothed"] = running_mean_uniform_filter1d(
-            self.TreeUtil.selected_df.loc[:, "Magnetic_Field"], 20)
+            self.TreeUtil.selected_df.loc[:, "Magnetic_Field"], self.smoothing_window_length)
         self.TreeUtil.selected_df.loc[:, "Magnetic_Field_Ambient"] = running_mean_uniform_filter1d(
-            self.TreeUtil.selected_df.loc[:, "Magnetic_Field"], 500)
+            self.TreeUtil.selected_df.loc[:, "Magnetic_Field"], self.ambient_window_length)
         self.TreeUtil.selected_df.loc[:, "Magnetic_Field_residual"] = self.TreeUtil.selected_df.loc[:,
                                                             "Magnetic_Field_Smoothed"] - self.TreeUtil.selected_df .loc[:,
                                                                                          "Magnetic_Field_Ambient"]
-
+                    
+    def draw_1d_selected(self):
+        self.TreeUtil.selected_df = self.TreeUtil.selected_df.sort_values(by='datetime')
         self.time_series_ax.cla()
         self.time_series_ax.plot(self.TreeUtil.selected_df["datetime"], self.TreeUtil.selected_df["Magnetic_Field"])
         self.time_series_ax.set_ylabel("Total mag field $B$ [nT]")

@@ -19,6 +19,8 @@ def compute_mask(double[:] coord_array,
     cdef Py_ssize_t target_len = targets.shape[0]
     cdef np.ndarray[np.uint8_t, ndim=1] mask = np.zeros(coord_len, dtype=np.uint8)
 
+
+
     cdef Py_ssize_t i, j
     cdef double current
 
