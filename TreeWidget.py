@@ -42,10 +42,10 @@ class TreeUtil():
         recurse(self.tree.invisibleRootItem())
         survey_combined = pd.concat([item.data_frame for item in checked_items], ignore_index=True)
         self.selected_df = survey_combined
-        print("survey combined")
-        print(survey_combined)
-        print(survey_combined.shape)
-        print("  ")
+        #print("survey combined")
+        #print(survey_combined)
+        #print(survey_combined.shape)
+        #print("  ")
 
     def ffill_outlier(self, max_mag, min_mag, max_long, min_long, max_lat, min_lat):
         for item in self.checked_items_list:

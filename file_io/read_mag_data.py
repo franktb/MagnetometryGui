@@ -2,19 +2,28 @@ import pandas as pd
 import os
 from data_model import Survey, SurveyFrame
 from PySide6.QtCore import Qt
+from multiprocessing import Queue
+
+from worker import PWorker
+
 
 class ReadMagCSV():
     def read_from_BOBCSV(self, filename, delimiter, skiprows, project):
-        survey_frame_raw = pd.read_csv(filename,
-                                       delimiter=delimiter,
-                                       skiprows=skiprows,
-                                       usecols=["Reading_Date", "Reading_Time", "Magnetic_Field", "GPS_Latitude",
-                                                "GPS_Longitude", #"GPS_Easting", "GPS_Northing"
-                                                ],
-                                       engine="c",
-                                       low_memory=False,
-                                       dtype=str
-                                       )
+        queue = Queue()
+        myPworker = PWorker(pd.read_csv,
+                            result_queue=queue,
+                            filepath_or_buffer=filename,
+                            delimiter=delimiter,
+                            skiprows=skiprows,
+                            usecols=["Reading_Date", "Reading_Time", "Magnetic_Field", "GPS_Latitude","GPS_Longitude", "GPS_Easting", "GPS_Northing"],
+                            engine ="c",
+                            low_memory=False,
+                            dtype=str
+                            )
+        myPworker.start()
+        survey_frame_raw = queue.get()
+        myPworker.join()
+
 
         # The BOB software indicated missing GPS locations by "*"
         survey_frame_raw = survey_frame_raw[survey_frame_raw["GPS_Longitude"].str.contains(r"\*") == False]

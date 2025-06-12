@@ -23,7 +23,7 @@ import numpy as np
 
 import matplotlib.colors as colors
 
-from worker import Worker
+from worker import Worker, PWorker
 
 from util.gridding import grid
 from util.filter import running_mean_uniform_filter1d
@@ -113,6 +113,10 @@ class MainWindow(QMainWindow):
         self.validator_ambient = QIntValidator(0, 1000000, self)
         self.ui.lineEdit_ambientWindow.setValidator(self.validator_ambient)
 
+        self.validator_nthSelect = QIntValidator(0, 10000, self)
+        self.ui.lineEdit_nthSelectWindow.setValidator(self.validator_nthSelect)
+
+
         self.smoothing_window_length = int(self.ui.lineEdit_smoothingWindow.text())
         self.ambient_window_length = int(self.ui.lineEdit_ambientWindow.text())
         self.ui.lineEdit_ambientWindow.editingFinished.connect(self.ambient_lineEdit_change)
@@ -162,9 +166,11 @@ class MainWindow(QMainWindow):
             pass
 
         self.mapping_2D_ax.cla()
+
+        nth_select = int(self.ui.lineEdit_nthSelectWindow.text())
         self.data_coordinates = np.array(
-            (self.TreeUtil.selected_df["Longitude"],
-             self.TreeUtil.selected_df["Latitude"]))
+            (self.TreeUtil.selected_df["Longitude"].iloc[::nth_select],
+             self.TreeUtil.selected_df["Latitude"].iloc[::nth_select]))
 
         x_min = np.min(self.TreeUtil.selected_df ["Longitude"])
         x_max = np.max(self.TreeUtil.selected_df ["Longitude"])
@@ -175,7 +181,8 @@ class MainWindow(QMainWindow):
 
 
         start = time.time()
-        grid_x, grid_y, grid_z = grid(self.TreeUtil.selected_df["Magnetic_Field_residual"],
+
+        grid_x, grid_y, grid_z = grid(self.TreeUtil.selected_df["Magnetic_Field_residual"].iloc[::nth_select],
                                       self.data_coordinates,
                                       x_min,
                                       x_max,
@@ -264,6 +271,7 @@ class MainWindow(QMainWindow):
                             project=self.TreeUtil
                             )
 
+            #worker.start()
             self.threadpool.start(worker)
         else:
             QMessageBox.critical(self, "File IO Error", "No text file selected!", )
