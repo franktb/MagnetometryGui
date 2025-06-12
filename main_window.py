@@ -1,12 +1,12 @@
 import sys
-
+from multiprocessing import Queue
 
 from TreeWidget import TreeUtil
 from file_io.write_mag_data import WriteMagCSV
 from ui_elements.ui_main_window import Ui_MainWindow
 from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QInputDialog, QTreeWidget, \
     QTreeWidgetItem, QDialog, QListWidgetItem
-from PySide6.QtCore import QThreadPool, Slot, Signal, Qt
+from PySide6.QtCore import QThreadPool, Slot, Signal, Qt, QTimer
 import contextily as cx
 from PySide6.QtGui import QIntValidator
 from matplotlib.backends.backend_qtagg import FigureCanvas
@@ -30,6 +30,7 @@ from util.gridding import grid
 from util.filter import running_mean_uniform_filter1d
 from ui_elements.dialogs import *
 import time
+import util
 
 
 class MplCanvas(FigureCanvas):
@@ -144,6 +145,8 @@ class MainWindow(QMainWindow):
         # self.ui.treeWidget.setHeaderHidden(True)
         self.threadpool = QThreadPool()
 
+        self.grid_queue = Queue()
+
     def write_to_csv(self):
         return 0
         #self.writeCSV.write_to_CSV(filename=filename, )
@@ -210,15 +213,28 @@ class MainWindow(QMainWindow):
         worker = Worker(self.TreeUtil.checked_items)
         self.threadpool.start(worker)
 
+
+
+
+    def check_worker_result(self):
+        if not self.grid_queue.empty():
+            self.timer.stop()
+            result = self.grid_queue.get()
+
+            if isinstance(result, Exception):
+                print("Worker failed:", result)
+                return
+
+            self.grid_x, self.grid_y, self.grid_z = result
+            self.update_plot()
+
+
+
+
+
+
+
     def draw_selection(self):
-
-        try:
-            self.cbar.remove()
-        except:
-            pass
-
-        self.mapping_2D_ax.cla()
-
         nth_select = int(self.ui.lineEdit_nthSelectWindow.text())
         self.data_coordinates = np.array(
             (self.TreeUtil.selected_df["Longitude"].iloc[::nth_select],
@@ -231,20 +247,40 @@ class MainWindow(QMainWindow):
         y_max = np.max(self.TreeUtil.selected_df ["Latitude"])
 
 
+        myPworker = PWorker(util.gridding.grid,
+                            self.TreeUtil.selected_df["Magnetic_Field_residual"].iloc[::nth_select],
+                            self.data_coordinates,
+                            x_min,
+                            x_max,
+                            complex(0, self.eastingsSampleRate),
+                            y_max,
+                            y_min,
+                            complex(0, self.northingsSampleRate), "linear",result_queue=self.grid_queue,)
 
-        start = time.time()
 
-        grid_x, grid_y, grid_z = grid(self.TreeUtil.selected_df["Magnetic_Field_residual"].iloc[::nth_select],
-                                      self.data_coordinates,
-                                      x_min,
-                                      x_max,
-                                      complex(0,self.eastingsSampleRate),
-                                      y_max,
-                                      y_min,
-                                      complex(0,self.northingsSampleRate), "linear")
+        myPworker.start()
 
-        end = time.time()
-        print("I am here", end - start)
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.check_worker_result)
+        self.timer.start(100)
+
+
+
+
+    def update_plot(self,):
+
+        try:
+            self.cbar.remove()
+        except:
+            pass
+
+        self.mapping_2D_ax.cla()
+
+        #self.grid_x, self.grid_y, self.grid_z = result
+        x_min, x_max = np.min(self.grid_x), np.max(self.grid_x)
+        y_min, y_max = np.min(self.grid_y), np.max(self.grid_y)
+
+
 
         # self.mapping_2D_ax.imshow(grid_z.T, origin='lower', extent=(x_min , x_max, y_min, y_max ))
         self.mapping_2D_ax.set_xlim([x_min-0.1, x_max+0.1])
@@ -265,8 +301,8 @@ class MainWindow(QMainWindow):
 
 
         #norm = colors.SymLogNorm(linthresh=1e-3, linscale=1.0, vmin=grid_z.min(), vmax=grid_z.max())
-        masked_grid_z = np.ma.masked_invalid(grid_z)
-        self.contourfplot = self.mapping_2D_ax.pcolormesh(grid_x, grid_y, masked_grid_z, #250,
+        masked_grid_z = np.ma.masked_invalid(self.grid_z)
+        self.contourfplot = self.mapping_2D_ax.pcolormesh(self.grid_x, self.grid_y, masked_grid_z, #250,
                                                     #origin='lower',
                                                     #extent=(x_min, x_max, y_min, y_max),
                                                     # cmap='RdBu_r', norm=norm)

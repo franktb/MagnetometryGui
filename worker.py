@@ -31,12 +31,13 @@ class PWorker():
                                args=(fn, args, kwargs, result_queue)
                                )
         print("Thread start")
-        print(args, kwargs)
+        #print(args, kwargs)
 
     @staticmethod
     def target_wrapper(fn, args, kwargs, result_queue):
         try:
             result = fn(*args, **kwargs)
+            print(type(result))
             if result_queue:
                 result_queue.put(result)
         except Exception as e:
