@@ -117,18 +117,27 @@ class MainWindow(QMainWindow):
         self.validator_ambient = QIntValidator(0, 1000000, self)
         self.ui.lineEdit_ambientWindow.setValidator(self.validator_ambient)
 
+        self.validator_easting = QIntValidator(0,5000,self)
+        self.validator_northing = QIntValidator(0, 5000, self)
+        self.ui.lineEdit_eastingsSampleRate.setValidator(self.validator_easting)
+        self.ui.lineEdit_northingsSampleRate.setValidator(self.validator_northing)
+
+
         self.validator_nthSelect = QIntValidator(0, 10000, self)
         self.ui.lineEdit_nthSelectWindow.setValidator(self.validator_nthSelect)
 
 
         self.smoothing_window_length = int(self.ui.lineEdit_smoothingWindow.text())
         self.ambient_window_length = int(self.ui.lineEdit_ambientWindow.text())
-
-
+        self.eastingsSampleRate = int(self.ui.lineEdit_eastingsSampleRate.text())
+        self.northingsSampleRate = int(self.ui.lineEdit_northingsSampleRate.text())
 
 
         self.ui.lineEdit_ambientWindow.textEdited.connect(self.ambient_lineEdit_change)
         self.ui.lineEdit_smoothingWindow.textEdited.connect(self.smoothing_lineEdit_change)
+
+        self.ui.lineEdit_northingsSampleRate.textEdited.connect(self.northings_lineEdit_change)
+        self.ui.lineEdit_eastingsSampleRate.textEdited.connect(self.eastings_lineEdit_change)
 
         self.readCSV = ReadMagCSV()
         self.writeCSV = WriteMagCSV()
@@ -142,9 +151,24 @@ class MainWindow(QMainWindow):
     def diurnal_correction(self):
         return 0
 
+    def northings_lineEdit_change(self):
+        state, text = self.lineEdit_validate(self.ui.lineEdit_northingsSampleRate)
+        if state == QIntValidator.Acceptable:
+            print("Valid integer:", text)
+            self.northingsSampleRate = int(text)
+        else:
+            self.ui.lineEdit_northingsSampleRate.setText(str(self.northingsSampleRate))
+
+    def eastings_lineEdit_change(self):
+        state, text = self.lineEdit_validate(self.ui.lineEdit_eastingsSampleRate)
+        if state == QIntValidator.Acceptable:
+            print("Valid integer:", text)
+            self.eastingsSampleRate = int(text)
+        else:
+            self.ui.lineEdit_eastingsSampleRate.setText(str(self.eastingsSampleRate))
+
     def ambient_lineEdit_change(self):
-        text = self.ui.lineEdit_ambientWindow.text()
-        state, _, _ = self.ui.lineEdit_ambientWindow.validator().validate(text, 0)
+        state, text = self.lineEdit_validate(self.ui.lineEdit_ambientWindow)
         if state == QIntValidator.Acceptable:
             print("Valid integer:", text)
             self.ambient_window_length = int(text)
@@ -153,13 +177,17 @@ class MainWindow(QMainWindow):
             self.ui.lineEdit_ambientWindow.setText(str(self.ambient_window_length))
 
     def smoothing_lineEdit_change(self):
-        text = self.ui.lineEdit_smoothingWindow.text()
-        state,_,_=self.ui.lineEdit_smoothingWindow.validator().validate(text, 0)
+        state, text = self.lineEdit_validate(self.ui.lineEdit_smoothingWindow)
         if state == QIntValidator.Acceptable:
             print("Valid integer:", text)
             self.smoothing_window_length = int(text)
         else:
             self.ui.lineEdit_smoothingWindow.setText(str(self.smoothing_window_length))
+
+
+    def lineEdit_validate(self, line_edit):
+        state, text, _ = line_edit.validator().validate(line_edit.text(), 0)
+        return state, text
 
 
     def layer_update(self):
@@ -210,10 +238,10 @@ class MainWindow(QMainWindow):
                                       self.data_coordinates,
                                       x_min,
                                       x_max,
-                                      2000j,
+                                      complex(0,self.eastingsSampleRate),
                                       y_max,
                                       y_min,
-                                      2000j, "linear")
+                                      complex(0,self.northingsSampleRate), "linear")
 
         end = time.time()
         print("I am here", end - start)
