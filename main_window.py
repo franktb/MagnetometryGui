@@ -2,6 +2,7 @@ import sys
 
 
 from TreeWidget import TreeUtil
+from file_io.write_mag_data import WriteMagCSV
 from ui_elements.ui_main_window import Ui_MainWindow
 from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QInputDialog, QTreeWidget, \
     QTreeWidgetItem, QDialog, QListWidgetItem
@@ -56,6 +57,9 @@ class MainWindow(QMainWindow):
         self.ui.actionRemoveOutlier.triggered.connect(self.remove_outlier)
 
         self.ui.actioncalcResiduals.triggered.connect(self.calc_residuals)
+
+        self.ui.actionCSV.triggered.connect(self.write_to_csv)
+
 
         self.mapping_2D_canvas = FigureCanvas(Figure(figsize=(5, 3)))
         # self.mapping_2D_canvas = MplCanvas(self, 5,3,150)
@@ -119,11 +123,21 @@ class MainWindow(QMainWindow):
 
         self.smoothing_window_length = int(self.ui.lineEdit_smoothingWindow.text())
         self.ambient_window_length = int(self.ui.lineEdit_ambientWindow.text())
-        self.ui.lineEdit_ambientWindow.editingFinished.connect(self.ambient_lineEdit_change)
 
-        self.magCSV = ReadMagCSV()
+
+
+
+        self.ui.lineEdit_ambientWindow.textEdited.connect(self.ambient_lineEdit_change)
+        self.ui.lineEdit_smoothingWindow.textEdited.connect(self.smoothing_lineEdit_change)
+
+        self.readCSV = ReadMagCSV()
+        self.writeCSV = WriteMagCSV()
         # self.ui.treeWidget.setHeaderHidden(True)
         self.threadpool = QThreadPool()
+
+    def write_to_csv(self):
+        return 0
+        #self.writeCSV.write_to_CSV(filename=filename, )
 
     def diurnal_correction(self):
         return 0
@@ -134,8 +148,18 @@ class MainWindow(QMainWindow):
         if state == QIntValidator.Acceptable:
             print("Valid integer:", text)
             self.ambient_window_length = int(text)
+            self.validator_smooth.setRange(0, self.ambient_window_length)
         else:
-            self.ui.lineEdit_ambientWindow.setText(int(self.ambient_window_length))
+            self.ui.lineEdit_ambientWindow.setText(str(self.ambient_window_length))
+
+    def smoothing_lineEdit_change(self):
+        text = self.ui.lineEdit_smoothingWindow.text()
+        state,_,_=self.ui.lineEdit_smoothingWindow.validator().validate(text, 0)
+        if state == QIntValidator.Acceptable:
+            print("Valid integer:", text)
+            self.smoothing_window_length = int(text)
+        else:
+            self.ui.lineEdit_smoothingWindow.setText(str(self.smoothing_window_length))
 
 
     def layer_update(self):
@@ -264,7 +288,7 @@ class MainWindow(QMainWindow):
         # if self.project != None:
         selected_survey = QFileDialog.getOpenFileName(filter="All Files(*);;Text files(*.csv *.txt)")
         if selected_survey[0].endswith((".txt", ".csv")):
-            worker = Worker(self.magCSV.read_from_BOBCSV,
+            worker = Worker(self.readCSV.read_from_BOBCSV,
                             selected_survey[0],
                             delimiter=",",
                             skiprows=5,
@@ -281,7 +305,7 @@ class MainWindow(QMainWindow):
                                                            caption="Select directory",
                                                            options=QFileDialog.Option.ShowDirsOnly)
         print(selected_folder)
-        worker = Worker(self.magCSV.read_from_SeaLINKFolderXYZ,
+        worker = Worker(self.readCSV.read_from_SeaLINKFolderXYZ,
                         selected_folder,
                         project=self.TreeUtil,
                         )
@@ -295,7 +319,7 @@ class MainWindow(QMainWindow):
 
             print(inputs[-1])
             print(inputs[1:-1])
-            worker = Worker(self.magCSV.read_from_customCSV,
+            worker = Worker(self.readCSV.read_from_customCSV,
                             inputs[0],
                             delimiter=",",
                             skiprows=int(inputs[-1]),
