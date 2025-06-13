@@ -61,6 +61,8 @@ class MainWindow(QMainWindow):
 
         self.ui.actionCSV.triggered.connect(self.write_to_csv)
 
+        self.ui.actionGeoTiff.triggered.connect(self.write_to_geotiff)
+
 
         self.mapping_2D_canvas = FigureCanvas(Figure(figsize=(5, 3)))
         # self.mapping_2D_canvas = MplCanvas(self, 5,3,150)
@@ -149,7 +151,10 @@ class MainWindow(QMainWindow):
 
     def write_to_csv(self):
         return 0
-        #self.writeCSV.write_to_CSV(filename=filename, )
+
+
+    def write_to_geotiff(self):
+        self.writeCSV.write_to_GeoTiff("myGeoTiff.tif",self.grid_x,self.grid_y,self.grid_z )
 
     def diurnal_correction(self):
         return 0

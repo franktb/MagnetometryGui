@@ -38,43 +38,7 @@ class DataManipulator():
 
     @staticmethod
     def drop_from_lasso_select(df, selected_lat_long, tol=1e-8):
-        """
-        df.sort_values(by='datetime')
-        print("")
-        print("")
-        long_array = df['Longitude'].to_numpy().astype(np.float64)
-        target_longs = selected_lat_long[:, 0].data.astype(np.float64) #selected_lat_long is a masked array
-        #target_longs.sort()
-        mask_long = compute_mask(long_array, target_longs, tol)
-        #np.savetxt("longInputs.txt", long_array)
-        #np.savetxt("debugTargetsLong.txt", mask_long.T)
-
-        lat_array = df['Latitude'].to_numpy().astype(np.float64)
-        target_lats = selected_lat_long[:, 1].data.astype(np.float64) #selected_lat_long is a masked array
-        #target_lats.sort()
-        mask_lat = compute_mask(lat_array, target_lats, tol)
-        np.savetxt("debugInputsLat.txt", lat_array)
-        np.savetxt("debugTargetsLat.txt", target_lats.T)
-        np.savetxt("debugMaskLat.txt", mask_lat.T)
-
-        mask =  ~(mask_long & mask_lat)
-        print("lat bool", np.sum(mask_lat))
-        print("long bool", np.sum(mask_long))
-        print("mask bool", np.sum(mask))
-
-        print(selected_lat_long.shape)
-        print(df.shape)
-        print(mask.shape)
-        df.drop(df[~mask].index, inplace=True)
-        print("")
-        print("")
-        print("DONE!!!")
-        print(df.shape)
-        """
-
         df.sort_values(by='datetime', inplace=True)
-        print(df)
-        #pd.set_option('display.max_rows', None)
         lat_array = df['Latitude'].to_numpy().astype(np.float64)
         long_array = df['Longitude'].to_numpy().astype(np.float64)
         coord_array = np.stack((long_array, lat_array), axis=1)  # Shape: (N, 2)
