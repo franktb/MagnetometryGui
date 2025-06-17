@@ -1,4 +1,6 @@
 import sys
+import os
+import multiprocessing
 from multiprocessing import Queue
 
 from TreeWidget import TreeUtil
@@ -464,6 +466,12 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     #pd.set_option('display.max_columns', None)
+    if getattr(sys, 'frozen', False):
+        # For PyInstaller bundled app
+        os.environ['PROJ_DATA'] = os.path.join(sys._MEIPASS, 'pyproj', 'proj')
+
+    multiprocessing.freeze_support()
+
     app = QApplication(sys.argv)
     widget = MainWindow()
     widget.show()

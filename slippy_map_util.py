@@ -81,7 +81,7 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
             self.lasso_selector.disconnect_events()
             self.lasso_selector = None
 
-        self.canvas.draw_idle()
+        #self.canvas.draw_idle()
 
         dlg = QMessageBox(self)
         dlg.setWindowTitle("Conformation")
