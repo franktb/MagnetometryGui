@@ -155,12 +155,29 @@ class MainWindow(QMainWindow):
         widgetFFT.show()
 
     def write_to_csv(self):
-        return 0
+        filename, _ = QFileDialog.getSaveFileName(
+            self,
+            "Save as text",
+            "",
+            ".csv (*.csv);;All Files (*)"
+        )
+        if not filename.lower().endswith(".csv"):
+            filename += ".csv"
+        print(np.column_stack((self.grid_x, self.grid_y, self.grid_z)).shape)
+        flat_x = self.grid_x.ravel()
+        flat_y = self.grid_y.ravel()
+        flat_z = self.grid_z.ravel()
+        df = pd.DataFrame({
+            "Longitude": flat_x,
+            "Latitude": flat_y,
+            "Value": flat_z
+        })
+        df.to_csv(filename, index=False)
 
     def write_to_geotiff(self):
         filename, _ = QFileDialog.getSaveFileName(
             self,
-            "Save GeoTIFF",
+            "Save as GeoTIFF",
             "",
             "GeoTIFF files (*.tif);;All Files (*)"
         )
@@ -168,7 +185,7 @@ class MainWindow(QMainWindow):
             # Ensure the filename ends with .tif
             if not filename.lower().endswith(".tif"):
                 filename += ".tif"
-                self.writeCSV.write_to_GeoTiff(filename, self.grid_x, self.grid_y, self.grid_z)
+            self.writeCSV.write_to_GeoTiff(filename, self.grid_x.rave, self.grid_y, self.grid_z)
 
     def diurnal_correction(self):
         return 0
