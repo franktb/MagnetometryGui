@@ -49,16 +49,16 @@ class TreeUtil():
 
     def ffill_outlier(self, max_mag, min_mag, max_long, min_long, max_lat, min_lat):
         for item in self.checked_items_list:
-            thread = Thread(target=self.data_manipulator.ffill_outlier_from_df,
-                            args=(item.data_frame,max_mag, min_mag, max_long, min_long, max_lat, min_lat))
-            thread.start()
+            self.data_manipulator.ffill_outlier_from_df(
+                item.data_frame,max_mag, min_mag, max_long, min_long, max_lat, min_lat)
+        self.checked_items()
 
 
     def dropna_outlier(self, max_mag, min_mag, max_long, min_long, max_lat, min_lat):
         for item in self.checked_items_list:
-            thread = Thread(target=self.data_manipulator.dropna_outlier_from_df,
-                            args=(item.data_frame,max_mag, min_mag, max_long, min_long, max_lat, min_lat))
-            thread.start()
+            self.data_manipulator.dropna_outlier_from_df(
+                item.data_frame,max_mag, min_mag, max_long, min_long, max_lat, min_lat)
+        self.checked_items()
 
     def drop_from_lasso_select(self, selected_points):
         for item in self.checked_items_list:

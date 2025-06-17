@@ -242,6 +242,7 @@ class MainWindow(QMainWindow):
 
 
     def draw_selection(self):
+        self.TreeUtil.selected_df = self.TreeUtil.selected_df.sort_values(by='datetime')
         nth_select = int(self.ui.lineEdit_nthSelectWindow.text())
         self.data_coordinates = np.array(
             (self.TreeUtil.selected_df["Longitude"].iloc[::nth_select],
@@ -437,23 +438,19 @@ class MainWindow(QMainWindow):
                 max_mag, min_mag, max_long, min_long, max_lat, min_lat = [float(i) for i in inputs[:-1]]
                 if inputs[-1] == "Remove entry":
                     print(("Here"))
-                    #print(self.TreeUtil.selected_df.shape)
-                    worker = Worker(self.data_manipulator.dropna_outlier_from_df,
-                                    self.TreeUtil.selected_df,
+
+                    worker = Worker(self.TreeUtil.dropna_outlier,
                                     max_mag, min_mag, max_long, min_long, max_lat, min_lat
                                     )
                     self.threadpool.start(worker)
-                    self.TreeUtil.dropna_outlier(max_mag, min_mag, max_long, min_long, max_lat, min_lat)
                 elif inputs[-1]  == "Use last value":
-                    worker = Worker(self.data_manipulator.ffill_outlier_from_df,
-                                    self.TreeUtil.selected_df,
+                    worker = Worker(self.TreeUtil.ffill_outlier,
                                     max_mag, min_mag, max_long, min_long, max_lat, min_lat
                                     )
                     self.threadpool.start(worker)
-                    self.TreeUtil.ffill_outlier(max_mag, min_mag, max_long, min_long, max_lat, min_lat)
 
                 elif  inputs[-1]  == "Interpolate neighbours":
-                    raise("not implemnted")
+                    raise("not implemented")
 
 
             except ValueError:
