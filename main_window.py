@@ -4,6 +4,7 @@ import multiprocessing
 from multiprocessing import Queue
 
 from TreeWidget import TreeUtil
+from fft_window import FFTWindow
 from file_io.write_mag_data import WriteMagCSV
 from ui_elements.ui_main_window import Ui_MainWindow
 from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QInputDialog, QTreeWidget, \
@@ -64,12 +65,13 @@ class MainWindow(QMainWindow):
         self.ui.actionCSV.triggered.connect(self.write_to_csv)
 
         self.ui.actionGeoTiff.triggered.connect(self.write_to_geotiff)
+        self.ui.actionDownward_continuation.triggered.connect(self.spawn_fft_window)
 
 
         self.mapping_2D_canvas = FigureCanvas(Figure(figsize=(5, 3)))
         # self.mapping_2D_canvas = MplCanvas(self, 5,3,150)
 
-        self.ui.verticalLayout2DMappingCanvas.addWidget(SlippyMapNavigationToolbar(self.mapping_2D_canvas, self,))
+        self.ui.verticalLayout2DMappingCanvas.addWidget(SlippyMapNavigationToolbar(self.mapping_2D_canvas, self, ))
         self.ui.verticalLayout2DMappingCanvas.addWidget(self.mapping_2D_canvas)
         self.mapping_2D_ax = self.mapping_2D_canvas.figure.subplots()
         self.cbar = None
@@ -109,9 +111,7 @@ class MainWindow(QMainWindow):
         forthlayer.setCheckState(Qt.Checked)
         self.ui.layerWidget.addItem(forthlayer)
 
-
         self.ui.layerWidget.itemChanged.connect(self.layer_update)
-
 
         self.data_manipulator = DataManipulator()
         self.data_coordinates = None
@@ -122,21 +122,18 @@ class MainWindow(QMainWindow):
         self.validator_ambient = QIntValidator(0, 1000000, self)
         self.ui.lineEdit_ambientWindow.setValidator(self.validator_ambient)
 
-        self.validator_easting = QIntValidator(0,5000,self)
+        self.validator_easting = QIntValidator(0, 5000, self)
         self.validator_northing = QIntValidator(0, 5000, self)
         self.ui.lineEdit_eastingsSampleRate.setValidator(self.validator_easting)
         self.ui.lineEdit_northingsSampleRate.setValidator(self.validator_northing)
 
-
         self.validator_nthSelect = QIntValidator(0, 10000, self)
         self.ui.lineEdit_nthSelectWindow.setValidator(self.validator_nthSelect)
-
 
         self.smoothing_window_length = int(self.ui.lineEdit_smoothingWindow.text())
         self.ambient_window_length = int(self.ui.lineEdit_ambientWindow.text())
         self.eastingsSampleRate = int(self.ui.lineEdit_eastingsSampleRate.text())
         self.northingsSampleRate = int(self.ui.lineEdit_northingsSampleRate.text())
-
 
         self.ui.lineEdit_ambientWindow.textEdited.connect(self.ambient_lineEdit_change)
         self.ui.lineEdit_smoothingWindow.textEdited.connect(self.smoothing_lineEdit_change)
@@ -151,12 +148,17 @@ class MainWindow(QMainWindow):
 
         self.grid_queue = Queue()
 
+
+
+    def spawn_fft_window(self):
+        widgetFFT = FFTWindow(parent=self)
+        widgetFFT.show()
+
     def write_to_csv(self):
         return 0
 
-
     def write_to_geotiff(self):
-        self.writeCSV.write_to_GeoTiff("myGeoTiff.tif",self.grid_x,self.grid_y,self.grid_z )
+        self.writeCSV.write_to_GeoTiff("myGeoTiff.tif", self.grid_x, self.grid_y, self.grid_z)
 
     def diurnal_correction(self):
         return 0
@@ -194,11 +196,9 @@ class MainWindow(QMainWindow):
         else:
             self.ui.lineEdit_smoothingWindow.setText(str(self.smoothing_window_length))
 
-
     def lineEdit_validate(self, line_edit):
         state, text, _ = line_edit.validator().validate(line_edit.text(), 0)
         return state, text
-
 
     def layer_update(self):
         print("hello")
@@ -206,7 +206,7 @@ class MainWindow(QMainWindow):
             if self.ui.layerWidget.item(i).checkState() == Qt.Checked:
                 print(self.ui.layerWidget.item(i).text())
 
-        if self.ui.layerWidget.item(3).checkState() == Qt.Checked and self.track_lines !=None:
+        if self.ui.layerWidget.item(3).checkState() == Qt.Checked and self.track_lines != None:
             print("YES")
 
             self.track_lines.set_visible(True)
@@ -220,9 +220,6 @@ class MainWindow(QMainWindow):
         worker = Worker(self.TreeUtil.checked_items)
         self.threadpool.start(worker)
 
-
-
-
     def check_worker_result(self):
         if not self.grid_queue.empty():
             self.timer.stop()
@@ -235,12 +232,6 @@ class MainWindow(QMainWindow):
             self.grid_x, self.grid_y, self.grid_z = result
             self.update_plot()
 
-
-
-
-
-
-
     def draw_selection(self):
         self.TreeUtil.selected_df = self.TreeUtil.selected_df.sort_values(by='datetime')
         nth_select = int(self.ui.lineEdit_nthSelectWindow.text())
@@ -248,12 +239,11 @@ class MainWindow(QMainWindow):
             (self.TreeUtil.selected_df["Longitude"].iloc[::nth_select],
              self.TreeUtil.selected_df["Latitude"].iloc[::nth_select]))
 
-        x_min = np.min(self.TreeUtil.selected_df ["Longitude"])
-        x_max = np.max(self.TreeUtil.selected_df ["Longitude"])
+        x_min = np.min(self.TreeUtil.selected_df["Longitude"])
+        x_max = np.max(self.TreeUtil.selected_df["Longitude"])
 
-        y_min = np.min(self.TreeUtil.selected_df ["Latitude"])
-        y_max = np.max(self.TreeUtil.selected_df ["Latitude"])
-
+        y_min = np.min(self.TreeUtil.selected_df["Latitude"])
+        y_max = np.max(self.TreeUtil.selected_df["Latitude"])
 
         myPworker = PWorker(util.gridding.grid,
                             self.TreeUtil.selected_df["Magnetic_Field_residual"].iloc[::nth_select],
@@ -263,8 +253,7 @@ class MainWindow(QMainWindow):
                             complex(0, self.eastingsSampleRate),
                             y_max,
                             y_min,
-                            complex(0, self.northingsSampleRate), "linear",result_queue=self.grid_queue,)
-
+                            complex(0, self.northingsSampleRate), "linear", result_queue=self.grid_queue, )
 
         myPworker.start()
 
@@ -272,10 +261,7 @@ class MainWindow(QMainWindow):
         self.timer.timeout.connect(self.check_worker_result)
         self.timer.start(100)
 
-
-
-
-    def update_plot(self,):
+    def update_plot(self, ):
 
         try:
             self.cbar.remove()
@@ -284,15 +270,13 @@ class MainWindow(QMainWindow):
 
         self.mapping_2D_ax.cla()
 
-        #self.grid_x, self.grid_y, self.grid_z = result
+        # self.grid_x, self.grid_y, self.grid_z = result
         x_min, x_max = np.min(self.grid_x), np.max(self.grid_x)
         y_min, y_max = np.min(self.grid_y), np.max(self.grid_y)
 
-
-
         # self.mapping_2D_ax.imshow(grid_z.T, origin='lower', extent=(x_min , x_max, y_min, y_max ))
-        self.mapping_2D_ax.set_xlim([x_min-0.1, x_max+0.1])
-        self.mapping_2D_ax.set_ylim([y_min-0.1, y_max+0.1])
+        self.mapping_2D_ax.set_xlim([x_min - 0.1, x_max + 0.1])
+        self.mapping_2D_ax.set_ylim([y_min - 0.1, y_max + 0.1])
 
         cx.add_basemap(self.mapping_2D_ax, crs="EPSG:4326", source=cx.providers.OpenStreetMap.Mapnik)
         self.mapping_2D_ax.set_xlabel("Long [°]")
@@ -304,20 +288,17 @@ class MainWindow(QMainWindow):
         # self.contourfplot = self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', extent=(x_min, x_max, y_min, y_max),
         #           cmap='RdBu_r' )
 
-
         start = time.time()
 
-
-        #norm = colors.SymLogNorm(linthresh=1e-3, linscale=1.0, vmin=grid_z.min(), vmax=grid_z.max())
+        # norm = colors.SymLogNorm(linthresh=1e-3, linscale=1.0, vmin=grid_z.min(), vmax=grid_z.max())
         masked_grid_z = np.ma.masked_invalid(self.grid_z)
-        self.contourfplot = self.mapping_2D_ax.pcolormesh(self.grid_x, self.grid_y, masked_grid_z, #250,
-                                                    #origin='lower',
-                                                    #extent=(x_min, x_max, y_min, y_max),
-                                                    # cmap='RdBu_r', norm=norm)
-                                                    cmap='RdBu_r',
-                                                    norm="symlog"
-                                                    )
-
+        self.contourfplot = self.mapping_2D_ax.pcolormesh(self.grid_x, self.grid_y, masked_grid_z,  # 250,
+                                                          # origin='lower',
+                                                          # extent=(x_min, x_max, y_min, y_max),
+                                                          # cmap='RdBu_r', norm=norm)
+                                                          cmap='RdBu_r',
+                                                          norm="symlog"
+                                                          )
 
         end = time.time()
         print(end - start)
@@ -325,7 +306,6 @@ class MainWindow(QMainWindow):
         # self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', levels=10,
         #                            norm=colors.SymLogNorm(linthresh=10, linscale=1,
         #                                                   vmin=np.nanmin(grid_z), vmax=np.nanmax(grid_z), base=10))
-
 
         try:
             self.track_lines.remove()
@@ -339,14 +319,11 @@ class MainWindow(QMainWindow):
         else:
             self.track_lines.set_visible(False)
 
-
-
-
-        self.cbar = self.mapping_2D_canvas.figure.colorbar(self.contourfplot, ax=self.mapping_2D_ax, orientation="vertical")
+        self.cbar = self.mapping_2D_canvas.figure.colorbar(self.contourfplot, ax=self.mapping_2D_ax,
+                                                           orientation="vertical")
         self.cbar.set_label('Anomaly [nT]')
         self.mapping_2D_canvas.draw_idle()
-        #print("Number of collections:", len(self.contourfplot.collections))
-
+        # print("Number of collections:", len(self.contourfplot.collections))
 
     def create_new_project(self):
         project_name, ok = QInputDialog.getText(self, 'Input Dialog', 'Enter project name:')
@@ -367,7 +344,7 @@ class MainWindow(QMainWindow):
                             project=self.TreeUtil
                             )
 
-            #worker.start()
+            # worker.start()
             self.threadpool.start(worker)
         else:
             QMessageBox.critical(self, "File IO Error", "No text file selected!", )
@@ -412,9 +389,10 @@ class MainWindow(QMainWindow):
         self.TreeUtil.selected_df.loc[:, "Magnetic_Field_Ambient"] = running_mean_uniform_filter1d(
             self.TreeUtil.selected_df.loc[:, "Magnetic_Field"], self.ambient_window_length)
         self.TreeUtil.selected_df.loc[:, "Magnetic_Field_residual"] = self.TreeUtil.selected_df.loc[:,
-                                                            "Magnetic_Field_Smoothed"] - self.TreeUtil.selected_df .loc[:,
-                                                                                         "Magnetic_Field_Ambient"]
-                    
+                                                                      "Magnetic_Field_Smoothed"] - self.TreeUtil.selected_df.loc[
+                                                                                                   :,
+                                                                                                   "Magnetic_Field_Ambient"]
+
     def draw_1d_selected(self):
         self.TreeUtil.selected_df = self.TreeUtil.selected_df.sort_values(by='datetime')
         self.time_series_ax.cla()
@@ -423,7 +401,8 @@ class MainWindow(QMainWindow):
         self.time_series_canvas.draw_idle()
 
         self.time_series_ax_res.cla()
-        self.time_series_ax_res.plot(self.TreeUtil.selected_df["datetime"], self.TreeUtil.selected_df["Magnetic_Field_residual"])
+        self.time_series_ax_res.plot(self.TreeUtil.selected_df["datetime"],
+                                     self.TreeUtil.selected_df["Magnetic_Field_residual"])
         self.time_series_ax_res.set_ylabel(r"Res $B_0 - \bar{B}$ [nT]")
         self.time_series_canvas_res.draw_idle()
 
@@ -431,7 +410,7 @@ class MainWindow(QMainWindow):
         @Slot(list)
         def retrieve_user_input(inputs):
             print(inputs)
-            #print(type(self.TreeUtil.selected_df["Longitude"][0]))
+            # print(type(self.TreeUtil.selected_df["Longitude"][0]))
             print(inputs[-1])
 
             try:
@@ -443,14 +422,14 @@ class MainWindow(QMainWindow):
                                     max_mag, min_mag, max_long, min_long, max_lat, min_lat
                                     )
                     self.threadpool.start(worker)
-                elif inputs[-1]  == "Use last value":
+                elif inputs[-1] == "Use last value":
                     worker = Worker(self.TreeUtil.ffill_outlier,
                                     max_mag, min_mag, max_long, min_long, max_lat, min_lat
                                     )
                     self.threadpool.start(worker)
 
-                elif  inputs[-1]  == "Interpolate neighbours":
-                    raise("not implemented")
+                elif inputs[-1] == "Interpolate neighbours":
+                    raise ("not implemented")
 
 
             except ValueError:
@@ -462,7 +441,7 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
-    #pd.set_option('display.max_columns', None)
+    # pd.set_option('display.max_columns', None)
     if getattr(sys, 'frozen', False):
         # For PyInstaller bundled app
         os.environ['PROJ_DATA'] = os.path.join(sys._MEIPASS, 'pyproj', 'proj')

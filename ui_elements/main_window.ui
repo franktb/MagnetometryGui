@@ -262,6 +262,7 @@
     <property name="title">
      <string>Experimental</string>
     </property>
+    <addaction name="actionDownward_continuation"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -400,6 +401,11 @@
   <action name="actionGeoTiff">
    <property name="text">
     <string>GeoTiff</string>
+   </property>
+  </action>
+  <action name="actionDownward_continuation">
+   <property name="text">
+    <string>Downward continuation</string>
    </property>
   </action>
  </widget>

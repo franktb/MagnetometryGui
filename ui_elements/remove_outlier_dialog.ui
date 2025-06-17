@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Remove Outlier</string>
+   <string>Outlier handeling</string>
   </property>
   <widget class="QPushButton" name="submitButton">
    <property name="geometry">
@@ -39,7 +39,7 @@
     <item row="0" column="0">
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Max Magnetic Field:</string>
+       <string>Max magnetic field:</string>
       </property>
      </widget>
     </item>
@@ -53,49 +53,49 @@
     <item row="1" column="0">
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>Min Magnetic Field:</string>
+       <string>Min magnetic field:</string>
       </property>
      </widget>
     </item>
     <item row="1" column="1">
      <widget class="QLineEdit" name="lineEdit_minMagField">
       <property name="text">
-       <string>45000</string>
+       <string>46000</string>
       </property>
      </widget>
     </item>
     <item row="2" column="0">
      <widget class="QLabel" name="label_3">
       <property name="text">
-       <string>Max Long Val:</string>
+       <string>Max longitude:</string>
       </property>
      </widget>
     </item>
     <item row="2" column="1">
      <widget class="QLineEdit" name="lineEdit_maxLongVal">
       <property name="text">
-       <string>-7.2</string>
+       <string>-7.0</string>
       </property>
      </widget>
     </item>
     <item row="3" column="0">
      <widget class="QLabel" name="label_4">
       <property name="text">
-       <string>Min Long Val:</string>
+       <string>Min longitude:</string>
       </property>
      </widget>
     </item>
     <item row="3" column="1">
      <widget class="QLineEdit" name="lineEdit_minLongVal">
       <property name="text">
-       <string>-8.7</string>
+       <string>-9.0</string>
       </property>
      </widget>
     </item>
     <item row="4" column="0">
      <widget class="QLabel" name="label_6">
       <property name="text">
-       <string>Max Lat Val:</string>
+       <string>Max latitude:</string>
       </property>
      </widget>
     </item>
@@ -109,7 +109,7 @@
     <item row="5" column="0">
      <widget class="QLabel" name="label_5">
       <property name="text">
-       <string>Min Lat Val:</string>
+       <string>Min latitude:</string>
       </property>
      </widget>
     </item>
