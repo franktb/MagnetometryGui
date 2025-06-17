@@ -1,6 +1,7 @@
 import sys
 import pandas as pd
 import numpy as np
+import os
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QTreeWidget,QTreeWidgetItem
 from PySide6.QtGui import QStandardItemModel,QStandardItem, QFont, QColor
@@ -69,8 +70,12 @@ class TreeUtil():
 
     def write_surveys_to_csv(self):
         self.checked_items()
+
+        output_dir = "processed"
+        os.makedirs(output_dir, exist_ok=True)
+
         for item in self.checked_items_list:
-            filename = item.text(0) + "processed"
-            item.data_frame.to_csv(filename)
+            filename = os.path.join(output_dir, item.text(0))
+            item.data_frame.to_csv(filename, index=False)
 
 
