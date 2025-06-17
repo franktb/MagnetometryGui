@@ -67,4 +67,10 @@ class TreeUtil():
                                   selected_points))
             thread.start()
 
+    def write_surveys_to_csv(self):
+        self.checked_items()
+        for item in self.checked_items_list:
+            filename = item.text(0) + "processed"
+            item.data_frame.to_csv(filename)
+
 

@@ -250,6 +250,7 @@
     <addaction name="actionSave_Project"/>
     <addaction name="separator"/>
     <addaction name="menuOpen_Survey"/>
+    <addaction name="actionExport_Survey"/>
     <addaction name="separator"/>
     <addaction name="menuExport_Grid"/>
    </widget>
@@ -406,6 +407,11 @@
   <action name="actionDownward_continuation">
    <property name="text">
     <string>Downward continuation</string>
+   </property>
+  </action>
+  <action name="actionExport_Survey">
+   <property name="text">
+    <string>Export Survey</string>
    </property>
   </action>
  </widget>

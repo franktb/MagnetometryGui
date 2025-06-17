@@ -68,6 +68,7 @@ class MainWindow(QMainWindow):
         self.ui.actionDownward_continuation.triggered.connect(self.spawn_fft_window)
 
 
+
         self.mapping_2D_canvas = FigureCanvas(Figure(figsize=(5, 3)))
         # self.mapping_2D_canvas = MplCanvas(self, 5,3,150)
 
@@ -94,6 +95,8 @@ class MainWindow(QMainWindow):
         self.selected_df = pd.DataFrame()
         self.TreeUtil = TreeUtil(self.ui.treeWidget, self.selected_df)
         self.ui.treeWidget.itemChanged[QTreeWidgetItem, int].connect(self.update_selected_df)
+
+        self.ui.actionExport_Survey.triggered.connect(self.TreeUtil.write_surveys_to_csv)
 
         firstlayer = QListWidgetItem("Context map")
         firstlayer.setCheckState(Qt.Checked)
@@ -147,6 +150,7 @@ class MainWindow(QMainWindow):
         self.threadpool = QThreadPool()
 
         self.grid_queue = Queue()
+
 
 
 

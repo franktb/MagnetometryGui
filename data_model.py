@@ -10,6 +10,7 @@ class SurveyFrame(QTreeWidgetItem):
     def __init__(self, name, data_frame, source_corrupted):
         super().__init__()
         self.setText(0, name)
+        self.name = name
         self.data_frame = data_frame
         self.source_corrupted = source_corrupted
 
