@@ -158,7 +158,17 @@ class MainWindow(QMainWindow):
         return 0
 
     def write_to_geotiff(self):
-        self.writeCSV.write_to_GeoTiff("myGeoTiff.tif", self.grid_x, self.grid_y, self.grid_z)
+        filename, _ = QFileDialog.getSaveFileName(
+            self,
+            "Save GeoTIFF",
+            "",
+            "GeoTIFF files (*.tif);;All Files (*)"
+        )
+        if filename:
+            # Ensure the filename ends with .tif
+            if not filename.lower().endswith(".tif"):
+                filename += ".tif"
+                self.writeCSV.write_to_GeoTiff(filename, self.grid_x, self.grid_y, self.grid_z)
 
     def diurnal_correction(self):
         return 0
