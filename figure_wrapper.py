@@ -6,6 +6,17 @@ from matplotlib.widgets import LassoSelector
 import numpy as np
 from matplotlib.path import Path
 from threading import Thread
+from matplotlib.backends.backend_qtagg import FigureCanvas
+from matplotlib.figure import Figure
+
+
+class MplCanvas(FigureCanvas):
+    def __init__(self, parent=None, width=5, height=3, dpi=150):
+        self.fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = self.fig.add_subplot(111)
+        super().__init__(self.fig)
+
+
 
 class SlippyMapNavigationToolbar(NavigationToolbar):
     def __init__(self, canvas, parent=None):

@@ -13,7 +13,7 @@ from PySide6.QtCore import QThreadPool, Slot, Signal, Qt, QTimer
 import contextily as cx
 from PySide6.QtGui import QIntValidator
 from matplotlib.backends.backend_qtagg import FigureCanvas
-from slippy_map_util import SlippyMapNavigationToolbar
+from figure_wrapper import SlippyMapNavigationToolbar
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
@@ -36,11 +36,7 @@ import time
 import util
 
 
-class MplCanvas(FigureCanvas):
-    def __init__(self, parent=None, width=5, height=3, dpi=150):
-        self.fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = self.fig.add_subplot(111)
-        super().__init__(self.fig)
+
 
 
 class MainWindow(QMainWindow):
