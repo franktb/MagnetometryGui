@@ -16,8 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QLabel, QLineEdit, QMainWindow,
-    QMenuBar, QSizePolicy, QStatusBar, QVBoxLayout,
-    QWidget)
+    QMenuBar, QPushButton, QSizePolicy, QStatusBar,
+    QVBoxLayout, QWidget)
 
 class Ui_FFTWindow(object):
     def setupUi(self, FFTWindow):
@@ -32,18 +32,21 @@ class Ui_FFTWindow(object):
         self.verticalLayout2DMappingCanvas = QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout2DMappingCanvas.setObjectName(u"verticalLayout2DMappingCanvas")
         self.verticalLayout2DMappingCanvas.setContentsMargins(0, 0, 0, 0)
-        self.lineEdit = QLineEdit(self.centralwidget)
-        self.lineEdit.setObjectName(u"lineEdit")
-        self.lineEdit.setGeometry(QRect(840, 100, 113, 27))
-        self.lineEdit_2 = QLineEdit(self.centralwidget)
-        self.lineEdit_2.setObjectName(u"lineEdit_2")
-        self.lineEdit_2.setGeometry(QRect(840, 170, 113, 27))
+        self.lineEditDepth = QLineEdit(self.centralwidget)
+        self.lineEditDepth.setObjectName(u"lineEditDepth")
+        self.lineEditDepth.setGeometry(QRect(840, 100, 113, 27))
+        self.lineEditIterations = QLineEdit(self.centralwidget)
+        self.lineEditIterations.setObjectName(u"lineEditIterations")
+        self.lineEditIterations.setGeometry(QRect(840, 170, 113, 27))
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(840, 80, 66, 19))
         self.label_2 = QLabel(self.centralwidget)
         self.label_2.setObjectName(u"label_2")
         self.label_2.setGeometry(QRect(840, 140, 66, 19))
+        self.pushButton_StartIteration = QPushButton(self.centralwidget)
+        self.pushButton_StartIteration.setObjectName(u"pushButton_StartIteration")
+        self.pushButton_StartIteration.setGeometry(QRect(840, 230, 111, 27))
         FFTWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(FFTWindow)
         self.menubar.setObjectName(u"menubar")
@@ -60,7 +63,10 @@ class Ui_FFTWindow(object):
 
     def retranslateUi(self, FFTWindow):
         FFTWindow.setWindowTitle(QCoreApplication.translate("FFTWindow", u"MainWindow", None))
+        self.lineEditDepth.setText(QCoreApplication.translate("FFTWindow", u"50.0", None))
+        self.lineEditIterations.setText(QCoreApplication.translate("FFTWindow", u"3", None))
         self.label.setText(QCoreApplication.translate("FFTWindow", u"Depth:", None))
         self.label_2.setText(QCoreApplication.translate("FFTWindow", u"Iterations:", None))
+        self.pushButton_StartIteration.setText(QCoreApplication.translate("FFTWindow", u"Do it!", None))
     # retranslateUi
 

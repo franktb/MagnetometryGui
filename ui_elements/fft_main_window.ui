@@ -25,7 +25,7 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout2DMappingCanvas"/>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="lineEditDepth">
     <property name="geometry">
      <rect>
       <x>840</x>
@@ -34,8 +34,11 @@
       <height>27</height>
      </rect>
     </property>
+    <property name="text">
+     <string>50.0</string>
+    </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_2">
+   <widget class="QLineEdit" name="lineEditIterations">
     <property name="geometry">
      <rect>
       <x>840</x>
@@ -43,6 +46,9 @@
       <width>113</width>
       <height>27</height>
      </rect>
+    </property>
+    <property name="text">
+     <string>3</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -69,6 +75,19 @@
     </property>
     <property name="text">
      <string>Iterations:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_StartIteration">
+    <property name="geometry">
+     <rect>
+      <x>840</x>
+      <y>230</y>
+      <width>111</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Do it!</string>
     </property>
    </widget>
   </widget>
