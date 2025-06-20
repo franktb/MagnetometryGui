@@ -30,7 +30,7 @@ import matplotlib.colors as colors
 from worker import Worker, PWorker
 
 from util.gridding import grid
-from util.filter import running_mean_uniform_filter1d
+from util.filter import running_mean_uniform_filter1d, sobel
 from ui_elements.dialogs import *
 import time
 import util
@@ -63,6 +63,8 @@ class MainWindow(QMainWindow):
         self.ui.actionGeoTiff.triggered.connect(self.write_to_geotiff)
         self.ui.actionDownward_continuation.triggered.connect(self.spawn_fft_window)
 
+
+        self.ui.actionanomalyDetection.triggered.connect(self.detect_anomalies)
 
 
         self.mapping_2D_canvas = FigureCanvas(Figure(figsize=(5, 3)))
@@ -148,7 +150,24 @@ class MainWindow(QMainWindow):
         self.grid_queue = Queue()
 
 
+    def detect_anomalies(self):
+        print("I am here")
+        magnitude = sobel(self.grid_z)
+        threshold = np.percentile(magnitude, 98)  # or fixed value
+        mask = magnitude >= threshold
 
+        print(mask)
+        # Step 4: Get coordinates
+        y_indices, x_indices = np.where(mask)
+        #magnitudes_filtered = magnitude[mask]
+
+        x_coords = self.grid_x[y_indices, x_indices]
+        y_coords = self.grid_y[y_indices, x_indices]
+
+        self.anomalies = self.mapping_2D_ax.scatter(x_coords,y_coords)
+
+        self.mapping_2D_canvas.draw_idle()
+        print("anno done")
 
     def spawn_fft_window(self):
         widgetFFT = FFTWindow(parent=self)

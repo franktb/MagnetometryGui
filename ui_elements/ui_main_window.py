@@ -81,6 +81,8 @@ class Ui_MainWindow(object):
         self.actionDownward_continuation.setObjectName(u"actionDownward_continuation")
         self.actionExport_Survey = QAction(MainWindow)
         self.actionExport_Survey.setObjectName(u"actionExport_Survey")
+        self.actionanomalyDetection = QAction(MainWindow)
+        self.actionanomalyDetection.setObjectName(u"actionanomalyDetection")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayoutWidget = QWidget(self.centralwidget)
@@ -193,6 +195,7 @@ class Ui_MainWindow(object):
         self.toolBar.addAction(self.actionDrawSelect)
         self.toolBar.addAction(self.actionRemoveOutlier)
         self.toolBar.addAction(self.actionDraw1D)
+        self.toolBar.addAction(self.actionanomalyDetection)
 
         self.retranslateUi(MainWindow)
 
@@ -228,6 +231,7 @@ class Ui_MainWindow(object):
         self.actionGeoTiff.setText(QCoreApplication.translate("MainWindow", u"GeoTiff", None))
         self.actionDownward_continuation.setText(QCoreApplication.translate("MainWindow", u"Downward continuation", None))
         self.actionExport_Survey.setText(QCoreApplication.translate("MainWindow", u"Export Survey", None))
+        self.actionanomalyDetection.setText(QCoreApplication.translate("MainWindow", u"anomalyDetection", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Display Layers:", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Smoothing window size:", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Ambient estimation window size:", None))

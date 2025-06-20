@@ -5,6 +5,20 @@ def running_mean_uniform_filter1d(x, N):
     return ndi.uniform_filter1d(x, N, mode='reflect')
 
 
+def sobel(grid_z):
+    # Replace NaNs and compute Sobel gradients
+    grid_z_clean = np.nan_to_num(grid_z)
+
+    # Compute horizontal and vertical gradients
+    sobel_h = ndi.sobel(grid_z_clean, axis=0)
+    sobel_v = ndi.sobel(grid_z_clean, axis=1)
+
+    # Compute gradient magnitude and normalize to [0, 255]
+    magnitude = np.hypot(sobel_h, sobel_v)
+    magnitude = 255.0 * (magnitude / np.max(magnitude))
+    return magnitude
+
+
 class DownwardContinuation():
     def upward_continue(self, T0, dz, ):
         nx, ny = T0.shape

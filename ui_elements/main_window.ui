@@ -290,6 +290,7 @@
    <addaction name="actionDrawSelect"/>
    <addaction name="actionRemoveOutlier"/>
    <addaction name="actionDraw1D"/>
+   <addaction name="actionanomalyDetection"/>
   </widget>
   <action name="actionblubb">
    <property name="text">
@@ -412,6 +413,11 @@
   <action name="actionExport_Survey">
    <property name="text">
     <string>Export Survey</string>
+   </property>
+  </action>
+  <action name="actionanomalyDetection">
+   <property name="text">
+    <string>anomalyDetection</string>
    </property>
   </action>
  </widget>
