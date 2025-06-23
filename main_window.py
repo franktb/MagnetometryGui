@@ -5,7 +5,7 @@ from multiprocessing import Queue
 
 from TreeWidget import TreeUtil
 from fft_window import FFTWindow
-from file_io.write_mag_data import WriteMagCSV
+from file_io.tiff_io import WriteMag
 from ui_elements.ui_main_window import Ui_MainWindow
 from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QInputDialog, QTreeWidget, \
     QTreeWidgetItem, QDialog, QListWidgetItem
@@ -17,7 +17,7 @@ from figure_wrapper import SlippyMapNavigationToolbar
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
-from file_io.read_txt_data import ReadMagCSV
+from file_io.txt_io import ReadMagCSV
 import pandas as pd
 
 from util.data_manipulation import DataManipulator
@@ -143,7 +143,7 @@ class MainWindow(QMainWindow):
         self.ui.lineEdit_eastingsSampleRate.textEdited.connect(self.eastings_lineEdit_change)
 
         self.readCSV = ReadMagCSV()
-        self.writeCSV = WriteMagCSV()
+        self.writeCSV = WriteMag()
         # self.ui.treeWidget.setHeaderHidden(True)
         self.threadpool = QThreadPool()
 
@@ -204,7 +204,7 @@ class MainWindow(QMainWindow):
             # Ensure the filename ends with .tif
             if not filename.lower().endswith(".tif"):
                 filename += ".tif"
-            self.writeCSV.write_to_GeoTiff(filename, self.grid_x.rave, self.grid_y, self.grid_z)
+            self.writeCSV.write_to_GeoTiff(filename, self.grid_x, self.grid_y, self.grid_z)
 
     def diurnal_correction(self):
         return 0

@@ -3,7 +3,7 @@ import rasterio
 from rasterio.transform import from_origin
 import numpy as np
 
-class WriteMagCSV():
+class WriteMag():
     def write_to_CSV(self, filename, data_frame, columns,sep=","):
         data_frame.to_csv(path_or_buf=filename,
                           sep=sep)
