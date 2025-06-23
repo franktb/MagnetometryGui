@@ -17,7 +17,7 @@ from figure_wrapper import SlippyMapNavigationToolbar
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
-from file_io.read_mag_data import ReadMagCSV
+from file_io.read_txt_data import ReadMagCSV
 import pandas as pd
 
 from util.data_manipulation import DataManipulator
