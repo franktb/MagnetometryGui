@@ -5,7 +5,7 @@ from multiprocessing import Queue
 
 from TreeWidget import TreeUtil
 from fft_window import FFTWindow
-from file_io.tiff_io import WriteMag
+from file_io.txt_io import WriteMag
 from ui_elements.ui_main_window import Ui_MainWindow
 from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QInputDialog, QTreeWidget, \
     QTreeWidgetItem, QDialog, QListWidgetItem

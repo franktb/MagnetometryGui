@@ -1,15 +1,15 @@
+from multiprocessing.queues import Queue
+
 import pandas as pd
 import rasterio
-from rasterio.transform import from_origin
+from rasterio.transform import from_origin, rowcol
+from rasterio.enums import Resampling
 import numpy as np
+from scipy.ndimage import map_coordinates
+
+from worker import PWorker
 
 class WriteMag():
-    def write_to_CSV(self, filename, data_frame, columns,sep=","):
-        data_frame.to_csv(path_or_buf=filename,
-                          sep=sep)
-
-
-
     def write_to_GeoTiff(self,filename, grid_x, grid_y, grid_z):
         data = np.ma.masked_invalid(grid_z).filled(np.nan).astype(np.float32)
         print(data)
@@ -43,3 +43,29 @@ class WriteMag():
                     ) as dst:
             dst.write(data.T, 1)
 
+
+class ReadBathymetry():
+    def read_from_GeoTiff(self, filename, grid_x, grid_y):
+        queue = Queue()
+
+        def quickwrapper(filename):
+            with rasterio.open(filename) as dataset:
+                data = dataset.read(1)
+                transform = dataset.transform
+
+                # Convert spatial coordinates to pixel row,col
+                rows, cols = rowcol(transform, grid_x.ravel(), grid_y.ravel(), op=float)
+
+                # Interpolate values at floating point pixel coords
+                coords = np.vstack([rows, cols])  # shape (2, N)
+                values = map_coordinates(data, coords, order=1, mode='nearest')
+            return values
+
+
+        myPworker = PWorker(quickwrapper,
+                            result_queue=queue,
+                            filename=filename)
+        myPworker.start()
+        raw_tiff = queue.get()
+        myPworker.join()
+        return raw_tiff
