@@ -152,3 +152,9 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
                        source=cx.providers.OpenStreetMap.Mapnik,
                        )
 
+    def home(self, *args):
+        super().home(*args)
+        cx.add_basemap(self.canvas.figure.get_axes()[0],
+                       crs="EPSG:32629",
+                       source=cx.providers.OpenStreetMap.Mapnik,
+                       )
