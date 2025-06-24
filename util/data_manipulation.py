@@ -37,8 +37,8 @@ class DataManipulator():
     @staticmethod
     def drop_from_lasso_select(df, selected_lat_long, tol=1e-8):
         df.sort_values(by='datetime', inplace=True)
-        lat_array = df['Latitude'].to_numpy().astype(np.float64)
-        long_array = df['Longitude'].to_numpy().astype(np.float64)
+        lat_array = df['UTM_Northing'].to_numpy().astype(np.float64)
+        long_array = df['UTM_Easting'].to_numpy().astype(np.float64)
         coord_array = np.stack((long_array, lat_array), axis=1)  # Shape: (N, 2)
         selected_coords = selected_lat_long.data.astype(np.float64)  # Shape: (M, 2)
 

@@ -36,11 +36,11 @@ class ReadMagCSV():
                                          r"GPS_Longitude": r"Longitude",
                                          r"GPS_Easting": r"UTM_Easting",
                                          r"GPS_Northing": r"UTM_Northing"}, inplace=True)
-        survey_frame_raw = survey_frame_raw.astype({"Magnetic_Field":"float32",
-                                 "Latitude":"float32",
-                                 "Longitude":"float32",
-                                 "UTM_Easting":"float32",
-                                 "UTM_Northing":"float32"
+        survey_frame_raw = survey_frame_raw.astype({"Magnetic_Field":"float64",
+                                 "Latitude":"float64",
+                                 "Longitude":"float64",
+                                 "UTM_Easting":"float64",
+                                 "UTM_Northing":"float64"
                                                     })
 
         survey_id = os.path.basename(filename)
@@ -76,9 +76,9 @@ class ReadMagCSV():
                     survey_frame_raw.drop(survey_frame_raw.loc[survey_frame_raw["Time"] == "Time"].index, inplace=True)
                     survey_frame_raw.rename(columns={r"Field_Mag1": r"Magnetic_Field"}, inplace=True)
 
-                    survey_frame_raw = survey_frame_raw.astype({"Magnetic_Field": "float32",
-                                             "Latitude": "float32",
-                                             "Longitude": "float32",
+                    survey_frame_raw = survey_frame_raw.astype({"Magnetic_Field": "float64",
+                                             "Latitude": "float64",
+                                             "Longitude": "float64",
                                             })
 
                     # Two-step datetime parsing since "parse_dates" was deprecated at development time
@@ -115,11 +115,11 @@ class ReadMagCSV():
         #survey_frame_raw.rename(columns={r"GPS_Latitude": r"Latitude", r"GPS_Longitude": r"Longitude"},
         #                        inplace=True)
         survey_frame_raw.columns = ['Date', 'Time', 'Easting', 'Northing', 'Magnetic_Field']
-        survey_frame_raw.astype({"Magnetic_Field": "float32",
-                                 "Latitude": "float32",
-                                 "Longitude": "float32",
-                                 "GPS_Easting": "float32",
-                                 "GPS_Northing": "float32"})
+        survey_frame_raw.astype({"Magnetic_Field": "float64",
+                                 "Latitude": "float64",
+                                 "Longitude": "float64",
+                                 "GPS_Easting": "float64",
+                                 "GPS_Northing": "float64"})
 
         survey_id = os.path.basename(filename)
         new_survey = Survey(survey_id)

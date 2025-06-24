@@ -8,6 +8,7 @@ from matplotlib.path import Path
 from threading import Thread
 from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.figure import Figure
+from pyproj import Transformer
 
 
 class MplCanvas(FigureCanvas):
@@ -139,10 +140,15 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
     def release_pan(self, *args):
         #EPSG:4326,EPSG:3857
         super().release_pan(*args)
-        cx.add_basemap(self.canvas.figure.get_axes()[0], crs="EPSG:4326", source=cx.providers.OpenStreetMap.Mapnik)
+        cx.add_basemap(self.canvas.figure.get_axes()[0],
+                       crs="EPSG:32629",
+                       source=cx.providers.OpenStreetMap.Mapnik)
 
 
     def release_zoom(self, *args):
         super().release_zoom(*args)
-        cx.add_basemap(self.canvas.figure.get_axes()[0], crs="EPSG:4326", source=cx.providers.OpenStreetMap.Mapnik)
+        cx.add_basemap(self.canvas.figure.get_axes()[0],
+                       crs="EPSG:32629",
+                       source=cx.providers.OpenStreetMap.Mapnik,
+                       )
 

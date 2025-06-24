@@ -34,7 +34,7 @@ from util.filter import running_mean_uniform_filter1d, sobel
 from ui_elements.dialogs import *
 import time
 import util
-
+import pyproj
 
 
 
@@ -187,8 +187,8 @@ class MainWindow(QMainWindow):
         flat_y = self.grid_y.ravel()
         flat_z = self.grid_z.ravel()
         df = pd.DataFrame({
-            "Longitude": flat_x,
-            "Latitude": flat_y,
+            "UTM_Easting": flat_x,
+            "UTM_Northing": flat_y,
             "Value": flat_z
         })
         df.to_csv(filename, index=False)
@@ -282,14 +282,14 @@ class MainWindow(QMainWindow):
         self.TreeUtil.selected_df = self.TreeUtil.selected_df.sort_values(by='datetime')
         nth_select = int(self.ui.lineEdit_nthSelectWindow.text())
         self.data_coordinates = np.array(
-            (self.TreeUtil.selected_df["Longitude"].iloc[::nth_select],
-             self.TreeUtil.selected_df["Latitude"].iloc[::nth_select]))
+            (self.TreeUtil.selected_df["UTM_Easting"].iloc[::nth_select],
+             self.TreeUtil.selected_df["UTM_Northing"].iloc[::nth_select]))
 
-        x_min = np.min(self.TreeUtil.selected_df["Longitude"])
-        x_max = np.max(self.TreeUtil.selected_df["Longitude"])
+        x_min = np.min(self.TreeUtil.selected_df["UTM_Easting"])
+        x_max = np.max(self.TreeUtil.selected_df["UTM_Easting"])
 
-        y_min = np.min(self.TreeUtil.selected_df["Latitude"])
-        y_max = np.max(self.TreeUtil.selected_df["Latitude"])
+        y_min = np.min(self.TreeUtil.selected_df["UTM_Northing"])
+        y_max = np.max(self.TreeUtil.selected_df["UTM_Northing"])
 
         myPworker = PWorker(util.gridding.grid,
                             self.TreeUtil.selected_df["Magnetic_Field_residual"].iloc[::nth_select],
@@ -321,10 +321,16 @@ class MainWindow(QMainWindow):
         y_min, y_max = np.min(self.grid_y), np.max(self.grid_y)
 
         # self.mapping_2D_ax.imshow(grid_z.T, origin='lower', extent=(x_min , x_max, y_min, y_max ))
-        self.mapping_2D_ax.set_xlim([x_min - 0.1, x_max + 0.1])
-        self.mapping_2D_ax.set_ylim([y_min - 0.1, y_max + 0.1])
+        #self.mapping_2D_ax.set_xlim([x_min - 0.1, x_max + 0.1])
+        #self.mapping_2D_ax.set_ylim([y_min - 0.1, y_max + 0.1])
 
-        cx.add_basemap(self.mapping_2D_ax, crs="EPSG:4326", source=cx.providers.OpenStreetMap.Mapnik)
+
+
+        # Mask invalid Z values
+        masked_grid_z = np.ma.masked_invalid(self.grid_z)
+
+
+
         self.mapping_2D_ax.set_xlabel("Long [°]")
         self.mapping_2D_ax.set_ylabel("Lat [°]")
         # self.mapping_2D_ax.imshow(grid_z.T, origin='lower', extent=(x_min, x_max, y_min, y_max))
@@ -349,6 +355,12 @@ class MainWindow(QMainWindow):
         end = time.time()
         print(end - start)
 
+        cx.add_basemap(self.mapping_2D_ax,
+                       crs="EPSG:32629",
+                       source=cx.providers.OpenStreetMap.Mapnik,
+                       )
+
+
         # self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', levels=10,
         #                            norm=colors.SymLogNorm(linthresh=10, linscale=1,
         #                                                   vmin=np.nanmin(grid_z), vmax=np.nanmax(grid_z), base=10))
@@ -358,8 +370,10 @@ class MainWindow(QMainWindow):
         except:
             pass
 
+
         self.track_lines = self.mapping_2D_ax.scatter(self.data_coordinates[0, :],
                                                       self.data_coordinates[1, :], color="black", s=1)
+
         if self.ui.layerWidget.item(3).checkState() == Qt.Checked:
             self.track_lines.set_visible(True)
         else:
@@ -456,7 +470,7 @@ class MainWindow(QMainWindow):
         @Slot(list)
         def retrieve_user_input(inputs):
             print(inputs)
-            # print(type(self.TreeUtil.selected_df["Longitude"][0]))
+            # print(type(self.TreeUtil.selected_df["UTM_Easting"][0]))
             print(inputs[-1])
 
             try:
