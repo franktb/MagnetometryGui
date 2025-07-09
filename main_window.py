@@ -5,7 +5,8 @@ from multiprocessing import Queue
 
 from TreeWidget import TreeUtil
 from fft_window import FFTWindow
-from file_io.txt_io import WriteMag
+from file_io.tiff_io import WriteMag, Bathymetry
+from file_io.txt_io import WriteMagCSV
 from ui_elements.ui_main_window import Ui_MainWindow
 from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QInputDialog, QTreeWidget, \
     QTreeWidgetItem, QDialog, QListWidgetItem
@@ -143,7 +144,10 @@ class MainWindow(QMainWindow):
         self.ui.lineEdit_eastingsSampleRate.textEdited.connect(self.eastings_lineEdit_change)
 
         self.readCSV = ReadMagCSV()
-        self.writeCSV = WriteMag()
+        self.writeCSV = WriteMagCSV()
+        self.writeTif = WriteMag()
+
+        self.bath_IO = Bathymetry()
         # self.ui.treeWidget.setHeaderHidden(True)
         self.threadpool = QThreadPool()
 
@@ -204,7 +208,7 @@ class MainWindow(QMainWindow):
             # Ensure the filename ends with .tif
             if not filename.lower().endswith(".tif"):
                 filename += ".tif"
-            self.writeCSV.write_to_GeoTiff(filename, self.grid_x, self.grid_y, self.grid_z)
+            self.writeTif.write_to_GeoTiff(filename, self.grid_x, self.grid_y, self.grid_z)
 
     def diurnal_correction(self):
         return 0

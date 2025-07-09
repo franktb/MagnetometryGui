@@ -8,6 +8,7 @@ import numpy as np
 from scipy.ndimage import map_coordinates
 
 from worker import PWorker
+from scipy.interpolate import RegularGridInterpolator
 
 class WriteMag():
     def write_to_GeoTiff(self,filename, grid_x, grid_y, grid_z):
@@ -44,28 +45,77 @@ class WriteMag():
             dst.write(data.T, 1)
 
 
-class ReadBathymetry():
-    def read_from_GeoTiff(self, filename, grid_x, grid_y):
+class Bathymetry():
+    def read_and_interpolate_geotiff(self, filename, grid_x, grid_y, upscale_factor=0.25):
+        file = rasterio.open(filename)
+        data = file.read(1, out_shape=(
+            file.count,
+            int(file.height * upscale_factor),
+            int(file.width * upscale_factor)
+        ), resampling=Resampling.bilinear)
+
+        # scale image transform
+        transform = file.transform * file.transform.scale(
+            (file.width / data.shape[-1]),
+            (file.height / data.shape[-2])
+        )
+
+        data = data.astype(float)
+        mask = np.isclose(data, file.nodata, atol=1e-8)
+        data[mask] = np.nan
+
+        # Generate 1D row and column indices
+        rows = np.arange(data.shape[0])
+        cols = np.arange(data.shape[1])
+
+        a, b, c, d, e, f = transform.a, transform.b, transform.c, transform.d, transform.e, transform.f
+
+        xs = c + cols * a  # b should be 0 due to regular grid
+        ys = f + rows * e  # d should be 0 due to regular grid
+
+        # Get TIFF bounds
+        xmin, ymin, xmax, ymax = file.bounds
+
+        # Mask: where grid points fall within the TIFF bounds
+        inside_mask = (
+                (grid_x >= xmin) & (grid_x <= xmax) &
+                (grid_y >= ymin) & (grid_y <= ymax)
+        )
+
+        interp = RegularGridInterpolator(
+            (ys, xs), data,
+            bounds_error=False, fill_value=np.nan
+        )
+
+        # Only interpolate points inside the TIFF area
+        points = np.stack([grid_y[inside_mask], grid_x[inside_mask]], axis=-1)
+        interpolated_values = interp(points)
+
+        # Prepare output array filled with NaNs
+        interpolated = np.full_like(grid_x, np.nan, dtype=float)
+        interpolated[inside_mask] = interpolated_values
+
+        return interpolated
+
+
+    def merge_TiffFolder(self,filenames, grid_x, grid_y, upscale_factor=0.25):
+        merged = np.full_like(grid_x, np.nan, dtype=float)
+        for fname in filenames:
+            interpolated = self.read_and_interpolate_geotiff(fname, grid_x, grid_y, upscale_factor)
+            merged = np.where(~np.isnan(interpolated), interpolated, merged)
+
+        return merged
+
+
+    def read_from_TiffFolder(self, filenames, grid_x, grid_y):
         queue = Queue()
-
-        def quickwrapper(filename):
-            with rasterio.open(filename) as dataset:
-                data = dataset.read(1)
-                transform = dataset.transform
-
-                # Convert spatial coordinates to pixel row,col
-                rows, cols = rowcol(transform, grid_x.ravel(), grid_y.ravel(), op=float)
-
-                # Interpolate values at floating point pixel coords
-                coords = np.vstack([rows, cols])  # shape (2, N)
-                values = map_coordinates(data, coords, order=1, mode='nearest')
-            return values
-
-
-        myPworker = PWorker(quickwrapper,
+        myPworker = PWorker(self.merge_TiffFolder,
                             result_queue=queue,
-                            filename=filename)
+                            filenames= filenames,
+                            grid_x=grid_x,
+                            grid_y=grid_y,
+        )
         myPworker.start()
-        raw_tiff = queue.get()
+        bathymetry_map = queue.get()
         myPworker.join()
-        return raw_tiff
+        return bathymetry_map
