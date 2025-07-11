@@ -3,11 +3,13 @@ from multiprocessing import Queue
 from PySide6.QtWidgets import QMainWindow
 from PySide6.QtCore import QThreadPool, Slot, Signal, Qt, QTimer
 from figure_wrapper import SlippyMapNavigationToolbar
+from file_io.tiff_io import Bathymetry, WriteMag
 from ui_elements.ui_fft_window import Ui_FFTWindow
 from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.figure import Figure
 
 from util.filter import DownwardContinuation
+from util.interpolation_module import MagCube
 from worker import PWorker
 import numpy as np
 
@@ -33,11 +35,16 @@ class FFTWindow(QMainWindow):
         self.ui.lineEditIterations.textEdited.connect(self.iterationsEdited)
 
         self.ui.pushButton_StartIteration.clicked.connect(self.downward_continuation)
+        self.ui.pushButton_layer.clicked.connect(self.downward_cube)
 
         self.downward_field = None
 
         self.myDownward = DownwardContinuation()
         self.fft_queue = Queue()
+
+        self.myMagCube = MagCube()
+        self.myBathymetry = Bathymetry()
+        self.tiffWriter = WriteMag()
 
     def depthEdited(self):
         self.depth = float(self.ui.lineEditDepth.text())
@@ -62,6 +69,7 @@ class FFTWindow(QMainWindow):
         print("lets do it")
         #self.myDownward.iterative_downward_finite(self.parent.grid_z,self.depth, self.n_iterations)
 
+        print("do it depth", self.depth)
         myPworker = PWorker(self.myDownward.iterative_downward_finite,
                             np.nan_to_num(self.parent.grid_z),
                             self.depth,
@@ -71,6 +79,26 @@ class FFTWindow(QMainWindow):
         self.timer = QTimer()
         self.timer.timeout.connect(self.check_worker_result)
         self.timer.start(100)
+
+
+    def downward_cube(self):
+        filenames = ["./BathTiffs/BY_CV16_01_CelticSea_5m_U29N.tif",
+                     "./BathTiffs/BY_CV16_02_Cork_5m_U29N.tif"]
+
+
+        depth_grid = self.myBathymetry.read_from_TiffFolder(filenames,
+                                                            self.parent.grid_x,
+                                                            self.parent.grid_y)
+        print(depth_grid)
+        np.savetxt("debugBAthGrid", depth_grid)
+
+        cube, layer_heights = self.myMagCube.compute_cube(depth_grid, np.nan_to_num(self.parent.grid_z))
+        cube = np.nan_to_num(cube)
+
+
+        maglayer = self.myMagCube.sample_cube_at_height(cube, layer_heights, depth_grid)
+        self.tiffWriter.write_to_GeoTiff("depth.tif", self.parent.grid_x, self.parent.grid_y, maglayer)
+
 
     def update_plot(self):
         try:

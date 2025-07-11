@@ -324,9 +324,17 @@ class MainWindow(QMainWindow):
         x_min, x_max = np.min(self.grid_x), np.max(self.grid_x)
         y_min, y_max = np.min(self.grid_y), np.max(self.grid_y)
 
+        # Compute ranges
+        x_range = x_max - x_min
+        y_range = y_max - y_min
+
+        # Apply 5% padding
+        x_pad = 0.05 * x_range
+        y_pad = 0.05 * y_range
+
         # self.mapping_2D_ax.imshow(grid_z.T, origin='lower', extent=(x_min , x_max, y_min, y_max ))
-        #self.mapping_2D_ax.set_xlim([x_min - 0.1, x_max + 0.1])
-        #self.mapping_2D_ax.set_ylim([y_min - 0.1, y_max + 0.1])
+        self.mapping_2D_ax.set_xlim([x_min - x_pad, x_max + x_pad])
+        self.mapping_2D_ax.set_ylim([y_min - y_pad, y_max + y_pad])
 
 
 
@@ -386,6 +394,10 @@ class MainWindow(QMainWindow):
         self.cbar = self.mapping_2D_canvas.figure.colorbar(self.contourfplot, ax=self.mapping_2D_ax,
                                                            orientation="vertical")
         self.cbar.set_label('Anomaly [nT]')
+
+        self.mapping_2D_ax.scatter(489426, 5693316)
+        self.mapping_2D_ax.scatter(514500, 5705600)
+
         self.mapping_2D_canvas.draw_idle()
         # print("Number of collections:", len(self.contourfplot.collections))
 

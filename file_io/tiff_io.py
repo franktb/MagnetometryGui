@@ -1,4 +1,4 @@
-from multiprocessing.queues import Queue
+from multiprocessing import Queue
 
 import pandas as pd
 import rasterio
