@@ -47,6 +47,9 @@ class Ui_FFTWindow(object):
         self.pushButton_StartIteration = QPushButton(self.centralwidget)
         self.pushButton_StartIteration.setObjectName(u"pushButton_StartIteration")
         self.pushButton_StartIteration.setGeometry(QRect(840, 230, 111, 27))
+        self.pushButton_layer = QPushButton(self.centralwidget)
+        self.pushButton_layer.setObjectName(u"pushButton_layer")
+        self.pushButton_layer.setGeometry(QRect(850, 290, 88, 27))
         FFTWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(FFTWindow)
         self.menubar.setObjectName(u"menubar")
@@ -68,5 +71,6 @@ class Ui_FFTWindow(object):
         self.label.setText(QCoreApplication.translate("FFTWindow", u"Depth:", None))
         self.label_2.setText(QCoreApplication.translate("FFTWindow", u"Iterations:", None))
         self.pushButton_StartIteration.setText(QCoreApplication.translate("FFTWindow", u"Do it!", None))
+        self.pushButton_layer.setText(QCoreApplication.translate("FFTWindow", u"Do Layer", None))
     # retranslateUi
 
