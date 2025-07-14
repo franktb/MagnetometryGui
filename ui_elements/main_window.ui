@@ -282,13 +282,11 @@
    </attribute>
    <addaction name="separator"/>
    <addaction name="actionDinuralCorrection"/>
+   <addaction name="actionRemoveOutlier"/>
    <addaction name="actionSmoothSurvey"/>
-   <addaction name="separator"/>
    <addaction name="actioncalcResiduals"/>
    <addaction name="separator"/>
-   <addaction name="separator"/>
    <addaction name="actionDrawSelect"/>
-   <addaction name="actionRemoveOutlier"/>
    <addaction name="actionDraw1D"/>
    <addaction name="actionanomalyDetection"/>
   </widget>
@@ -416,6 +414,10 @@
    </property>
   </action>
   <action name="actionanomalyDetection">
+   <property name="icon">
+    <iconset resource="icons/resources.qrc">
+     <normaloff>:/icons/search-icon.png</normaloff>:/icons/search-icon.png</iconset>
+   </property>
    <property name="text">
     <string>anomalyDetection</string>
    </property>

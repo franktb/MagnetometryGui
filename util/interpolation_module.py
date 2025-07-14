@@ -50,19 +50,3 @@ class MagCube():
 
         values = values_flat.reshape(Y, X)
         return values
-
-        """
-        L, Y, X = cube.shape
-        cube_flat = cube.reshape(L, -1)  # shape: (L, Y*X)
-
-        interp_func = interp1d(
-            layer_heights, cube_flat, axis=0,
-            bounds_error=False, fill_value=np.nan
-        )
-
-        heights_flat = grid_merge.flatten()  # shape: (Y*X,)
-        values_flat = interp_func(heights_flat)  # shape: (Y*X,)
-        values = values_flat.reshape(Y, X)
-
-        return values
-        """

@@ -524,6 +524,17 @@ if __name__ == "__main__":
 
     multiprocessing.freeze_support()
 
+    from PyQt6.QtCore import QDir, QResource
+
+    QDir.setCurrent(QDir.currentPath())  # make sure current dir is set
+    res = QResource(":/icons/")
+    print(res.isValid())
+    print(QDir(":/icons/").entryList())
+
+    from PySide6.QtGui import QIcon
+
+    icon = QIcon("search-icon.png")
+    print("Null?", icon.isNull())
     app = QApplication(sys.argv)
     widget = MainWindow()
     widget.show()
