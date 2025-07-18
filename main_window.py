@@ -7,6 +7,7 @@ from TreeWidget import TreeUtil
 from fft_window import FFTWindow
 from file_io.tiff_io import WriteMag, Bathymetry
 from file_io.txt_io import WriteMagCSV
+from timeseries_window import TimeSeriesWindow
 from ui_elements.ui_main_window import Ui_MainWindow
 from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QInputDialog, QTreeWidget, \
     QTreeWidgetItem, QDialog, QListWidgetItem
@@ -63,7 +64,7 @@ class MainWindow(QMainWindow):
 
         self.ui.actionGeoTiff.triggered.connect(self.write_to_geotiff)
         self.ui.actionDownward_continuation.triggered.connect(self.spawn_fft_window)
-
+        self.ui.actionTimeseries_representation.triggered.connect(self.spawn_timeseries_window)
 
         self.ui.actionanomalyDetection.triggered.connect(self.detect_anomalies)
 
@@ -176,6 +177,10 @@ class MainWindow(QMainWindow):
     def spawn_fft_window(self):
         widgetFFT = FFTWindow(parent=self)
         widgetFFT.show()
+
+    def spawn_timeseries_window(self):
+        widgetTimeseries = TimeSeriesWindow(parent=self)
+        widgetTimeseries.show()
 
     def write_to_csv(self):
         filename, _ = QFileDialog.getSaveFileName(
@@ -471,6 +476,9 @@ class MainWindow(QMainWindow):
 
     def draw_1d_selected(self):
         self.TreeUtil.selected_df = self.TreeUtil.selected_df.sort_values(by='datetime')
+        if not "Magnetic_Field_residual" in self.TreeUtil.selected_df:
+            self.calc_residuals()
+
         self.time_series_ax.cla()
         self.time_series_ax.plot(self.TreeUtil.selected_df["datetime"], self.TreeUtil.selected_df["Magnetic_Field"])
         self.time_series_ax.set_ylabel("Total mag field $B$ [nT]")
@@ -523,18 +531,6 @@ if __name__ == "__main__":
         os.environ['PROJ_DATA'] = os.path.join(sys._MEIPASS, 'pyproj', 'proj')
 
     multiprocessing.freeze_support()
-
-    from PyQt6.QtCore import QDir, QResource
-
-    QDir.setCurrent(QDir.currentPath())  # make sure current dir is set
-    res = QResource(":/icons/")
-    print(res.isValid())
-    print(QDir(":/icons/").entryList())
-
-    from PySide6.QtGui import QIcon
-
-    icon = QIcon("search-icon.png")
-    print("Null?", icon.isNull())
     app = QApplication(sys.argv)
     widget = MainWindow()
     widget.show()

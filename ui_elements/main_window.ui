@@ -259,15 +259,16 @@
      <string>&amp;Edit</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuExperimental">
+   <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>Experimental</string>
+     <string>&amp;View</string>
     </property>
+    <addaction name="actionTimeseries_representation"/>
     <addaction name="actionDownward_continuation"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
-   <addaction name="menuExperimental"/>
+   <addaction name="menuView"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -420,6 +421,11 @@
    </property>
    <property name="text">
     <string>anomalyDetection</string>
+   </property>
+  </action>
+  <action name="actionTimeseries_representation">
+   <property name="text">
+    <string>Timeseries representation</string>
    </property>
   </action>
  </widget>
