@@ -28,6 +28,7 @@ from util.data_manipulation import DataManipulator
 from util.gridding import grid
 from util.filter import running_mean_uniform_filter1d, sobel
 from ui_elements.dialogs import *
+from window_manager import WindowManager
 from worker import Worker, PWorker
 
 
@@ -53,13 +54,11 @@ class MainWindow(QMainWindow):
         self.ui.actionCSV.triggered.connect(self.write_to_csv)
 
         self.ui.actionGeoTiff.triggered.connect(self.write_to_geotiff)
-        self.ui.actionDownward_continuation.triggered.connect(self.spawn_fft_window)
 
-
-        self.ui.actionTimeseries_representation.triggered.connect(self.spawn_timeseries_window)
+        self.ui.action_spawn_FFTWindow.triggered.connect(self.spawn_fft_window)
+        self.ui.action_spawn_TimeSeriesWindow.triggered.connect(self.spawn_timeseries_window)
 
         self.ui.actionanomalyDetection.triggered.connect(self.detect_anomalies)
-
 
         self.mapping_2D_canvas = FigureCanvas(Figure())
         # self.mapping_2D_canvas = MplCanvas(self, 5,3,150)
@@ -146,8 +145,18 @@ class MainWindow(QMainWindow):
 
         self.grid_queue = Queue()
 
-        self.fft_window = None
+    
+    def spawn_fft_window(self):
+        WindowManager.open_or_focus_window(self,
+                                           "fft_window",
+                                           FFTWindow,
+                                           self.ui.action_spawn_FFTWindow)
 
+    def spawn_timeseries_window(self):
+        WindowManager.open_or_focus_window(self,
+                                           "time_series_window",
+                                           TimeSeriesWindow,
+                                           self.ui.action_spawn_TimeSeriesWindow)
 
     def detect_anomalies(self):
         print("I am here")
@@ -158,29 +167,15 @@ class MainWindow(QMainWindow):
         print(mask)
         # Step 4: Get coordinates
         y_indices, x_indices = np.where(mask)
-        #magnitudes_filtered = magnitude[mask]
+        # magnitudes_filtered = magnitude[mask]
 
         x_coords = self.grid_x[y_indices, x_indices]
         y_coords = self.grid_y[y_indices, x_indices]
 
-        self.anomalies = self.mapping_2D_ax.scatter(x_coords,y_coords)
+        self.anomalies = self.mapping_2D_ax.scatter(x_coords, y_coords)
 
         self.mapping_2D_canvas.draw_idle()
         print("anno done")
-
-    def spawn_fft_window(self):
-        if self.fft_window is None:
-            self.ui.actionDownward_continuation.setChecked(True)
-            self.fft_window = FFTWindow(parent=self)
-            self.fft_window.show()
-
-        else:
-            self.ui.actionDownward_continuation.setChecked(True)
-            self.fft_window.raise_()
-            self.fft_window.activateWindow()
-
-
-
 
     def spawn_timeseries_window(self):
         widgetTimeseries = TimeSeriesWindow(parent=self)
@@ -345,12 +340,8 @@ class MainWindow(QMainWindow):
         self.mapping_2D_ax.set_xlim([x_min - x_pad, x_max + x_pad])
         self.mapping_2D_ax.set_ylim([y_min - y_pad, y_max + y_pad])
 
-
-
         # Mask invalid Z values
         masked_grid_z = np.ma.masked_invalid(self.grid_z)
-
-
 
         self.mapping_2D_ax.set_xlabel("Long [°]")
         self.mapping_2D_ax.set_ylabel("Lat [°]")
@@ -381,7 +372,6 @@ class MainWindow(QMainWindow):
                        source=cx.providers.OpenStreetMap.Mapnik,
                        )
 
-
         # self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', levels=10,
         #                            norm=colors.SymLogNorm(linthresh=10, linscale=1,
         #                                                   vmin=np.nanmin(grid_z), vmax=np.nanmax(grid_z), base=10))
@@ -390,7 +380,6 @@ class MainWindow(QMainWindow):
             self.track_lines.remove()
         except:
             pass
-
 
         self.track_lines = self.mapping_2D_ax.scatter(self.data_coordinates[0, :],
                                                       self.data_coordinates[1, :], color="black", s=1)
@@ -530,7 +519,7 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     # pd.set_option('display.max_columns', None)
-    pd.options.mode.copy_on_write = True #becomes default in Pandas 3.0
+    pd.options.mode.copy_on_write = True  # becomes default in Pandas 3.0
     if getattr(sys, 'frozen', False):
         # For PyInstaller bundled app
         os.environ['PROJ_DATA'] = os.path.join(sys._MEIPASS, 'pyproj', 'proj')

@@ -47,7 +47,7 @@ class FFTWindow(QMainWindow):
         self.tiffWriter = WriteMag()
 
     def closeEvent(self, event):
-        self.parent.ui.actionDownward_continuation.setChecked(False)
+        self.parent.ui.action_spawn_FFTWindow.setChecked(False)
         self.parent.fft_window = None
         super().closeEvent(event)
 
