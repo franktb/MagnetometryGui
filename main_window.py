@@ -1,44 +1,34 @@
 import sys
 import os
+import time
+import util
 import multiprocessing
 from multiprocessing import Queue
 
+import contextily as cx
+import pandas as pd
+import numpy as np
+
+from PySide6.QtWidgets import QListWidgetItem
+from PySide6.QtCore import QTimer
+from PySide6.QtGui import QIntValidator
+from matplotlib.backends.backend_qtagg import FigureCanvas
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
+import matplotlib.colors as colors
+
+from figure_wrapper import SlippyMapNavigationToolbar
 from TreeWidget import TreeUtil
 from fft_window import FFTWindow
 from file_io.tiff_io import WriteMag, Bathymetry
-from file_io.txt_io import WriteMagCSV
+from file_io.txt_io import WriteMagCSV, ReadMagCSV
 from timeseries_window import TimeSeriesWindow
 from ui_elements.ui_main_window import Ui_MainWindow
-from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QInputDialog, QTreeWidget, \
-    QTreeWidgetItem, QDialog, QListWidgetItem
-from PySide6.QtCore import QThreadPool, Slot, Signal, Qt, QTimer
-import contextily as cx
-from PySide6.QtGui import QIntValidator
-from matplotlib.backends.backend_qtagg import FigureCanvas
-from figure_wrapper import SlippyMapNavigationToolbar
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
-
-from file_io.txt_io import ReadMagCSV
-import pandas as pd
-
 from util.data_manipulation import DataManipulator
-
-pd.options.mode.copy_on_write = True
-import numpy as np
-
-import matplotlib.colors as colors
-
-from worker import Worker, PWorker
-
 from util.gridding import grid
 from util.filter import running_mean_uniform_filter1d, sobel
 from ui_elements.dialogs import *
-import time
-import util
-import pyproj
-
-
+from worker import Worker, PWorker
 
 
 class MainWindow(QMainWindow):
@@ -64,12 +54,14 @@ class MainWindow(QMainWindow):
 
         self.ui.actionGeoTiff.triggered.connect(self.write_to_geotiff)
         self.ui.actionDownward_continuation.triggered.connect(self.spawn_fft_window)
+
+
         self.ui.actionTimeseries_representation.triggered.connect(self.spawn_timeseries_window)
 
         self.ui.actionanomalyDetection.triggered.connect(self.detect_anomalies)
 
 
-        self.mapping_2D_canvas = FigureCanvas(Figure(figsize=(5, 3)))
+        self.mapping_2D_canvas = FigureCanvas(Figure())
         # self.mapping_2D_canvas = MplCanvas(self, 5,3,150)
 
         self.ui.verticalLayout2DMappingCanvas.addWidget(SlippyMapNavigationToolbar(self.mapping_2D_canvas, self, ))
@@ -78,12 +70,12 @@ class MainWindow(QMainWindow):
         self.cbar = None
         self.contourfplot = None
 
-        self.time_series_canvas = FigureCanvas(Figure(figsize=(5, 3)))
+        self.time_series_canvas = FigureCanvas(Figure())
         self.ui.verticalLayoutTimeSeriesCanvas.addWidget(NavigationToolbar(self.time_series_canvas))
         self.ui.verticalLayoutTimeSeriesCanvas.addWidget(self.time_series_canvas)
         self.time_series_ax = self.time_series_canvas.figure.subplots()
 
-        self.time_series_canvas_res = FigureCanvas(Figure(figsize=(5, 3)))
+        self.time_series_canvas_res = FigureCanvas(Figure())
         self.ui.verticalLayoutTimeSeriesCanvas_2.addWidget(NavigationToolbar(self.time_series_canvas_res))
         self.ui.verticalLayoutTimeSeriesCanvas_2.addWidget(self.time_series_canvas_res)
         self.time_series_ax_res = self.time_series_canvas_res.figure.subplots()
@@ -154,6 +146,8 @@ class MainWindow(QMainWindow):
 
         self.grid_queue = Queue()
 
+        self.fft_window = None
+
 
     def detect_anomalies(self):
         print("I am here")
@@ -175,8 +169,18 @@ class MainWindow(QMainWindow):
         print("anno done")
 
     def spawn_fft_window(self):
-        widgetFFT = FFTWindow(parent=self)
-        widgetFFT.show()
+        if self.fft_window is None:
+            self.ui.actionDownward_continuation.setChecked(True)
+            self.fft_window = FFTWindow(parent=self)
+            self.fft_window.show()
+
+        else:
+            self.ui.actionDownward_continuation.setChecked(True)
+            self.fft_window.raise_()
+            self.fft_window.activateWindow()
+
+
+
 
     def spawn_timeseries_window(self):
         widgetTimeseries = TimeSeriesWindow(parent=self)
@@ -526,6 +530,7 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     # pd.set_option('display.max_columns', None)
+    pd.options.mode.copy_on_write = True #becomes default in Pandas 3.0
     if getattr(sys, 'frozen', False):
         # For PyInstaller bundled app
         os.environ['PROJ_DATA'] = os.path.join(sys._MEIPASS, 'pyproj', 'proj')

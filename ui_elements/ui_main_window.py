@@ -16,10 +16,11 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QHeaderView, QLabel, QLineEdit,
-    QListWidget, QListWidgetItem, QMainWindow, QMenu,
-    QMenuBar, QSizePolicy, QStatusBar, QToolBar,
-    QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QGridLayout, QHeaderView, QLabel,
+    QLineEdit, QListWidget, QListWidgetItem, QMainWindow,
+    QMenu, QMenuBar, QSizePolicy, QStatusBar,
+    QToolBar, QTreeWidget, QTreeWidgetItem, QVBoxLayout,
+    QWidget)
 import resources_rc
 
 class Ui_MainWindow(object):
@@ -79,6 +80,8 @@ class Ui_MainWindow(object):
         self.actionGeoTiff.setObjectName(u"actionGeoTiff")
         self.actionDownward_continuation = QAction(MainWindow)
         self.actionDownward_continuation.setObjectName(u"actionDownward_continuation")
+        self.actionDownward_continuation.setCheckable(True)
+        self.actionDownward_continuation.setEnabled(True)
         self.actionExport_Survey = QAction(MainWindow)
         self.actionExport_Survey.setObjectName(u"actionExport_Survey")
         self.actionanomalyDetection = QAction(MainWindow)
@@ -88,68 +91,105 @@ class Ui_MainWindow(object):
         self.actionanomalyDetection.setIcon(icon6)
         self.actionTimeseries_representation = QAction(MainWindow)
         self.actionTimeseries_representation.setObjectName(u"actionTimeseries_representation")
+        self.actionTimeseries_representation.setCheckable(True)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.verticalLayoutWidget = QWidget(self.centralwidget)
-        self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(10, 530, 741, 241))
-        self.verticalLayoutTimeSeriesCanvas = QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayoutTimeSeriesCanvas.setObjectName(u"verticalLayoutTimeSeriesCanvas")
-        self.verticalLayoutTimeSeriesCanvas.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayoutWidget_2 = QWidget(self.centralwidget)
-        self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
-        self.verticalLayoutWidget_2.setGeometry(QRect(320, 10, 911, 501))
-        self.verticalLayout2DMappingCanvas = QVBoxLayout(self.verticalLayoutWidget_2)
-        self.verticalLayout2DMappingCanvas.setObjectName(u"verticalLayout2DMappingCanvas")
-        self.verticalLayout2DMappingCanvas.setContentsMargins(0, 0, 0, 0)
+        self.gridLayout = QGridLayout(self.centralwidget)
+        self.gridLayout.setObjectName(u"gridLayout")
         self.treeWidget = QTreeWidget(self.centralwidget)
         __qtreewidgetitem = QTreeWidgetItem()
         __qtreewidgetitem.setText(0, u"File Tree");
         self.treeWidget.setHeaderItem(__qtreewidgetitem)
         self.treeWidget.setObjectName(u"treeWidget")
-        self.treeWidget.setGeometry(QRect(10, 10, 291, 501))
-        self.layerWidget = QListWidget(self.centralwidget)
-        self.layerWidget.setObjectName(u"layerWidget")
-        self.layerWidget.setGeometry(QRect(1250, 40, 291, 111))
+
+        self.gridLayout.addWidget(self.treeWidget, 0, 0, 1, 1)
+
+        self.verticalLayout2DMappingCanvas = QVBoxLayout()
+        self.verticalLayout2DMappingCanvas.setObjectName(u"verticalLayout2DMappingCanvas")
+
+        self.gridLayout.addLayout(self.verticalLayout2DMappingCanvas, 0, 1, 1, 2)
+
+        self.verticalLayout = QVBoxLayout()
+        self.verticalLayout.setObjectName(u"verticalLayout")
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName(u"label")
-        self.label.setGeometry(QRect(1250, 10, 291, 19))
-        self.verticalLayoutWidget_3 = QWidget(self.centralwidget)
-        self.verticalLayoutWidget_3.setObjectName(u"verticalLayoutWidget_3")
-        self.verticalLayoutWidget_3.setGeometry(QRect(800, 530, 731, 241))
-        self.verticalLayoutTimeSeriesCanvas_2 = QVBoxLayout(self.verticalLayoutWidget_3)
-        self.verticalLayoutTimeSeriesCanvas_2.setObjectName(u"verticalLayoutTimeSeriesCanvas_2")
-        self.verticalLayoutTimeSeriesCanvas_2.setContentsMargins(0, 0, 0, 0)
+
+        self.verticalLayout.addWidget(self.label)
+
+        self.layerWidget = QListWidget(self.centralwidget)
+        self.layerWidget.setObjectName(u"layerWidget")
+
+        self.verticalLayout.addWidget(self.layerWidget)
+
         self.label_2 = QLabel(self.centralwidget)
         self.label_2.setObjectName(u"label_2")
-        self.label_2.setGeometry(QRect(1250, 160, 291, 19))
-        self.label_3 = QLabel(self.centralwidget)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setGeometry(QRect(1250, 220, 291, 19))
+
+        self.verticalLayout.addWidget(self.label_2)
+
         self.lineEdit_smoothingWindow = QLineEdit(self.centralwidget)
         self.lineEdit_smoothingWindow.setObjectName(u"lineEdit_smoothingWindow")
-        self.lineEdit_smoothingWindow.setGeometry(QRect(1250, 190, 291, 27))
+
+        self.verticalLayout.addWidget(self.lineEdit_smoothingWindow)
+
+        self.label_3 = QLabel(self.centralwidget)
+        self.label_3.setObjectName(u"label_3")
+
+        self.verticalLayout.addWidget(self.label_3)
+
         self.lineEdit_ambientWindow = QLineEdit(self.centralwidget)
         self.lineEdit_ambientWindow.setObjectName(u"lineEdit_ambientWindow")
-        self.lineEdit_ambientWindow.setGeometry(QRect(1250, 240, 291, 27))
+
+        self.verticalLayout.addWidget(self.lineEdit_ambientWindow)
+
         self.label_4 = QLabel(self.centralwidget)
         self.label_4.setObjectName(u"label_4")
-        self.label_4.setGeometry(QRect(1250, 270, 291, 19))
+
+        self.verticalLayout.addWidget(self.label_4)
+
         self.lineEdit_nthSelectWindow = QLineEdit(self.centralwidget)
         self.lineEdit_nthSelectWindow.setObjectName(u"lineEdit_nthSelectWindow")
-        self.lineEdit_nthSelectWindow.setGeometry(QRect(1250, 300, 291, 27))
-        self.label_5 = QLabel(self.centralwidget)
-        self.label_5.setObjectName(u"label_5")
-        self.label_5.setGeometry(QRect(1250, 420, 291, 19))
-        self.lineEdit_northingsSampleRate = QLineEdit(self.centralwidget)
-        self.lineEdit_northingsSampleRate.setObjectName(u"lineEdit_northingsSampleRate")
-        self.lineEdit_northingsSampleRate.setGeometry(QRect(1250, 450, 291, 27))
+
+        self.verticalLayout.addWidget(self.lineEdit_nthSelectWindow)
+
         self.label_6 = QLabel(self.centralwidget)
         self.label_6.setObjectName(u"label_6")
-        self.label_6.setGeometry(QRect(1250, 340, 291, 19))
+
+        self.verticalLayout.addWidget(self.label_6)
+
         self.lineEdit_eastingsSampleRate = QLineEdit(self.centralwidget)
         self.lineEdit_eastingsSampleRate.setObjectName(u"lineEdit_eastingsSampleRate")
-        self.lineEdit_eastingsSampleRate.setGeometry(QRect(1250, 370, 291, 27))
+
+        self.verticalLayout.addWidget(self.lineEdit_eastingsSampleRate)
+
+        self.label_5 = QLabel(self.centralwidget)
+        self.label_5.setObjectName(u"label_5")
+
+        self.verticalLayout.addWidget(self.label_5)
+
+        self.lineEdit_northingsSampleRate = QLineEdit(self.centralwidget)
+        self.lineEdit_northingsSampleRate.setObjectName(u"lineEdit_northingsSampleRate")
+
+        self.verticalLayout.addWidget(self.lineEdit_northingsSampleRate)
+
+
+        self.gridLayout.addLayout(self.verticalLayout, 0, 3, 1, 1)
+
+        self.verticalLayoutTimeSeriesCanvas = QVBoxLayout()
+        self.verticalLayoutTimeSeriesCanvas.setObjectName(u"verticalLayoutTimeSeriesCanvas")
+
+        self.gridLayout.addLayout(self.verticalLayoutTimeSeriesCanvas, 1, 0, 1, 2)
+
+        self.verticalLayoutTimeSeriesCanvas_2 = QVBoxLayout()
+        self.verticalLayoutTimeSeriesCanvas_2.setObjectName(u"verticalLayoutTimeSeriesCanvas_2")
+
+        self.gridLayout.addLayout(self.verticalLayoutTimeSeriesCanvas_2, 1, 2, 1, 2)
+
+        self.gridLayout.setRowStretch(0, 3)
+        self.gridLayout.setRowStretch(1, 1)
+        self.gridLayout.setColumnStretch(0, 1)
+        self.gridLayout.setColumnStretch(1, 2)
+        self.gridLayout.setColumnStretch(2, 2)
+        self.gridLayout.setColumnStretch(3, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -239,15 +279,15 @@ class Ui_MainWindow(object):
         self.actionTimeseries_representation.setText(QCoreApplication.translate("MainWindow", u"Timeseries representation", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Display Layers:", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Smoothing window size:", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Ambient estimation window size:", None))
         self.lineEdit_smoothingWindow.setText(QCoreApplication.translate("MainWindow", u"20", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Ambient estimation window size:", None))
         self.lineEdit_ambientWindow.setText(QCoreApplication.translate("MainWindow", u"500", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Time sampling rate:", None))
         self.lineEdit_nthSelectWindow.setText(QCoreApplication.translate("MainWindow", u"1", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Northings sampling rate:", None))
-        self.lineEdit_northingsSampleRate.setText(QCoreApplication.translate("MainWindow", u"1000", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Eastings sampling rate:", None))
         self.lineEdit_eastingsSampleRate.setText(QCoreApplication.translate("MainWindow", u"1000", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", u"Northings sampling rate:", None))
+        self.lineEdit_northingsSampleRate.setText(QCoreApplication.translate("MainWindow", u"1000", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"&File", None))
         self.menuOpen_Survey.setTitle(QCoreApplication.translate("MainWindow", u"Import Survey", None))
         self.menuExport_Grid.setTitle(QCoreApplication.translate("MainWindow", u"Export Grid", None))

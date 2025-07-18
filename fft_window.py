@@ -46,6 +46,11 @@ class FFTWindow(QMainWindow):
         self.myBathymetry = Bathymetry()
         self.tiffWriter = WriteMag()
 
+    def closeEvent(self, event):
+        self.parent.ui.actionDownward_continuation.setChecked(False)
+        self.parent.fft_window = None
+        super().closeEvent(event)
+
     def depthEdited(self):
         self.depth = float(self.ui.lineEditDepth.text())
 
