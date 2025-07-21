@@ -3,7 +3,6 @@ import numpy as np
 from util.bin.fastmask import compute_mask, compute_pairwise_mask
 import os
 os.environ["OMP_NUM_THREADS"] = "12"
-import cupy as cp
 
 
 class DataManipulator():

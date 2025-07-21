@@ -184,14 +184,13 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="separator"/>
-   <addaction name="actionDinuralCorrection"/>
    <addaction name="actionRemoveOutlier"/>
-   <addaction name="actionSmoothSurvey"/>
+   <addaction name="actionDinuralCorrection"/>
    <addaction name="actioncalcResiduals"/>
    <addaction name="separator"/>
-   <addaction name="actionDrawSelect"/>
    <addaction name="actionDraw1D"/>
+   <addaction name="actionDrawSelect"/>
+   <addaction name="separator"/>
    <addaction name="actionanomalyDetection"/>
   </widget>
   <action name="actionblubb">
@@ -285,18 +284,6 @@
     <string>RemoveOutlier</string>
    </property>
   </action>
-  <action name="actionDraw1D">
-   <property name="icon">
-    <iconset resource="icons/resources.qrc">
-     <normaloff>:/icons/area-chart-icon.png</normaloff>:/icons/area-chart-icon.png</iconset>
-   </property>
-   <property name="text">
-    <string>Draw1D</string>
-   </property>
-   <property name="toolTip">
-    <string>Draw a timeseries representation of selected surveys</string>
-   </property>
-  </action>
   <action name="actionCSV">
    <property name="text">
     <string>CSV</string>
@@ -338,6 +325,18 @@
    </property>
    <property name="text">
     <string>Timeseries representation</string>
+   </property>
+  </action>
+  <action name="actionDraw1D">
+   <property name="icon">
+    <iconset resource="icons/resources.qrc">
+     <normaloff>:/icons/area-chart-icon.png</normaloff>:/icons/area-chart-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Draw1D</string>
+   </property>
+   <property name="toolTip">
+    <string>Draw a timeseries representation of selected surveys</string>
    </property>
   </action>
  </widget>

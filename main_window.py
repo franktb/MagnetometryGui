@@ -28,6 +28,7 @@ from util.data_manipulation import DataManipulator
 from util.gridding import grid
 from util.filter import running_mean_uniform_filter1d, sobel
 from ui_elements.dialogs import *
+from util.time_series_module import TimeSeriesManipulator
 from window_manager import WindowManager
 from worker import Worker, PWorker
 
@@ -145,7 +146,7 @@ class MainWindow(QMainWindow):
 
         self.grid_queue = Queue()
 
-    
+
     def spawn_fft_window(self):
         WindowManager.open_or_focus_window(self,
                                            "fft_window",
@@ -177,9 +178,7 @@ class MainWindow(QMainWindow):
         self.mapping_2D_canvas.draw_idle()
         print("anno done")
 
-    def spawn_timeseries_window(self):
-        widgetTimeseries = TimeSeriesWindow(parent=self)
-        widgetTimeseries.show()
+
 
     def write_to_csv(self):
         filename, _ = QFileDialog.getSaveFileName(
@@ -457,29 +456,30 @@ class MainWindow(QMainWindow):
         dlg.exec()
 
     def calc_residuals(self):
-        self.TreeUtil.selected_df = self.TreeUtil.selected_df.sort_values(by='datetime')
-        self.TreeUtil.selected_df.loc[:, "Magnetic_Field_Smoothed"] = running_mean_uniform_filter1d(
-            self.TreeUtil.selected_df.loc[:, "Magnetic_Field"], self.smoothing_window_length)
-        self.TreeUtil.selected_df.loc[:, "Magnetic_Field_Ambient"] = running_mean_uniform_filter1d(
-            self.TreeUtil.selected_df.loc[:, "Magnetic_Field"], self.ambient_window_length)
-        self.TreeUtil.selected_df.loc[:, "Magnetic_Field_residual"] = self.TreeUtil.selected_df.loc[:,
-                                                                      "Magnetic_Field_Smoothed"] - self.TreeUtil.selected_df.loc[
-                                                                                                   :,
-                                                                                                   "Magnetic_Field_Ambient"]
+        TimeSeriesManipulator.smoothing_and_residual_calculation(self.TreeUtil.selected_df,
+                                                                 self.smoothing_window_length,
+                                                                 self.ambient_window_length)
+
 
     def draw_1d_selected(self):
         self.TreeUtil.selected_df = self.TreeUtil.selected_df.sort_values(by='datetime')
         if not "Magnetic_Field_residual" in self.TreeUtil.selected_df:
             self.calc_residuals()
 
+        window = getattr(self, "time_series_window", None)
+        if window is not None:
+            window.draw_1D_seelcted()
+
         self.time_series_ax.cla()
-        self.time_series_ax.plot(self.TreeUtil.selected_df["datetime"], self.TreeUtil.selected_df["Magnetic_Field"])
+        self.time_series_ax.plot(self.TreeUtil.selected_df["datetime"], self.TreeUtil.selected_df["Magnetic_Field"],
+                                 color="black")
         self.time_series_ax.set_ylabel("Total mag field $B$ [nT]")
         self.time_series_canvas.draw_idle()
 
         self.time_series_ax_res.cla()
         self.time_series_ax_res.plot(self.TreeUtil.selected_df["datetime"],
-                                     self.TreeUtil.selected_df["Magnetic_Field_residual"])
+                                     self.TreeUtil.selected_df["Magnetic_Field_residual"],
+                                     color="black")
         self.time_series_ax_res.set_ylabel(r"Res $B_0 - \bar{B}$ [nT]")
         self.time_series_canvas_res.draw_idle()
 
