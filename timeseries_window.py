@@ -1,3 +1,4 @@
+from figure_wrapper import TimeSeriesNavigationToolbar
 from ui_elements.ui_timeseries_window import Ui_MainWindow
 from PySide6.QtWidgets import QMainWindow
 from matplotlib.figure import Figure
@@ -12,7 +13,7 @@ class TimeSeriesWindow(QMainWindow):
         self.parent = parent
 
         self.time_series_canvas = FigureCanvas(Figure())
-        self.ui.verticalLayoutTimeSeriesCanvas.addWidget(NavigationToolbar(self.time_series_canvas))
+        self.ui.verticalLayoutTimeSeriesCanvas.addWidget(TimeSeriesNavigationToolbar(self.time_series_canvas,self))
         self.ui.verticalLayoutTimeSeriesCanvas.addWidget(self.time_series_canvas)
         self.time_series_ax = self.time_series_canvas.figure.subplots()
 

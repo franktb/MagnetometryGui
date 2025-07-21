@@ -8,6 +8,9 @@ from matplotlib.path import Path
 from threading import Thread
 from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.figure import Figure
+from matplotlib.widgets import SpanSelector
+import pandas as pd
+import matplotlib.dates as mdates
 from pyproj import Transformer
 
 
@@ -16,6 +19,123 @@ class MplCanvas(FigureCanvas):
         self.fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = self.fig.add_subplot(111)
         super().__init__(self.fig)
+
+
+
+class TimeSeriesNavigationToolbar(NavigationToolbar):
+    def __init__(self, canvas, parent=None):
+        super(TimeSeriesNavigationToolbar, self).__init__(canvas, parent)
+        self.parent = parent
+        self.selected_points = None
+
+        self.span_selector = None
+        self.span_active = False
+
+        # Store references to zoom and pan actions
+        self.zoom_action = self._actions['zoom']
+        self.pan_action = self._actions['pan']
+
+
+        # Find the index of the stretchable spacer (usually last)
+        spacer_index = self._find_spacer_index()
+
+        self.span_action = self.addAction(
+            QIcon(r"./ui_elements/icons/cut-scissor-icon.png"),
+            # fromTheme("face-smile"),  # Use a theme icon or load your own with QIcon("path.png")
+            "Custom Tool",
+            self.toggle_span
+        )
+        self.span_action.setToolTip("Span removal")
+        self.span_action.setCheckable(True)
+        self.insertAction(self.actions()[spacer_index], self.span_action)
+
+    def toggle_span(self):
+        if self.span_active:
+            self.deactivate_span()
+        else:
+            self.activate_span()
+
+
+    def _find_spacer_index(self):
+        # Typically the last action is the spacer that pushes widgets to the right
+        for i, action in enumerate(self.actions()):
+            if action.isSeparator():
+                continue
+            if action.iconText() == "":  # crude check for spacer
+                return i
+        return len(self.actions())
+
+    def activate_span(self):
+        self.span_active = True
+        self.span_action.setChecked(True)
+
+        # Disable pan/zoom actions to prevent user activation
+        self.zoom_action.setEnabled(False)
+        self.pan_action.setEnabled(False)
+
+        # Deactivate if already active
+        if self.zoom_action.isChecked():
+            self.zoom()
+        if self.pan_action.isChecked():
+            self.pan()
+
+
+        ax = self.canvas.figure.get_axes()[0]
+        self.span_selector = SpanSelector(ax,
+                                          onselect=self.on_select,
+                                          direction='horizontal',
+                                          useblit=True,
+                                          interactive=True,
+                                          )
+
+
+
+
+    def deactivate_span(self):
+        self.span_active = False
+        self.span_action.setChecked(False)
+
+        self.zoom_action.setEnabled(True)
+        self.pan_action.setEnabled(True)
+
+
+        if self.span_selector:
+            self.span_selector.disconnect_events()
+            self.span_selector.set_visible(False)
+            self.span_selector = None
+            self.canvas.draw_idle()
+
+        dlg = QMessageBox(self)
+        dlg.setWindowTitle("Conformation")
+        dlg.setText("Remove marked track line points?")
+        dlg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        dlg.setIcon(QMessageBox.Question)
+        button = dlg.exec()
+
+        if button == QMessageBox.Yes:
+            start = mdates.num2date(self.xmin)
+            end = mdates.num2date(self.xmax)
+            start = pd.to_datetime(start).tz_localize(None)
+            end = pd.to_datetime(end).tz_localize(None)
+            df = self.parent.parent.TreeUtil.selected_df
+
+            print("Selected interval:", start, "to", end)
+
+            # Filter the DataFrame to exclude that interval
+            df_filtered = df[(df["datetime"] < start) | (df["datetime"] > end)]
+
+            # Update the DataFrame in your object (optional)
+            self.parent.parent.TreeUtil.selected_df = df_filtered
+
+
+        else:
+            print("No!")
+
+
+    def on_select(self, xmin,xmax):
+        self.xmin = xmin
+        self.xmax = xmax
+
 
 
 
@@ -78,7 +198,8 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
 
         # Initialize LassoSelector
         ax = self.canvas.figure.get_axes()[0]
-        self.lasso_selector = LassoSelector(ax, onselect=self.on_select)
+        self.lasso_selector = LassoSelector(ax, onselect=self.on_select,
+                                            props=dict(color='red', linewidth=2, linestyle='--'))
 
 
     def deactivate_lasso(self):
