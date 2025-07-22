@@ -342,8 +342,8 @@ class MainWindow(QMainWindow):
         # Mask invalid Z values
         masked_grid_z = np.ma.masked_invalid(self.grid_z)
 
-        self.mapping_2D_ax.set_xlabel("Long [°]")
-        self.mapping_2D_ax.set_ylabel("Lat [°]")
+        self.mapping_2D_ax.set_xlabel("Eastings [m]")
+        self.mapping_2D_ax.set_ylabel("Northings [m]")
         # self.mapping_2D_ax.imshow(grid_z.T, origin='lower', extent=(x_min, x_max, y_min, y_max))
 
         bounds = np.array([-300, -200, -100, -50, -20, -10., -5, 0, 5, 10, 20, 50, 100, 200, 300])
@@ -366,10 +366,10 @@ class MainWindow(QMainWindow):
         end = time.time()
         print(end - start)
 
-        cx.add_basemap(self.mapping_2D_ax,
-                       crs="EPSG:32629",
-                       source=cx.providers.OpenStreetMap.Mapnik,
-                       )
+        #cx.add_basemap(self.mapping_2D_ax,
+        #               crs="EPSG:32629",
+        #               source=cx.providers.OpenStreetMap.Mapnik,
+        #               )
 
         # self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', levels=10,
         #                            norm=colors.SymLogNorm(linthresh=10, linscale=1,
@@ -392,8 +392,8 @@ class MainWindow(QMainWindow):
                                                            orientation="vertical")
         self.cbar.set_label('Anomaly [nT]')
 
-        self.mapping_2D_ax.scatter(489426, 5693316)
-        self.mapping_2D_ax.scatter(514500, 5705600)
+        #self.mapping_2D_ax.scatter(489426, 5693316)
+        self.mapping_2D_ax.scatter(514515,5705605)
 
         self.mapping_2D_canvas.draw_idle()
         # print("Number of collections:", len(self.contourfplot.collections))

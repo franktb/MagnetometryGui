@@ -49,7 +49,7 @@ class DataManipulator():
         #            mask[i] = True
         #    return mask
 
-        mask = compute_pairwise_mask(coord_array, selected_coords, tol)
+        mask = compute_pairwise_mask(coord_array, selected_coords, tol,12)
 
         print(f"Selected pairs: {selected_coords.shape[0]}")
         print(f"Matching rows: {np.sum(mask)} of {len(df)}")

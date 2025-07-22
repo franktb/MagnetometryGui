@@ -8,6 +8,9 @@ cimport cython
 from cython.parallel cimport parallel
 from libc.math cimport sqrt
 
+cdef extern from "omp.h":
+    void omp_set_num_threads(int)
+
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
@@ -38,7 +41,8 @@ def compute_pairwise_mask(
                         double[:, ::1] selected,
                         #np.ndarray[np.float64_t, ndim=2] coords,
                         #np.ndarray[np.float64_t, ndim=2] selected,
-                        double tol):
+                        double tol,
+                        int num_threads=0):
     cdef Py_ssize_t i, j
     cdef Py_ssize_t n_coords = coords.shape[0]
     cdef Py_ssize_t n_selected = selected.shape[0]
@@ -47,6 +51,9 @@ def compute_pairwise_mask(
     cdef double dx, dy, dist
     # compare to square distance to avoid computation of sqrt
     cdef double tol2 = tol * tol
+
+    if num_threads > 0:
+        omp_set_num_threads(num_threads)
 
     with nogil:
         for i in prange(n_coords, schedule='static'):
