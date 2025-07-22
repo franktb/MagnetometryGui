@@ -56,3 +56,8 @@ class DataManipulator():
         df.drop(df[mask].index, inplace=True)
         print("DONE!!!")
         print(df.shape)
+
+    @staticmethod
+    def drop_from_span_select(df, xmin, xmax):
+        df.sort_values(by='datetime', inplace=True)
+        df.drop(df[(df["datetime"] >= xmin) & (df["datetime"] <= xmax)].index, inplace=True)

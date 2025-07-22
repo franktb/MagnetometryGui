@@ -68,6 +68,14 @@ class TreeUtil():
                                   selected_points))
             thread.start()
 
+    def drop_from_span_select(self,xmin,xmax):
+        for item in self.checked_items_list:
+            thread = Thread(target=self.data_manipulator.drop_from_span_select,
+                            args=(item.data_frame,
+                                  xmin,
+                                  xmax))
+            thread.start()
+
     def write_surveys_to_csv(self):
         self.checked_items()
 

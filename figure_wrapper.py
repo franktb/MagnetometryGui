@@ -127,6 +127,11 @@ class TimeSeriesNavigationToolbar(NavigationToolbar):
             # Update the DataFrame in your object (optional)
             self.parent.parent.TreeUtil.selected_df = df_filtered
 
+            self.parent.parent.TreeUtil.drop_from_span_select(start,end)
+
+
+
+
 
         else:
             print("No!")
@@ -232,7 +237,7 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
                                 args=(self.parent.TreeUtil.selected_df,
                                       self.selected_points))
             thread.start()
-            #self.parent.TreeUtil.drop_from_lasso_select(self.selected_points)
+            self.parent.TreeUtil.drop_from_lasso_select(self.selected_points)
         else:
             print("No!")
 
