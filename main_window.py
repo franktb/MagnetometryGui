@@ -366,10 +366,10 @@ class MainWindow(QMainWindow):
         end = time.time()
         print(end - start)
 
-        #cx.add_basemap(self.mapping_2D_ax,
-        #               crs="EPSG:32629",
-        #               source=cx.providers.OpenStreetMap.Mapnik,
-        #               )
+        cx.add_basemap(self.mapping_2D_ax,
+                       crs="EPSG:32629",
+                       source=cx.providers.OpenStreetMap.Mapnik,
+                       )
 
         # self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', levels=10,
         #                            norm=colors.SymLogNorm(linthresh=10, linscale=1,
@@ -393,7 +393,7 @@ class MainWindow(QMainWindow):
         self.cbar.set_label('Anomaly [nT]')
 
         #self.mapping_2D_ax.scatter(489426, 5693316)
-        self.mapping_2D_ax.scatter(514515,5705605)
+        #self.mapping_2D_ax.scatter(514515,5705605)
 
         self.mapping_2D_canvas.draw_idle()
         # print("Number of collections:", len(self.contourfplot.collections))
