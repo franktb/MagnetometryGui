@@ -45,7 +45,7 @@ class MainWindow(QMainWindow):
         self.ui.actionFrom_BOB_CSV.triggered.connect(self.select_BOB_CSV)
         self.ui.actionFrom_Sealink_Folder.triggered.connect(self.select_SeaLINKFolder)
         self.ui.actionFrom_Custom_CSV.triggered.connect(self.select_custom_CSV)
-        self.ui.actionDraw1D.triggered.connect(self.draw_1d_selected)
+        self.ui.actionDraw1D.triggered.connect(self.wrapper_1d_selected)
 
         self.ui.actionDrawSelect.triggered.connect(self.draw_selection)
         self.ui.actionRemoveOutlier.triggered.connect(self.remove_outlier)
@@ -461,15 +461,19 @@ class MainWindow(QMainWindow):
                                                                  self.ambient_window_length)
 
 
-    def draw_1d_selected(self):
+
+    def wrapper_1d_selected(self):
         self.TreeUtil.selected_df = self.TreeUtil.selected_df.sort_values(by='datetime')
         if not "Magnetic_Field_residual" in self.TreeUtil.selected_df:
             self.calc_residuals()
 
         window = getattr(self, "time_series_window", None)
         if window is not None:
-            window.draw_1D_seelcted()
+            window.draw_1d_selected()
 
+        self.draw_1d_selected()
+
+    def draw_1d_selected(self):
         self.time_series_ax.cla()
         self.time_series_ax.plot(self.TreeUtil.selected_df["datetime"], self.TreeUtil.selected_df["Magnetic_Field"],
                                  color="black")
