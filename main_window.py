@@ -16,6 +16,7 @@ from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.colors as colors
+from matplotlib.colors import TwoSlopeNorm
 
 from figure_wrapper import SlippyMapNavigationToolbar
 from TreeWidget import TreeUtil
@@ -46,6 +47,8 @@ class MainWindow(QMainWindow):
         self.ui.actionFrom_Sealink_Folder.triggered.connect(self.select_SeaLINKFolder)
         self.ui.actionFrom_Custom_CSV.triggered.connect(self.select_custom_CSV)
         self.ui.actionDraw1D.triggered.connect(self.wrapper_1d_selected)
+
+
 
         self.ui.actionDrawSelect.triggered.connect(self.draw_selection)
         self.ui.actionRemoveOutlier.triggered.connect(self.remove_outlier)
@@ -79,6 +82,11 @@ class MainWindow(QMainWindow):
         self.ui.verticalLayoutTimeSeriesCanvas_2.addWidget(NavigationToolbar(self.time_series_canvas_res))
         self.ui.verticalLayoutTimeSeriesCanvas_2.addWidget(self.time_series_canvas_res)
         self.time_series_ax_res = self.time_series_canvas_res.figure.subplots()
+
+
+
+        self.ui.comboBox_Scale_type.currentIndexChanged.connect(self.update_scale)
+        self.color_scale_type = self.ui.comboBox_Scale_type.currentText()
 
         # self.ui.pushButton.clicked.connect(self.debugTree)
 
@@ -158,6 +166,12 @@ class MainWindow(QMainWindow):
                                            "time_series_window",
                                            TimeSeriesWindow,
                                            self.ui.action_spawn_TimeSeriesWindow)
+
+    def update_scale(self):
+        self.color_scale_type = self.ui.comboBox_Scale_type.currentText()
+        if self.grid_x is not None:
+            self.update_plot()
+
 
     def detect_anomalies(self):
         print("I am here")
@@ -355,13 +369,26 @@ class MainWindow(QMainWindow):
 
         # norm = colors.SymLogNorm(linthresh=1e-3, linscale=1.0, vmin=grid_z.min(), vmax=grid_z.max())
         masked_grid_z = np.ma.masked_invalid(self.grid_z)
-        self.contourfplot = self.mapping_2D_ax.pcolormesh(self.grid_x, self.grid_y, masked_grid_z,  # 250,
-                                                          # origin='lower',
-                                                          # extent=(x_min, x_max, y_min, y_max),
-                                                          # cmap='RdBu_r', norm=norm)
-                                                          cmap='RdBu_r',
-                                                          norm="symlog"
-                                                          )
+
+
+        if self.color_scale_type == "Linear scale":
+            norm = TwoSlopeNorm(vmin=np.nanmin(self.grid_z), vcenter=0, vmax=np.nanmax(self.grid_z))
+            self.contourfplot = self.mapping_2D_ax.pcolormesh(self.grid_x,
+                                                              self.grid_y,
+                                                              masked_grid_z,
+                                                              cmap='RdBu_r',
+                                                              norm=norm)
+
+        elif self.color_scale_type == "Logarithmic scale":
+            self.contourfplot = self.mapping_2D_ax.pcolormesh(self.grid_x,
+                                                              self.grid_y,
+                                                              masked_grid_z,  # 250,
+                                                              # origin='lower',
+                                                              # extent=(x_min, x_max, y_min, y_max),
+                                                              # cmap='RdBu_r', norm=norm)
+                                                              cmap='RdBu_r',
+                                                              norm="symlog"
+                                                              )
 
         end = time.time()
         print(end - start)

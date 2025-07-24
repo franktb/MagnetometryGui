@@ -16,11 +16,11 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QGridLayout, QHeaderView, QLabel,
-    QLineEdit, QListWidget, QListWidgetItem, QMainWindow,
-    QMenu, QMenuBar, QSizePolicy, QStatusBar,
-    QToolBar, QTreeWidget, QTreeWidgetItem, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QHeaderView,
+    QLabel, QLineEdit, QListWidget, QListWidgetItem,
+    QMainWindow, QMenu, QMenuBar, QSizePolicy,
+    QStatusBar, QToolBar, QTreeWidget, QTreeWidgetItem,
+    QVBoxLayout, QWidget)
 import resources_rc
 
 class Ui_MainWindow(object):
@@ -171,6 +171,18 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.lineEdit_northingsSampleRate)
 
+        self.label_7 = QLabel(self.centralwidget)
+        self.label_7.setObjectName(u"label_7")
+
+        self.verticalLayout.addWidget(self.label_7)
+
+        self.comboBox_Scale_type = QComboBox(self.centralwidget)
+        self.comboBox_Scale_type.addItem("")
+        self.comboBox_Scale_type.addItem("")
+        self.comboBox_Scale_type.setObjectName(u"comboBox_Scale_type")
+
+        self.verticalLayout.addWidget(self.comboBox_Scale_type)
+
 
         self.gridLayout.addLayout(self.verticalLayout, 0, 3, 1, 1)
 
@@ -235,8 +247,8 @@ class Ui_MainWindow(object):
         self.toolBar.addAction(self.actionDinuralCorrection)
         self.toolBar.addAction(self.actioncalcResiduals)
         self.toolBar.addSeparator()
-        self.toolBar.addAction(self.actionDrawSelect)
         self.toolBar.addAction(self.actionDraw1D)
+        self.toolBar.addAction(self.actionDrawSelect)
         self.toolBar.addSeparator()
         self.toolBar.addAction(self.actionanomalyDetection)
 
@@ -287,6 +299,10 @@ class Ui_MainWindow(object):
         self.lineEdit_eastingsSampleRate.setText(QCoreApplication.translate("MainWindow", u"1000", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Northings sampling rate:", None))
         self.lineEdit_northingsSampleRate.setText(QCoreApplication.translate("MainWindow", u"1000", None))
+        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Scale type:", None))
+        self.comboBox_Scale_type.setItemText(0, QCoreApplication.translate("MainWindow", u"Linear scale", None))
+        self.comboBox_Scale_type.setItemText(1, QCoreApplication.translate("MainWindow", u"Logarithmic scale", None))
+
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"&File", None))
         self.menuOpen_Survey.setTitle(QCoreApplication.translate("MainWindow", u"Import Survey", None))
         self.menuExport_Grid.setTitle(QCoreApplication.translate("MainWindow", u"Export Grid", None))

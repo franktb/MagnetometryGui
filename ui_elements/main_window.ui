@@ -109,6 +109,27 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Scale type:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboBox_Scale_type">
+        <item>
+         <property name="text">
+          <string>Linear scale</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Logarithmic scale</string>
+         </property>
+        </item>
+       </widget>
+      </item>
      </layout>
     </item>
     <item row="1" column="0" colspan="2">
