@@ -151,14 +151,6 @@ pymc==5.22.0
 pyogrio==0.11.0
 pyparsing==3.2.3
 pyproj==3.7.1
-PyQt6==6.9.0
-PyQt6-Qt6==6.9.0
-PyQt6-WebEngine==6.9.0
-PyQt6-WebEngine-Qt6==6.9.0
-PyQt6-WebEngineSubwheel-Qt6==6.7.3
-PyQt6_sip==13.10.0
-PyQtWebEngine==5.15.7
-PyQtWebEngine-Qt5==5.15.16
 pyshp==2.3.1
 PySide6==6.9.0
 PySide6_Addons==6.9.0

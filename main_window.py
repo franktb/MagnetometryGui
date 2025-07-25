@@ -17,6 +17,9 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.colors as colors
 from matplotlib.colors import TwoSlopeNorm
+from skimage import feature, measure
+
+
 
 from figure_wrapper import SlippyMapNavigationToolbar
 from TreeWidget import TreeUtil
@@ -32,6 +35,7 @@ from ui_elements.dialogs import *
 from util.time_series_module import TimeSeriesManipulator
 from window_manager import WindowManager
 from worker import Worker, PWorker
+
 
 
 class MainWindow(QMainWindow):
@@ -186,8 +190,20 @@ class MainWindow(QMainWindow):
 
         x_coords = self.grid_x[y_indices, x_indices]
         y_coords = self.grid_y[y_indices, x_indices]
-
         self.anomalies = self.mapping_2D_ax.scatter(x_coords, y_coords)
+
+
+        masked_grid_z = np.ma.masked_invalid(self.grid_z)
+        edges = feature.canny(masked_grid_z)
+        #self.anomalies = self.mapping_2D_ax.scatter(edges1)
+        contours = measure.find_contours(edges, level=0.99)
+        #print(type(contour))
+        #print(contour.shape)
+
+        for contour in contours:
+            self.mapping_2D_ax.plot(contour[:, 1], contour[:, 0])
+
+        #self.anomalies = self.mapping_2D_ax.scatter(x_coords, y_coords)
 
         self.mapping_2D_canvas.draw_idle()
         print("anno done")
