@@ -118,6 +118,10 @@ class MainWindow(QMainWindow):
         forthlayer.setCheckState(Qt.Checked)
         self.ui.layerWidget.addItem(forthlayer)
 
+        fifthlayer = QListWidgetItem("Clip region")
+        fifthlayer.setCheckState(Qt.Checked)
+        self.ui.layerWidget.addItem(fifthlayer)
+
         self.ui.layerWidget.itemChanged.connect(self.layer_update)
 
         self.data_manipulator = DataManipulator()
@@ -299,6 +303,8 @@ class MainWindow(QMainWindow):
             self.track_lines.set_visible(False)
             self.mapping_2D_canvas.draw_idle()
 
+        self.update_plot()
+
     def update_selected_df(self):
         worker = Worker(self.TreeUtil.checked_items)
         self.threadpool.start(worker)
@@ -386,19 +392,26 @@ class MainWindow(QMainWindow):
         # norm = colors.SymLogNorm(linthresh=1e-3, linscale=1.0, vmin=grid_z.min(), vmax=grid_z.max())
         masked_grid_z = np.ma.masked_invalid(self.grid_z)
 
+        if hasattr(self, 'mask_clip') and self.mask_clip is not None:
+            print("I AM HERE")
+            clipped_grid_z = np.ma.masked_where(~self.mask_clip, self.grid_z)
+        else:
+            clipped_grid_z = self.grid_z
+
+
 
         if self.color_scale_type == "Linear scale":
-            norm = TwoSlopeNorm(vmin=np.nanmin(self.grid_z), vcenter=0, vmax=np.nanmax(self.grid_z))
+            norm = TwoSlopeNorm(vmin=np.nanmin(clipped_grid_z), vcenter=0, vmax=np.nanmax(clipped_grid_z))
             self.contourfplot = self.mapping_2D_ax.pcolormesh(self.grid_x,
                                                               self.grid_y,
-                                                              masked_grid_z,
+                                                              clipped_grid_z,
                                                               cmap='RdBu_r',
                                                               norm=norm)
 
         elif self.color_scale_type == "Logarithmic scale":
             self.contourfplot = self.mapping_2D_ax.pcolormesh(self.grid_x,
                                                               self.grid_y,
-                                                              masked_grid_z,  # 250,
+                                                              clipped_grid_z,  # 250,
                                                               # origin='lower',
                                                               # extent=(x_min, x_max, y_min, y_max),
                                                               # cmap='RdBu_r', norm=norm)

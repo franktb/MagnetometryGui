@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QMessageBox
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 import contextily as cx
 from PySide6.QtGui import QIcon
-from matplotlib.widgets import LassoSelector
+from matplotlib.widgets import LassoSelector, PolygonSelector
 import numpy as np
 from matplotlib.path import Path
 from threading import Thread
@@ -153,6 +153,8 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
         self.lasso_selector = None
         self.lasso_active = False
 
+        self.clip_active = False
+
         # Store references to zoom and pan actions
         self.zoom_action = self._actions['zoom']
         self.pan_action = self._actions['pan']
@@ -172,6 +174,18 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
         self.lasso_action.setCheckable(True)
         self.insertAction(self.actions()[spacer_index], self.lasso_action)
 
+
+        self.clip_action = self.addAction(
+            QIcon(r"./ui_elements/icons/object-select-icon.png"),
+            "Clip region",
+            self.toggle_clip
+        )
+        self.clip_action.setToolTip("Clip region")
+        self.clip_action.setCheckable(True)
+        self.insertAction(self.actions()[spacer_index], self.clip_action)
+
+
+
     def _find_spacer_index(self):
         # Typically the last action is the spacer that pushes widgets to the right
         for i, action in enumerate(self.actions()):
@@ -180,6 +194,55 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
             if action.iconText() == "":  # crude check for spacer
                 return i
         return len(self.actions())
+
+
+    def toggle_clip(self):
+        if self.clip_active:
+            self.deactivate_clip()
+        else:
+            self.activate_clip()
+
+    def activate_clip(self):
+        self.clip_active = True
+        self.clip_action.setChecked(True)
+
+        # Disable pan/zoom actions to prevent user activation
+        self.zoom_action.setEnabled(False)
+        self.pan_action.setEnabled(False)
+
+        # Deactivate if already active
+        if self.zoom_action.isChecked():
+            self.zoom()
+        if self.pan_action.isChecked():
+            self.pan()
+
+        ax = self.canvas.figure.get_axes()[0]
+        self.poly_selector = PolygonSelector(ax,
+                                             onselect=self.on_select_clip,
+                                             draw_bounding_box=True,
+                                             useblit=True)
+
+
+    def on_select_clip(self, verts):
+        self.path_clip = Path(verts)
+
+    def deactivate_clip(self):
+        self.clip_active = False
+        self.clip_action.setChecked(False)
+
+        # Re-enable pan/zoom
+        self.zoom_action.setEnabled(True)
+        self.pan_action.setEnabled(True)
+
+        if self.poly_selector:
+            self.poly_selector.disconnect_events()
+            self.poly_selector = None
+
+        points = np.vstack((self.parent.grid_x.ravel(), self.parent.grid_y.ravel())).T
+        mask_flat = self.path_clip.contains_points(points)
+        self.parent.mask_clip = mask_flat.reshape(self.parent.grid_x.shape)
+
+
 
     def toggle_lasso(self):
         if self.lasso_active:
@@ -203,7 +266,7 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
 
         # Initialize LassoSelector
         ax = self.canvas.figure.get_axes()[0]
-        self.lasso_selector = LassoSelector(ax, onselect=self.on_select,
+        self.lasso_selector = LassoSelector(ax, onselect=self.on_select_lasso,
                                             props=dict(color='red', linewidth=2, linestyle='--'))
 
 
@@ -243,10 +306,7 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
             print("No!")
 
 
-
-
-
-    def on_select(self, verts):
+    def on_select_lasso(self, verts):
         ax = self.canvas.figure.axes[0]
         path = Path(verts)
         line = self.parent.track_lines.get_offsets()
