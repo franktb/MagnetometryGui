@@ -78,8 +78,8 @@ class TreeUtil():
 
     def write_surveys_to_csv(self):
         self.checked_items()
-
-        output_dir = "processed"
+        print("EXPORT")
+        output_dir = "processed_CV13_01"
         os.makedirs(output_dir, exist_ok=True)
 
         for item in self.checked_items_list:

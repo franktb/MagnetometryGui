@@ -245,7 +245,16 @@ class MainWindow(QMainWindow):
             # Ensure the filename ends with .tif
             if not filename.lower().endswith(".tif"):
                 filename += ".tif"
-            self.writeTif.write_to_GeoTiff(filename, self.grid_x, self.grid_y, self.grid_z)
+
+            if hasattr(self, 'mask_clip') and self.mask_clip is not None:
+                print("I AM HERE")
+                clipped_grid_z = np.ma.masked_where(~self.mask_clip, self.grid_z)
+            else:
+                clipped_grid_z = np.ma.masked_invalid(self.grid_z)
+
+
+
+            self.writeTif.write_to_GeoTiff(filename, self.grid_x, self.grid_y, clipped_grid_z)
 
     def diurnal_correction(self):
         return 0
@@ -390,13 +399,13 @@ class MainWindow(QMainWindow):
         start = time.time()
 
         # norm = colors.SymLogNorm(linthresh=1e-3, linscale=1.0, vmin=grid_z.min(), vmax=grid_z.max())
-        masked_grid_z = np.ma.masked_invalid(self.grid_z)
+        #masked_grid_z = np.ma.masked_invalid(self.grid_z)
 
         if hasattr(self, 'mask_clip') and self.mask_clip is not None:
             print("I AM HERE")
             clipped_grid_z = np.ma.masked_where(~self.mask_clip, self.grid_z)
         else:
-            clipped_grid_z = self.grid_z
+            clipped_grid_z = np.ma.masked_invalid(self.grid_z)
 
 
 
@@ -436,8 +445,13 @@ class MainWindow(QMainWindow):
         except:
             pass
 
-        self.track_lines = self.mapping_2D_ax.scatter(self.data_coordinates[0, :],
-                                                      self.data_coordinates[1, :], color="black", s=1)
+
+        if hasattr(self, 'masked_tracklines') and self.masked_tracklines is not None:
+            self.track_lines = self.mapping_2D_ax.scatter(self.masked_tracklines[0, :],
+                                                          self.masked_tracklines[1, :], color="black", s=1)
+        else:
+            self.track_lines = self.mapping_2D_ax.scatter(self.data_coordinates[0, :],
+                                                          self.data_coordinates[1, :], color="black", s=1)
 
         if self.ui.layerWidget.item(3).checkState() == Qt.Checked:
             self.track_lines.set_visible(True)
@@ -449,7 +463,7 @@ class MainWindow(QMainWindow):
         self.cbar.set_label('Anomaly [nT]')
 
         #self.mapping_2D_ax.scatter(489426, 5693316)
-        #self.mapping_2D_ax.scatter(514515,5705605)
+        #self.mapping_2D_ax.scatter(514400,5705500)
 
         self.mapping_2D_canvas.draw_idle()
         # print("Number of collections:", len(self.contourfplot.collections))

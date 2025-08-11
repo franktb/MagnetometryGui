@@ -226,6 +226,9 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
     def on_select_clip(self, verts):
         self.path_clip = Path(verts)
 
+
+
+
     def deactivate_clip(self):
         self.clip_active = False
         self.clip_action.setChecked(False)
@@ -239,8 +242,17 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
             self.poly_selector = None
 
         points = np.vstack((self.parent.grid_x.ravel(), self.parent.grid_y.ravel())).T
+
+        print("working", points.shape)
         mask_flat = self.path_clip.contains_points(points)
         self.parent.mask_clip = mask_flat.reshape(self.parent.grid_x.shape)
+
+        print("broken", self.parent.data_coordinates.shape)
+        mask_tracklines = self.path_clip.contains_points(self.parent.data_coordinates.T)
+        self.parent.masked_tracklines =  self.parent.data_coordinates[:,mask_tracklines]
+
+
+        print("DONE CLIPPING")
 
 
 
