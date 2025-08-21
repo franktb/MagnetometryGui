@@ -10,11 +10,7 @@ To compile the cython component run in your python environment:
 ```
 python setup.py build_ext --inplace       
 ```
-To pack an executable, run first
-```
-pyi-makespec main_window.py --onefile
-```
-and thereafter
+To pack an executable, run
 ```
 pyinstaller ./main_window.spec
 ```

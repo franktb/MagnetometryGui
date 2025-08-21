@@ -69,6 +69,8 @@ class MainWindow(QMainWindow):
         self.ui.actionanomalyDetection.triggered.connect(self.detect_anomalies)
 
         self.mapping_2D_canvas = FigureCanvas(Figure())
+        self.mapping_2D_canvas.setFocusPolicy(Qt.StrongFocus)
+        self.mapping_2D_canvas.setFocus()
         # self.mapping_2D_canvas = MplCanvas(self, 5,3,150)
 
         self.ui.verticalLayout2DMappingCanvas.addWidget(SlippyMapNavigationToolbar(self.mapping_2D_canvas, self, ))
