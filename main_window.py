@@ -334,6 +334,16 @@ class MainWindow(QMainWindow):
 
     def draw_selection(self):
         self.TreeUtil.selected_df = self.TreeUtil.selected_df.sort_values(by='datetime')
+
+
+        if not "Magnetic_Field_residual" in self.TreeUtil.selected_df:
+            self.calc_residuals()
+
+        if self.TreeUtil.selected_df.isnull().values.any():
+            self.TreeUtil.selected_df.dropna(inplace=True)
+            QMessageBox.warning(self, "Nan rows", "Nan rows has been removed to continue processing", )
+
+
         nth_select = int(self.ui.lineEdit_nthSelectWindow.text())
         self.data_coordinates = np.array(
             (self.TreeUtil.selected_df["UTM_Easting"].iloc[::nth_select],
