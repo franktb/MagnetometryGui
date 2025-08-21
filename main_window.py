@@ -498,13 +498,30 @@ class MainWindow(QMainWindow):
         selected_folder = QFileDialog.getExistingDirectory(parent=self,
                                                            caption="Select directory",
                                                            options=QFileDialog.Option.ShowDirsOnly)
-        print(selected_folder)
-        worker = Worker(self.readCSV.read_from_SeaLINKFolderXYZ,
-                        selected_folder,
-                        project=self.TreeUtil,
-                        )
 
-        self.threadpool.start(worker)
+        valid_folder = False
+        print(selected_folder)
+
+        folder_content = os.listdir(selected_folder)
+        # The raw data of acquired with Sealink is stored in CVXX_YY and a "Raw" subfolder
+        if str(os.listdir(selected_folder)[0]) == "Raw":
+            selected_folder = os.path.join(selected_folder, os.listdir(selected_folder)[0])
+            valid_folder = True
+
+        for file in folder_content:
+            if file.endswith(".XYZ"):
+                valid_folder = True
+                break
+
+        if valid_folder:
+            worker = Worker(self.readCSV.read_from_SeaLINKFolderXYZ,
+                            selected_folder,
+                            project=self.TreeUtil,
+                            )
+
+            self.threadpool.start(worker)
+        else:
+            QMessageBox.critical(self, "File IO Error", r"No .XYZ or Raw folder containing them has been found!", )
 
     def select_custom_CSV(self):
         @Slot(list)
