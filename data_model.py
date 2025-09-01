@@ -11,9 +11,6 @@ class MyQTreeWidgetItem(QTreeWidgetItem):
         self.setFlags(self.flags() | Qt.ItemIsEditable)
 
 
-
-
-
 class Survey(MyQTreeWidgetItem):
     def __init__(self, name):
         super().__init__(name)
@@ -31,7 +28,6 @@ class SurveyFrame(MyQTreeWidgetItem):
 class Anomaly(MyQTreeWidgetItem):
     def __init__(self, name, coordinates, user_defined):
         super().__init__(name)
-        #self.setText(0, name)
         self.coordinates = coordinates
         self.user_defined = user_defined
 
