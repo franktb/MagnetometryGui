@@ -88,6 +88,7 @@ class ReadMagCSV():
                     new_survey_frame = SurveyFrame(os.path.basename(file), survey_frame_raw, False)
                     new_survey_frame.setCheckState(0, Qt.Checked)
                     new_survey.addChild(new_survey_frame)
+                    print("typw", type(new_survey_frame))
 
                 except:
                     corrupted.append(os.path.join(path, file))

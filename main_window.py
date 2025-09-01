@@ -100,6 +100,7 @@ class MainWindow(QMainWindow):
 
         self.selected_df = pd.DataFrame()
         self.TreeUtil = TreeUtil(self.ui.treeWidget, self.selected_df)
+        self.ui.treeWidget.setEditTriggers(QTreeWidget.DoubleClicked | QTreeWidget.SelectedClicked)
         self.ui.treeWidget.itemChanged[QTreeWidgetItem, int].connect(self.update_selected_df)
 
         self.ui.actionExport_Survey.triggered.connect(self.TreeUtil.write_surveys_to_csv)

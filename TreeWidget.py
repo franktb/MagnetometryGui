@@ -10,16 +10,6 @@ from PySide6.QtCore import Qt
 from util.data_manipulation import DataManipulator
 from threading import Thread
 
-class Survey(QTreeWidgetItem):
-    def __init__( self, name):
-        super().__init__( )
-        self.setText(0, name)
-
-class SurveyFrame(QTreeWidgetItem):
-    def __init__( self, name, df):
-        super().__init__()
-        self.setText(0, name)
-        self.df = df
 
 class TreeUtil():
     def __init__(self, tree, selected_df):
