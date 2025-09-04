@@ -8,5 +8,6 @@
     <file alias="improvement-performance-icon.png">improvement-performance-icon.png</file>
     <file alias="area-chart-icon.png">area-chart-icon.png</file>
     <file alias="cut-scissor-icon.png">cut-scissor-icon.png</file>
+    <file alias="object-select-icon.png">object-select-icon.png</file>
   </qresource>
 </RCC>

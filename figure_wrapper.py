@@ -40,7 +40,7 @@ class TimeSeriesNavigationToolbar(NavigationToolbar):
         spacer_index = self._find_spacer_index()
 
         self.span_action = self.addAction(
-            QIcon(r"./ui_elements/icons/cut-scissor-icon.png"),
+            QIcon(u":/icons/cut-scissor-icon.png"),
             # fromTheme("face-smile"),  # Use a theme icon or load your own with QIcon("path.png")
             "Custom Tool",
             self.toggle_span
@@ -165,7 +165,7 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
 
 
         self.lasso_action = self.addAction(
-            QIcon(r"./ui_elements/icons/cut-scissor-icon.png"),
+            QIcon(u":/icons/cut-scissor-icon.png"),
             #fromTheme("face-smile"),  # Use a theme icon or load your own with QIcon("path.png")
             "Custom Tool",
             self.toggle_lasso
@@ -176,7 +176,7 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
 
 
         self.clip_action = self.addAction(
-            QIcon(r"./ui_elements/icons/object-select-icon.png"),
+            QIcon(u":/icons/object-select-icon.png"),
             "Clip region",
             self.toggle_clip
         )

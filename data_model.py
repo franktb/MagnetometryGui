@@ -11,6 +11,8 @@ class MyQTreeWidgetItem(QTreeWidgetItem):
         self.setFlags(self.flags() | Qt.ItemIsEditable)
 
 
+
+
 class Survey(MyQTreeWidgetItem):
     def __init__(self, name):
         super().__init__(name)

@@ -13,11 +13,16 @@ try:
 except ImportError:
     proj_data = []
 
+
+figure_data =[
+    ('./ui_elements/icons/*', 'ui_elements/icons'),
+]
+
 a = Analysis(
     ['main_window.py'],
     pathex=[],
     binaries=[],
-    datas=gdal_data + proj_data,
+    datas=gdal_data + proj_data + figure_data,
     hiddenimports=[
         'rasterio.sample',
         'pyproj',
@@ -25,7 +30,7 @@ a = Analysis(
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=[],
+    excludes=["PyQt6"],
     noarchive=False,
     optimize=0,
 )
