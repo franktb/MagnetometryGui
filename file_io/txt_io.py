@@ -75,15 +75,17 @@ class ReadMagCSV():
         print(os.listdir(path))
         for file in os.listdir(path):
             if file.endswith(".XYZ"):
-                survey_frame_header = pd.read_csv(os.path.join(path, file),
-                                                  delimiter=",",
-                                                  nrows=0,
-                                                  engine="python",
-                                                  on_bad_lines="warn",
-                                                  comment="/ ")
-                missing_cols = set(required_cols) - set(survey_frame_header.columns)
-
+                print(file)
                 try:
+                    survey_frame_header = pd.read_csv(os.path.join(path, file),
+                                                      delimiter=",",
+                                                      nrows=0,
+                                                      engine="python",
+                                                      on_bad_lines="warn",
+                                                      comment="/ ")
+                    missing_cols = set(required_cols) - set(survey_frame_header.columns)
+
+
                     # All required columns are present
                     if not missing_cols:
                         usecols = ["/Date", "Time", "Field_Mag1", "Longitude", "Latitude",
@@ -125,6 +127,11 @@ class ReadMagCSV():
                     new_survey_frame = SurveyFrame(os.path.basename(file), survey_frame_raw, False)
                     new_survey_frame.setCheckState(0, Qt.Checked)
                     new_survey.addChild(new_survey_frame)
+
+
+                #Is thrown if the file is empty
+                except pd.errors.EmptyDataError:
+                    print("Empty file", file)
 
                 except:
                     corrupted.append(os.path.join(path, file))
