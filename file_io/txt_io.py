@@ -4,6 +4,7 @@ from data_model import Survey, SurveyFrame
 from PySide6.QtCore import Qt
 from multiprocessing import Queue
 
+from util.coordinate_transformation import CoordinateTransformation
 from worker import PWorker
 
 
@@ -53,6 +54,18 @@ class ReadMagCSV():
         project.checked_items()
 
     def read_from_SeaLINKFolderXYZ(self, path, project):
+        """
+
+        :param path:
+        :param project:
+        :return:
+        """
+
+        # For a full record the following columns are required.
+        required_cols = ["/Date", "Time", "Field_Mag1", "Longitude", "Latitude",
+                         "UTM_Easting", "UTM_Northing"]
+        missing_eastnorth = False
+
         corrupted = []
         survey_id = os.path.basename(path)
         new_survey = Survey(survey_id)
@@ -62,17 +75,41 @@ class ReadMagCSV():
         print(os.listdir(path))
         for file in os.listdir(path):
             if file.endswith(".XYZ"):
+                survey_frame_header = pd.read_csv(os.path.join(path, file),
+                                                  delimiter=",",
+                                                  nrows=0,
+                                                  engine="python",
+                                                  on_bad_lines="warn",
+                                                  comment="/ ")
+                missing_cols = set(required_cols) - set(survey_frame_header.columns)
+
                 try:
+                    # All required columns are present
+                    if not missing_cols:
+                        usecols = ["/Date", "Time", "Field_Mag1", "Longitude", "Latitude",
+                                   "UTM_Easting", "UTM_Northing"]
+
+                    # Old Sealink files often only contain latitudes and longitudes
+                    elif missing_cols == {"UTM_Easting", "UTM_Northing"}:
+                        usecols = ["/Date", "Time", "Field_Mag1", "Longitude", "Latitude"]
+                        missing_eastnorth = True
+
                     survey_frame_raw = pd.read_csv(os.path.join(path, file),
                                                    delimiter=",",
-                                                   usecols=["/Date", "Time", "Field_Mag1", "Longitude", "Latitude",
-                                                            "UTM_Easting", "UTM_Northing"],
+                                                   usecols=usecols,
                                                    engine="python",
                                                    on_bad_lines="warn",
                                                    comment="/ ")
 
                     survey_frame_raw.drop(survey_frame_raw.loc[survey_frame_raw["Time"] == "Time"].index, inplace=True)
                     survey_frame_raw.rename(columns={r"Field_Mag1": r"Magnetic_Field"}, inplace=True)
+
+                    if missing_eastnorth:
+                        converted_easting, converted_northings = CoordinateTransformation.longlat_to_eastnorth(
+                            survey_frame_raw["Longitude"].astype(float),
+                            survey_frame_raw["Latitude"].astype(float))
+                        survey_frame_raw.loc[:, "UTM_Easting"] = converted_easting
+                        survey_frame_raw.loc[:, "UTM_Northing"] = converted_northings
 
                     survey_frame_raw = survey_frame_raw.astype({"Magnetic_Field": "float64",
                                                                 "Latitude": "float64",
@@ -88,10 +125,10 @@ class ReadMagCSV():
                     new_survey_frame = SurveyFrame(os.path.basename(file), survey_frame_raw, False)
                     new_survey_frame.setCheckState(0, Qt.Checked)
                     new_survey.addChild(new_survey_frame)
-                    print("typw", type(new_survey_frame))
 
                 except:
                     corrupted.append(os.path.join(path, file))
+                    print(file)
 
         project.checked_items()
 
