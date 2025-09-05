@@ -2,13 +2,12 @@ from PySide6.QtWidgets import QTreeWidgetItem
 from PySide6.QtCore import Qt
 
 
-
-
 class MyQTreeWidgetItem(QTreeWidgetItem):
     def __init__(self, name):
         super().__init__()
         self.setText(0, name)
         self.setFlags(self.flags() | Qt.ItemIsEditable)
+        self.name = name
 
 
 
@@ -22,7 +21,6 @@ class Survey(MyQTreeWidgetItem):
 class SurveyFrame(MyQTreeWidgetItem):
     def __init__(self, name, data_frame, source_corrupted):
         super().__init__(name)
-        self.name = name
         self.data_frame = data_frame
         self.source_corrupted = source_corrupted
 

@@ -17,7 +17,6 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.colors as colors
 from matplotlib.colors import TwoSlopeNorm
-from skimage import feature, measure
 
 
 
@@ -101,7 +100,7 @@ class MainWindow(QMainWindow):
         self.selected_df = pd.DataFrame()
         self.TreeUtil = TreeUtil(self.ui.treeWidget, self.selected_df)
         self.ui.treeWidget.setEditTriggers(QTreeWidget.DoubleClicked | QTreeWidget.SelectedClicked)
-        self.ui.treeWidget.itemChanged[QTreeWidgetItem, int].connect(self.update_selected_df)
+        self.ui.treeWidget.itemChanged.connect(lambda item, column: self.update_selected_df(item,column))
 
         self.ui.actionExport_Survey.triggered.connect(self.TreeUtil.write_surveys_to_csv)
 
@@ -318,7 +317,10 @@ class MainWindow(QMainWindow):
 
         self.update_plot()
 
-    def update_selected_df(self):
+    def update_selected_df(self, item, column):
+        print("debug1",item.name, column)
+        print("debug2",item.text(0), column)
+        item.name = item.text(column) #the c++ implementation requires the column
         worker = Worker(self.TreeUtil.checked_items)
         self.threadpool.start(worker)
 
