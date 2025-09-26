@@ -17,6 +17,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.colors as colors
 from matplotlib.colors import TwoSlopeNorm
+from skimage import feature, measure
 
 
 
@@ -248,7 +249,7 @@ class MainWindow(QMainWindow):
             if not filename.lower().endswith(".tif"):
                 filename += ".tif"
 
-            if hasattr(self, 'mask_clip') and self.mask_clip is not None and self.ui.layerWidget.item(5).checkState() == Qt.Checked:
+            if hasattr(self, 'mask_clip') and self.mask_clip is not None and self.ui.layerWidget.item(4).checkState() == Qt.Checked:
                 print("I AM HERE")
                 clipped_grid_z = np.ma.masked_where(~self.mask_clip, self.grid_z)
             else:

@@ -9,6 +9,9 @@ class MyQTreeWidgetItem(QTreeWidgetItem):
         self.setFlags(self.flags() | Qt.ItemIsEditable)
         self.name = name
 
+    def change_text(self):
+        self.name = self.text(0)
+
 
 
 
