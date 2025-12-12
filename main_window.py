@@ -122,7 +122,7 @@ class MainWindow(QMainWindow):
         self.ui.layerWidget.addItem(forthlayer)
 
         fifthlayer = QListWidgetItem("Clip region")
-        fifthlayer.setCheckState(Qt.Checked)
+        fifthlayer.setCheckState(Qt.Unchecked)
         self.ui.layerWidget.addItem(fifthlayer)
 
         self.ui.layerWidget.itemChanged.connect(self.layer_update)
@@ -314,6 +314,8 @@ class MainWindow(QMainWindow):
             self.track_lines.set_visible(False)
             self.mapping_2D_canvas.draw_idle()
 
+        if self.ui.layerWidget.item(4).checkState() == Qt.Checked:
+            print("huhu")
 
 
         self.update_plot()
