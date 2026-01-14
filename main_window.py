@@ -348,6 +348,7 @@ class MainWindow(QMainWindow):
 
         if self.TreeUtil.selected_df.isnull().values.any():
             self.TreeUtil.selected_df.dropna(inplace=True)
+
             QMessageBox.warning(self, "Nan rows", "Nan rows has been removed to continue processing", )
 
 

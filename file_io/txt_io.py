@@ -32,7 +32,10 @@ class ReadMagCSV():
         # Two-step datetime parsing since "parse_dates" was deprecated at development time
         survey_frame_raw['datetime'] = pd.to_datetime(
             survey_frame_raw['Reading_Date'] + ' ' + survey_frame_raw['Reading_Time'])
-
+        print(survey_frame_raw.columns)
+        survey_frame_raw = survey_frame_raw.drop(
+            columns=['Reading_Date', 'Reading_Time']
+        )
         survey_frame_raw.rename(columns={r"GPS_Latitude": r"Latitude",
                                          r"GPS_Longitude": r"Longitude",
                                          r"GPS_Easting": r"UTM_Easting",
@@ -73,7 +76,9 @@ class ReadMagCSV():
         project.tree.addTopLevelItem(new_survey)
 
         print(os.listdir(path))
-        for file in os.listdir(path):
+        lst = os.listdir(path)
+        lst.sort()
+        for file in lst:
             if file.endswith(".XYZ"):
                 print(file)
                 try:
