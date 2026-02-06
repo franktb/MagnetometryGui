@@ -6,9 +6,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>437</width>
-    <height>431</height>
+    <width>363</width>
+    <height>447</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>363</width>
+    <height>447</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>363</width>
+    <height>474</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Provide CSV column layout</string>
@@ -18,8 +36,8 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>421</width>
-     <height>421</height>
+     <width>341</width>
+     <height>429</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -61,6 +79,16 @@
     </item>
     <item>
      <widget class="QLineEdit" name="lineEdit_file_path"/>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_11">
+      <property name="text">
+       <string>Please provide the corresponding column indices, assuming indexing starts at 0.</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item>
      <layout class="QFormLayout" name="formLayout_4">

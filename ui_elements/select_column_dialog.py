@@ -23,10 +23,17 @@ class Ui_ColumnSelectDialog(object):
     def setupUi(self, ColumnSelectDialog):
         if not ColumnSelectDialog.objectName():
             ColumnSelectDialog.setObjectName(u"ColumnSelectDialog")
-        ColumnSelectDialog.resize(437, 431)
+        ColumnSelectDialog.resize(363, 447)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(ColumnSelectDialog.sizePolicy().hasHeightForWidth())
+        ColumnSelectDialog.setSizePolicy(sizePolicy)
+        ColumnSelectDialog.setMinimumSize(QSize(363, 447))
+        ColumnSelectDialog.setMaximumSize(QSize(363, 474))
         self.verticalLayoutWidget = QWidget(ColumnSelectDialog)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(10, 10, 421, 421))
+        self.verticalLayoutWidget.setGeometry(QRect(10, 10, 341, 429))
         self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -56,6 +63,12 @@ class Ui_ColumnSelectDialog(object):
         self.lineEdit_file_path.setObjectName(u"lineEdit_file_path")
 
         self.verticalLayout.addWidget(self.lineEdit_file_path)
+
+        self.label_11 = QLabel(self.verticalLayoutWidget)
+        self.label_11.setObjectName(u"label_11")
+        self.label_11.setWordWrap(True)
+
+        self.verticalLayout.addWidget(self.label_11)
 
         self.formLayout_4 = QFormLayout()
         self.formLayout_4.setObjectName(u"formLayout_4")
@@ -189,6 +202,7 @@ class Ui_ColumnSelectDialog(object):
         ColumnSelectDialog.setWindowTitle(QCoreApplication.translate("ColumnSelectDialog", u"Provide CSV column layout", None))
         self.label_7.setText(QCoreApplication.translate("ColumnSelectDialog", u"File:", None))
         self.selectFileButton.setText(QCoreApplication.translate("ColumnSelectDialog", u"Select", None))
+        self.label_11.setText(QCoreApplication.translate("ColumnSelectDialog", u"Please provide the corresponding column indices, assuming indexing starts at 0.", None))
         self.label.setText(QCoreApplication.translate("ColumnSelectDialog", u"Reading time:", None))
         self.label_8.setText(QCoreApplication.translate("ColumnSelectDialog", u"Reading day:", None))
         self.label_2.setText(QCoreApplication.translate("ColumnSelectDialog", u"Magnetic field:", None))
