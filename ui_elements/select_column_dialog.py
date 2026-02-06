@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'select_column_dialog.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.9.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -15,122 +15,169 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QDialog, QGridLayout, QLabel,
-    QLineEdit, QPushButton, QSizePolicy, QWidget)
+from PySide6.QtWidgets import (QApplication, QDialog, QFormLayout, QHBoxLayout,
+    QLabel, QLineEdit, QPushButton, QSizePolicy,
+    QSpacerItem, QVBoxLayout, QWidget)
 
 class Ui_ColumnSelectDialog(object):
     def setupUi(self, ColumnSelectDialog):
         if not ColumnSelectDialog.objectName():
             ColumnSelectDialog.setObjectName(u"ColumnSelectDialog")
-        ColumnSelectDialog.resize(448, 445)
-        self.label_7 = QLabel(ColumnSelectDialog)
+        ColumnSelectDialog.resize(437, 431)
+        self.verticalLayoutWidget = QWidget(ColumnSelectDialog)
+        self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
+        self.verticalLayoutWidget.setGeometry(QRect(10, 10, 421, 421))
+        self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.label_7 = QLabel(self.verticalLayoutWidget)
         self.label_7.setObjectName(u"label_7")
-        self.label_7.setGeometry(QRect(40, 20, 66, 19))
         font = QFont()
         font.setPointSize(12)
         self.label_7.setFont(font)
-        self.lineEdit_file_path = QLineEdit(ColumnSelectDialog)
-        self.lineEdit_file_path.setObjectName(u"lineEdit_file_path")
-        self.lineEdit_file_path.setGeometry(QRect(40, 60, 350, 27))
-        self.selectFileButton = QPushButton(ColumnSelectDialog)
+
+        self.horizontalLayout_5.addWidget(self.label_7)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_5.addItem(self.horizontalSpacer)
+
+        self.selectFileButton = QPushButton(self.verticalLayoutWidget)
         self.selectFileButton.setObjectName(u"selectFileButton")
-        self.selectFileButton.setGeometry(QRect(300, 20, 88, 27))
-        self.submitButton = QPushButton(ColumnSelectDialog)
-        self.submitButton.setObjectName(u"submitButton")
-        self.submitButton.setGeometry(QRect(300, 370, 88, 27))
-        self.layoutWidget = QWidget(ColumnSelectDialog)
-        self.layoutWidget.setObjectName(u"layoutWidget")
-        self.layoutWidget.setGeometry(QRect(40, 100, 351, 260))
-        self.gridLayout = QGridLayout(self.layoutWidget)
-        self.gridLayout.setObjectName(u"gridLayout")
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
-        self.label = QLabel(self.layoutWidget)
+
+        self.horizontalLayout_5.addWidget(self.selectFileButton)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_5)
+
+        self.lineEdit_file_path = QLineEdit(self.verticalLayoutWidget)
+        self.lineEdit_file_path.setObjectName(u"lineEdit_file_path")
+
+        self.verticalLayout.addWidget(self.lineEdit_file_path)
+
+        self.formLayout_4 = QFormLayout()
+        self.formLayout_4.setObjectName(u"formLayout_4")
+        self.label = QLabel(self.verticalLayoutWidget)
         self.label.setObjectName(u"label")
         self.label.setFont(font)
 
-        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
+        self.formLayout_4.setWidget(0, QFormLayout.ItemRole.LabelRole, self.label)
 
-        self.lineEdit_time = QLineEdit(self.layoutWidget)
+        self.lineEdit_time = QLineEdit(self.verticalLayoutWidget)
         self.lineEdit_time.setObjectName(u"lineEdit_time")
 
-        self.gridLayout.addWidget(self.lineEdit_time, 0, 1, 1, 1)
+        self.formLayout_4.setWidget(0, QFormLayout.ItemRole.FieldRole, self.lineEdit_time)
 
-        self.label_8 = QLabel(self.layoutWidget)
+        self.label_8 = QLabel(self.verticalLayoutWidget)
         self.label_8.setObjectName(u"label_8")
         self.label_8.setFont(font)
 
-        self.gridLayout.addWidget(self.label_8, 1, 0, 1, 1)
+        self.formLayout_4.setWidget(1, QFormLayout.ItemRole.LabelRole, self.label_8)
 
-        self.lineEdit_day = QLineEdit(self.layoutWidget)
+        self.lineEdit_day = QLineEdit(self.verticalLayoutWidget)
         self.lineEdit_day.setObjectName(u"lineEdit_day")
 
-        self.gridLayout.addWidget(self.lineEdit_day, 1, 1, 1, 1)
+        self.formLayout_4.setWidget(1, QFormLayout.ItemRole.FieldRole, self.lineEdit_day)
 
-        self.label_2 = QLabel(self.layoutWidget)
+        self.label_2 = QLabel(self.verticalLayoutWidget)
         self.label_2.setObjectName(u"label_2")
         self.label_2.setFont(font)
 
-        self.gridLayout.addWidget(self.label_2, 2, 0, 1, 1)
+        self.formLayout_4.setWidget(2, QFormLayout.ItemRole.LabelRole, self.label_2)
 
-        self.lineEdit_mag_field = QLineEdit(self.layoutWidget)
+        self.lineEdit_mag_field = QLineEdit(self.verticalLayoutWidget)
         self.lineEdit_mag_field.setObjectName(u"lineEdit_mag_field")
 
-        self.gridLayout.addWidget(self.lineEdit_mag_field, 2, 1, 1, 1)
+        self.formLayout_4.setWidget(2, QFormLayout.ItemRole.FieldRole, self.lineEdit_mag_field)
 
-        self.label_3 = QLabel(self.layoutWidget)
+        self.label_3 = QLabel(self.verticalLayoutWidget)
         self.label_3.setObjectName(u"label_3")
         self.label_3.setFont(font)
 
-        self.gridLayout.addWidget(self.label_3, 3, 0, 1, 1)
+        self.formLayout_4.setWidget(3, QFormLayout.ItemRole.LabelRole, self.label_3)
 
-        self.lineEdit_Gps_lat = QLineEdit(self.layoutWidget)
+        self.lineEdit_Gps_lat = QLineEdit(self.verticalLayoutWidget)
         self.lineEdit_Gps_lat.setObjectName(u"lineEdit_Gps_lat")
 
-        self.gridLayout.addWidget(self.lineEdit_Gps_lat, 3, 1, 1, 1)
+        self.formLayout_4.setWidget(3, QFormLayout.ItemRole.FieldRole, self.lineEdit_Gps_lat)
 
-        self.label_4 = QLabel(self.layoutWidget)
+        self.label_4 = QLabel(self.verticalLayoutWidget)
         self.label_4.setObjectName(u"label_4")
         self.label_4.setFont(font)
 
-        self.gridLayout.addWidget(self.label_4, 4, 0, 1, 1)
+        self.formLayout_4.setWidget(4, QFormLayout.ItemRole.LabelRole, self.label_4)
 
-        self.lineEdit_Gps_long = QLineEdit(self.layoutWidget)
+        self.lineEdit_Gps_long = QLineEdit(self.verticalLayoutWidget)
         self.lineEdit_Gps_long.setObjectName(u"lineEdit_Gps_long")
 
-        self.gridLayout.addWidget(self.lineEdit_Gps_long, 4, 1, 1, 1)
+        self.formLayout_4.setWidget(4, QFormLayout.ItemRole.FieldRole, self.lineEdit_Gps_long)
 
-        self.label_5 = QLabel(self.layoutWidget)
+        self.label_5 = QLabel(self.verticalLayoutWidget)
         self.label_5.setObjectName(u"label_5")
         self.label_5.setFont(font)
 
-        self.gridLayout.addWidget(self.label_5, 5, 0, 1, 1)
+        self.formLayout_4.setWidget(5, QFormLayout.ItemRole.LabelRole, self.label_5)
 
-        self.lineEdit_Gps_easting = QLineEdit(self.layoutWidget)
+        self.lineEdit_Gps_easting = QLineEdit(self.verticalLayoutWidget)
         self.lineEdit_Gps_easting.setObjectName(u"lineEdit_Gps_easting")
 
-        self.gridLayout.addWidget(self.lineEdit_Gps_easting, 5, 1, 1, 1)
+        self.formLayout_4.setWidget(5, QFormLayout.ItemRole.FieldRole, self.lineEdit_Gps_easting)
 
-        self.label_6 = QLabel(self.layoutWidget)
+        self.label_6 = QLabel(self.verticalLayoutWidget)
         self.label_6.setObjectName(u"label_6")
         self.label_6.setFont(font)
 
-        self.gridLayout.addWidget(self.label_6, 6, 0, 1, 1)
+        self.formLayout_4.setWidget(6, QFormLayout.ItemRole.LabelRole, self.label_6)
 
-        self.lineEdit_Gps_northing = QLineEdit(self.layoutWidget)
+        self.lineEdit_Gps_northing = QLineEdit(self.verticalLayoutWidget)
         self.lineEdit_Gps_northing.setObjectName(u"lineEdit_Gps_northing")
 
-        self.gridLayout.addWidget(self.lineEdit_Gps_northing, 6, 1, 1, 1)
+        self.formLayout_4.setWidget(6, QFormLayout.ItemRole.FieldRole, self.lineEdit_Gps_northing)
 
-        self.label_9 = QLabel(self.layoutWidget)
+        self.label_9 = QLabel(self.verticalLayoutWidget)
         self.label_9.setObjectName(u"label_9")
         self.label_9.setFont(font)
 
-        self.gridLayout.addWidget(self.label_9, 7, 0, 1, 1)
+        self.formLayout_4.setWidget(7, QFormLayout.ItemRole.LabelRole, self.label_9)
 
-        self.lineEdit_skipHeaderRows = QLineEdit(self.layoutWidget)
+        self.lineEdit_skipHeaderRows = QLineEdit(self.verticalLayoutWidget)
         self.lineEdit_skipHeaderRows.setObjectName(u"lineEdit_skipHeaderRows")
 
-        self.gridLayout.addWidget(self.lineEdit_skipHeaderRows, 7, 1, 1, 1)
+        self.formLayout_4.setWidget(7, QFormLayout.ItemRole.FieldRole, self.lineEdit_skipHeaderRows)
+
+        self.label_10 = QLabel(self.verticalLayoutWidget)
+        self.label_10.setObjectName(u"label_10")
+        self.label_10.setFont(font)
+
+        self.formLayout_4.setWidget(8, QFormLayout.ItemRole.LabelRole, self.label_10)
+
+        self.lineEdit_delimiter = QLineEdit(self.verticalLayoutWidget)
+        self.lineEdit_delimiter.setObjectName(u"lineEdit_delimiter")
+
+        self.formLayout_4.setWidget(8, QFormLayout.ItemRole.FieldRole, self.lineEdit_delimiter)
+
+
+        self.verticalLayout.addLayout(self.formLayout_4)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
+
+        self.submitButton = QPushButton(self.verticalLayoutWidget)
+        self.submitButton.setObjectName(u"submitButton")
+
+        self.horizontalLayout_4.addWidget(self.submitButton)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout_4)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout.addItem(self.verticalSpacer)
 
 
         self.retranslateUi(ColumnSelectDialog)
@@ -139,17 +186,18 @@ class Ui_ColumnSelectDialog(object):
     # setupUi
 
     def retranslateUi(self, ColumnSelectDialog):
-        ColumnSelectDialog.setWindowTitle(QCoreApplication.translate("ColumnSelectDialog", u"Column Select Dialog", None))
+        ColumnSelectDialog.setWindowTitle(QCoreApplication.translate("ColumnSelectDialog", u"Provide CSV column layout", None))
         self.label_7.setText(QCoreApplication.translate("ColumnSelectDialog", u"File:", None))
         self.selectFileButton.setText(QCoreApplication.translate("ColumnSelectDialog", u"Select", None))
+        self.label.setText(QCoreApplication.translate("ColumnSelectDialog", u"Reading time:", None))
+        self.label_8.setText(QCoreApplication.translate("ColumnSelectDialog", u"Reading day:", None))
+        self.label_2.setText(QCoreApplication.translate("ColumnSelectDialog", u"Magnetic field:", None))
+        self.label_3.setText(QCoreApplication.translate("ColumnSelectDialog", u"GPS latitude:", None))
+        self.label_4.setText(QCoreApplication.translate("ColumnSelectDialog", u"GPS longitude:", None))
+        self.label_5.setText(QCoreApplication.translate("ColumnSelectDialog", u"GPS eastings:", None))
+        self.label_6.setText(QCoreApplication.translate("ColumnSelectDialog", u"GPS Northings:", None))
+        self.label_9.setText(QCoreApplication.translate("ColumnSelectDialog", u"Skip rows:", None))
+        self.label_10.setText(QCoreApplication.translate("ColumnSelectDialog", u"Delimiter:", None))
         self.submitButton.setText(QCoreApplication.translate("ColumnSelectDialog", u"Submit", None))
-        self.label.setText(QCoreApplication.translate("ColumnSelectDialog", u"Reading Time", None))
-        self.label_8.setText(QCoreApplication.translate("ColumnSelectDialog", u"Reading Day", None))
-        self.label_2.setText(QCoreApplication.translate("ColumnSelectDialog", u"Magnetic Field", None))
-        self.label_3.setText(QCoreApplication.translate("ColumnSelectDialog", u"Gps Latitude", None))
-        self.label_4.setText(QCoreApplication.translate("ColumnSelectDialog", u"Gps Longitude", None))
-        self.label_5.setText(QCoreApplication.translate("ColumnSelectDialog", u"Gps Easting", None))
-        self.label_6.setText(QCoreApplication.translate("ColumnSelectDialog", u"Gps Northing", None))
-        self.label_9.setText(QCoreApplication.translate("ColumnSelectDialog", u"Skip rows", None))
     # retranslateUi
 
