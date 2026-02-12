@@ -73,7 +73,7 @@ Therefore, we approximate the ambient field $|\bar{B}(x,y,z_0,t)|$ using a (slow
     U(x,y,z_0,t) = |\Bar{B}(x,y,z_0,t)|-|B(x,y,z_0,t)|,
     \label{eq:anomalies_time}
 \end{equation}
-where where significant deviations of $U(x,y,z_0,t)$ from zero are interpreted as local magnetic anomalies
+where any significant deviations of $U(x,y,z_0,t)$ from zero are interpreted as local magnetic anomalies
 To place these anomalies into a spatial context, the residual time series is interpolated onto a spatial grid, yielding the final anomaly grid, which can be used for visualisation and further analysis.
 
 
