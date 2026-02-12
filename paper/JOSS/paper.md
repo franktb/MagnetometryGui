@@ -43,14 +43,14 @@ This enables a meaningful comparison to industry datasets, which are typically o
 
 # Methods and functionality
 To target a broad audience, including researchers, and to facilitate extensibility, the software is implemented in Python. 
-It provides a graphical wrapper around widely used scientific libraries, including NumPy, SciPy, pandas, and Matplotlib.
+It provides a graphical wrapper around widely used scientific libraries, including NumPy, SciPy, Pandas, and Matplotlib.
 The software is structured into three main packages: an I/O module, a processing module, and a graphical user interface (GUI).
 The GUI follows the Model–View–Controller (MVC) design pattern and is implemented using the Qt framework, exposed to Python through PySide6, to guide users through the processing workflow.
 The main processing pipeline consists of four core stages: **CSV import**, **processing**, **gridding and visualization**, and **CSV/TIFF export**.
 Two additional optional stages, **bathymetry import** and **downward continuation**, are available if desired.
 An overview of the pipeline is shown in \autoref{fig:pipeline}, and each stage is described in more detail below.
 
-![The UI implements a processing pipeline that reads INFOMAR data, processes it, visualises it, potentially downward continues the anomaly grid and eventually exports the final result.
+![The software implements a processing pipeline that assists the user in reading, processing and visualising magnetometry data and in exporting an anomaly grid.
 \label{fig:pipeline}](pipeline.png)
 
 ## CSV import
@@ -73,7 +73,7 @@ Therefore, we approximate the ambient field $|\bar{B}(x,y,z_0,t)|$ using a (slow
     U(x,y,z_0,t) = |\Bar{B}(x,y,z_0,t)|-|B(x,y,z_0,t)|,
     \label{eq:anomalies_time}
 \end{equation}
-where any significant deviations of $U(x,y,z_0,t)$ from zero are interpreted as local magnetic anomalies
+where any significant deviations of $U(x,y,z_0,t)$ from zero are interpreted as local magnetic anomalies.
 To place these anomalies into a spatial context, the residual time series is interpolated onto a spatial grid, yielding the final anomaly grid, which can be used for visualisation and further analysis.
 
 
