@@ -2,7 +2,7 @@
 title: "InfoMag: A graphical user interface for INFOMAR's magnetometry data"
 tags:
   - Python
-  - Infomar
+  - INFOMAR
   - Magnetic anomaly
 authors:
   - name: Frank Bastian
@@ -19,77 +19,80 @@ affiliations:
    index: 1
  - name: University College Cork, Ireland
    index: 2
-
+bibliography: paper.bib
 ---
 
 
 # Summary
-
-
-Here, we present an free and open open-source graphical user interface (GUI), built on python that can process magnetometry data set and enables a subsequent analysis through its exported magnetic anomaly grids.
-
+Magnetometry measures variations in the Earth’s magnetic field caused by ferromagnetic objects.
+In the context of maritime geoscience, these are mostly caused by large-scale geological formations or shipwrecks and unexploded ordnance (UXO), whereas the latter are of particular interest for marine development.
+Here, we present a graphical user interface (GUI) that wraps a processing pipeline to assist users in reading raw magnetometry data, processing it and eventually exporting an anomaly grid for further processing.
 
 
 # Statement of need
-The INFOMAR programme is Ireland’s national seabed mapping programme that maps the country’s marine territory to support sustainable development, environmental protection, and marine resource management.
-Over the last 20 years, various geological data sets such as bathymetry, sub-bottom profiler, and magnetometry data have been acquired, with significant portions of the bathymetry and backscatter data processed and made publicly available.
-However, this has not been the case for the magnetometry data, which remains largely unprocessed in its raw format.
+The INFOMAR programme is Ireland’s national seabed mapping initiative, tasked with mapping the country’s marine territory in support of sustainable development, environmental protection, and marine resource management. 
+Over the past two decades, INFOMAR has acquired a wide range of geophysical datasets, including bathymetry, sub-bottom profiler, and magnetometry data.
+While substantial portions of the bathymetry and backscatter data have been processed and released publicly, the magnetometry data remain largely unprocessed in their raw format.
 
+Processing raw magnetometry data presents several challenges, including sensor noise, acquisition artefacts, and corrupted measurements during sensor deployment or recovery.
+An interactive visualisation of the raw data is essential for identifying such issues and enabling more efficient and comfortable cleaning.
+Consequently, there is an urgent need for a user interface that allows users to visualise and interact with the raw data.
+
+Furthermore, since INFOMAR data is surface-acquired, an additional step is needed to downward-continue the estimated anomaly grid to the seabed.
+This enables a meaningful comparison to industry datasets, which are typically obtained close to the seabed.
 
 # Methods and functionality
-The architecture consists of three packages: the IO module, the processing module, and the Graphic User Interface.
-The Graphical User Interface implements the Model-View-Control pattern through the QT framework, which is exposed to Python through Pyside6.
-To target a wider audience, including researchers and to allow for easy extensions, the software is purposely written in Python, serving as a graphical wrapper around standard scientific libraries such as matplotlib, numpy, scipy, and pandas.
+To target a broad audience, including researchers, and to facilitate extensibility, the software is implemented in Python. 
+It provides a graphical wrapper around widely used scientific libraries, including NumPy, SciPy, pandas, and Matplotlib.
+The software is structured into three main packages: an I/O module, a processing module, and a graphical user interface (GUI).
+The GUI follows the Model–View–Controller (MVC) design pattern and is implemented using the Qt framework, exposed to Python through PySide6, to guide users through the processing workflow.
+The main processing pipeline consists of four core stages: **CSV import**, **processing**, **gridding and visualization**, and **CSV/TIFF export**.
+Two additional optional stages, **bathymetry import** and **downward continuation**, are available if desired.
+An overview of the pipeline is shown in \autoref{fig:pipeline}, and each stage is described in more detail below.
 
-The user interface consists of three windows assisting the user through the processing pipeline.
-The main pipeline consists of four main steps: "csv import", "processing", "gridding and visualisation", and "CSV/Tiff export".
-Optionally, there are two additional steps: "bathymetry import" and "downward continuation".
-A visual representation of the pipeline is given in~\autoref{fig:pipeline} and a detailed description of each step is provided in the following paragraphs.
-
-
-![The UI implements a processing pipeline that reads Infomar data, processes it, visualises it, potentially downward continues the anomaly grid and eventually exports the final result.
+![The UI implements a processing pipeline that reads INFOMAR data, processes it, visualises it, potentially downward continues the anomaly grid and eventually exports the final result.
 \label{fig:pipeline}](pipeline.png)
 
-## CSV Import
-In 2016, Infomar switched the acquisition software from SeaLink to Marine Magnetics BOB, resulting in a difference in the recorded files.
-The IO module can handle both formats and provide a convenient single-action import for end users.
-In addition, a custom import for arbitrary text-based (comma-separated) files is also provided.
+## CSV import
+In 2016, INFOMAR transitioned its acquisition software from SeaLink to Marine Magnetics BOB, resulting in differences in the structure and content of the recorded data files.
+The I/O module supports both formats and provides a unified, single-action import mechanism for end users.
+In addition, a custom import is available for arbitrary text-based (comma-separated) files, enabling the use of magnetometry data from external sources.
 
 
 ## Processing, gridding and visualisation
 
-Magnetometry data is obtained though towing a magnetometer behind a vessel.
-Moving the vessel (along a line) creates a one dimensional time series of magnetometry data $|B(x,y,z_0,t)|$ with spacial data attached to each measuring point.
-The timeseries $|B|(x,y,z_0,t)$ can be inspected in the bottom of the main window, and magnified in the "timeseries representation" window.
-Next, $|B|(x,y,z_0,t)$ is used to estimate the total field magnetic anomalies
+Marine magnetometry data are acquired by towing a magnetometer behind a survey vessel and measuring the total magnetic field $|B(x,y,z_0)|$.
+As the vessel moves along a survey line, this produces a one-dimensional time series $|B(x,y,z_0,t)|$, with spatial coordinates associated with each measurement.
+The raw time series $|B(x,y,z_0,t)|$ can be inspected in the lower panel of the main application window and further examined, magnified, and processed in a dedicated window.
+
+
+To isolate the local magnetic anomalies, we need to subtract the large-scale contributions caused by geological structures or diurnal variations of the Earth’s magnetic field from the original timeseries $|B(x,y,z_0,t)|$ [@blakely1996potential]. 
+We assume that these large-scale contributions occur on a slower timescale than the (fast) changes in $|B|(x,y,z_0,t)$, caused by moving over a local ferromagnetic object such as ship wrecks.
+Therefore, we approximate the ambient field $|\bar{B}(x,y,z_0,t)|$ using a (slowly) running mean of the measured signal $|B|(x,y,z_0,t)$ and subtract it from the measured signal to obtain the residual timeseries
 \begin{equation}
-    U(x,y,z_0,t) = |\Bar{B}(x,y,z_0,t)|-|B(x,y,z_0,t)|.
+    U(x,y,z_0,t) = |\Bar{B}(x,y,z_0,t)|-|B(x,y,z_0,t)|,
     \label{eq:anomalies_time}
 \end{equation}
-To reduce noise, the user can smooth $|B(x,y,z_0,t)|$ using a running mean with a short, i.e. local, window size.
-
-
-Additionally, we assume that changes in the ambient field $|\bar{B}(x,y,z_0,t)|$ caused by geological changes of the seabed or the diurnal changes of the magnetic field are on a slower timescale than the (fast) changes in $|B|(x,y,z_0,t)$, caused by moving over ferromagnetic objects such as ship wrecks.
-Therefore, we estimate the ambient field $|\bar{B}(x,y,z_0,t)|$ akin to $|B(x,y,z_0,t)|$ as running mean but with a larger window size.
-Based on preliminary work, we preset both parameters to initial values and leave them to the user to be further adjusted.
-
-In the next step, the processed time series $U(x,y,z_0,t)$ is gridded using either a linear or nearest-neighbour interpolation, yielding a two dimensional representation, which we refer to as "anomaly grid".
+where where significant deviations of $U(x,y,z_0,t)$ from zero are interpreted as local magnetic anomalies
+To place these anomalies into a spatial context, the residual time series is interpolated onto a spatial grid, yielding the final anomaly grid, which can be used for visualisation and further analysis.
 
 
 ## Export
-Eventually, both the downward-continued field and the surface field, represented as a grid, can be exported.
-This can either be text-based (CSV) or as a GeoTiff for further usage in another Geographic Information System (GIS) software.
-Additionally, at any given moment during the processing pipeline, a snapshot of the underlying data that has been processed until this point can be exported into a CSV file as well.
- 
+Both the surface and the downward-continued anomaly grid can be exported as a gridded dataset.
+Currently, text-based (CSV) or image-based (GeoTIFF) file formats are supported, allowing direct integration with standard geographic information system (GIS) software.
+Furthermore, at any stage of the processing pipeline, users may export a snapshot of the intermediate processed data to CSV, facilitating reproducibility, debugging, and external analysis.
 
 
 # Future work
-To enhance the performance and to bypass the global interpreter lock, an incremental replacement of modules with compiled C code is planned.
-In order to verify the implementation of the downward continuation, we will collect magnetometry data on different altitudes using a fluxgate magnetometer Sensys FGM3D/100.
-This will be featured in an additional paper, combined with a theoretical review of downward continuation, a case study on INFOMAR magnetometry data, and bathymetry imports for seabed depth.
-
+To improve performance and circumvent limitations imposed by the Python Global Interpreter Lock, an incremental replacement of selected modules with compiled C code is planned.
+To validate the downward continuation module, magnetometry data will be collected at multiple altitudes using a Sensys FGM3D/100 fluxgate magnetometer.
+The validation results will be presented in a separate publication, together with a theoretical review and a case study using INFOMAR magnetometry data, and the incorporation of bathymetric information.
 
 # Acknowledgements
 Financial support by the Geological Survey Ireland is gratefully acknowledged.
+
+# References
+
+
 
 
