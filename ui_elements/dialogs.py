@@ -3,6 +3,7 @@ from ui_elements.remove_outlier_dialog import Ui_RemoveOutlierDialog
 from PySide6.QtCore import QThreadPool, Slot, Signal, Qt
 from PySide6.QtWidgets import QMainWindow, QApplication, QFileDialog, QMessageBox, QInputDialog, QTreeWidget, \
     QTreeWidgetItem, QDialog
+from PySide6.QtGui import QIntValidator
 
 class ColumnSelectDlg(QDialog):
     data_signal = Signal(list)
@@ -15,6 +16,17 @@ class ColumnSelectDlg(QDialog):
 
         self.ui.selectFileButton.clicked.connect(self.open_file_dialog)
         self.ui.submitButton.clicked.connect(self.send_data)
+
+        self.validator = QIntValidator(0, 100000, self)
+
+        self.ui.lineEdit_day.setValidator(self.validator)
+        self.ui.lineEdit_time.setValidator(self.validator)
+        self.ui.lineEdit_mag_field.setValidator(self.validator)
+        self.ui.lineEdit_Gps_lat.setValidator(self.validator)
+        self.ui.lineEdit_Gps_long.setValidator(self.validator)
+        self.ui.lineEdit_Gps_easting.setValidator(self.validator)
+        self.ui.lineEdit_Gps_northing.setValidator(self.validator)
+        self.ui.lineEdit_skipHeaderRows.setValidator(self.validator)
 
 
     def open_file_dialog(self):
@@ -35,8 +47,20 @@ class ColumnSelectDlg(QDialog):
             self.ui.lineEdit_skipHeaderRows.text()
         ]
 
-        self.data_signal.emit(inputs)
-        self.accept()
+        if all([lineEdit!="" for lineEdit in inputs]):
+            self.data_signal.emit(inputs)
+            self.accept()
+        else:
+            alert_box = QMessageBox.critical(
+                self,
+                "Empty input!",
+                "Some fields are empty! Continue editing?",
+                buttons=QMessageBox.Ok | QMessageBox.Discard ,
+                defaultButton=QMessageBox.Discard,
+            )
+
+            if alert_box.Discard:
+                self.reject()
 
 
 class RemoveOutlierDlg(QDialog):
