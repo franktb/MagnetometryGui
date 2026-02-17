@@ -202,7 +202,7 @@ class Ui_ColumnSelectDialog(object):
         ColumnSelectDialog.setWindowTitle(QCoreApplication.translate("ColumnSelectDialog", u"Provide CSV column layout", None))
         self.label_7.setText(QCoreApplication.translate("ColumnSelectDialog", u"File:", None))
         self.selectFileButton.setText(QCoreApplication.translate("ColumnSelectDialog", u"Select", None))
-        self.label_11.setText(QCoreApplication.translate("ColumnSelectDialog", u"Please provide the corresponding column indices, assuming indexing starts at 0.", None))
+        self.label_11.setText(QCoreApplication.translate("ColumnSelectDialog", u"Please provide the corresponding column names:", None))
         self.label.setText(QCoreApplication.translate("ColumnSelectDialog", u"Reading time:", None))
         self.label_8.setText(QCoreApplication.translate("ColumnSelectDialog", u"Reading day:", None))
         self.label_2.setText(QCoreApplication.translate("ColumnSelectDialog", u"Magnetic field:", None))

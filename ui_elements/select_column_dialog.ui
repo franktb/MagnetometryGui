@@ -83,7 +83,7 @@
     <item>
      <widget class="QLabel" name="label_11">
       <property name="text">
-       <string>Please provide the corresponding column indices, assuming indexing starts at 0.</string>
+       <string>Please provide the corresponding column names:</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>

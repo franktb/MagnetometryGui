@@ -544,17 +544,12 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "File IO Error", r"No .XYZ or Raw folder containing them has been found!", )
 
     def select_custom_CSV(self):
-        @Slot(list)
+        @Slot(dict)
         def retrieve_user_input(inputs):
-            print(inputs)
+            print("here", inputs)
 
-            print(inputs[-1])
-            print(inputs[1:-1])
             worker = Worker(self.readCSV.read_from_customCSV,
-                            inputs[0],
-                            delimiter=",",
-                            skiprows=int(inputs[-1]),
-                            usecols=[int(x) - 1 for x in inputs[1:-1]],
+                            configs=inputs,
                             project=self.TreeUtil
                             )
 

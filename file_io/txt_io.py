@@ -90,7 +90,6 @@ class ReadMagCSV():
                                                       comment="/ ")
                     missing_cols = set(required_cols) - set(survey_frame_header.columns)
 
-
                     # All required columns are present
                     if not missing_cols:
                         usecols = ["/Date", "Time", "Field_Mag1", "Longitude", "Latitude",
@@ -134,7 +133,7 @@ class ReadMagCSV():
                     new_survey.addChild(new_survey_frame)
 
 
-                #Is thrown if the file is empty
+                # Is thrown if the file is empty
                 except pd.errors.EmptyDataError:
                     print("Empty file", file)
 
@@ -144,33 +143,42 @@ class ReadMagCSV():
 
         project.checked_items()
 
-    def read_from_customCSV(self, filename, delimiter, skiprows, usecols, project):
-        survey_frame_raw = pd.read_csv(filename,
-                                       delimiter=delimiter,
-                                       skiprows=skiprows,
-                                       usecols=usecols,
-                                       # usecols=["Reading_Date", "Reading_Time", "Magnetic_Field", "GPS_Latitude",
-                                       #         "GPS_Longitude", "GPS_Easting", "GPS_Northing"],
+    def read_from_customCSV(self, configs, project):
+        print(configs["file"])
+        survey_frame_raw = pd.read_csv(configs["file"],
+                                       delimiter=configs["delimiter"],
+                                       skiprows=configs["skip"],
+                                       usecols=[configs["date"],
+                                                configs["time"],
+                                                configs["mag"],
+                                                configs["lat"],
+                                                configs["long"],
+                                                configs["east"],
+                                                configs["north"]],
                                        engine="c",
                                        low_memory=False)
 
-        # The BOB software indicated missing GPS locations by "*"
-        survey_frame_raw = survey_frame_raw[survey_frame_raw["GPS_Longitude"].str.contains(r"\*") == False]
-        print(survey_frame_raw.columns.values)
         # Two-step datetime parsing since "parse_dates" was deprecated at development time
         survey_frame_raw['datetime'] = pd.to_datetime(
-            survey_frame_raw['Reading_Date'] + ' ' + survey_frame_raw['Reading_Time'])
+            survey_frame_raw[configs["date"]] + ' ' + survey_frame_raw[configs["time"]])
+        print(survey_frame_raw.columns)
+        survey_frame_raw = survey_frame_raw.drop(
+            columns=[configs["date"], configs["time"]]
+        )
+        survey_frame_raw.rename(columns={configs["mag"]: r"Magnetic_Field",
+                                         configs["lat"]: r"Latitude",
+                                         configs["long"]: r"Longitude",
+                                         configs["east"]: r"UTM_Easting",
+                                         configs["north"]: r"UTM_Northing"}, inplace=True)
+        survey_frame_raw = survey_frame_raw.astype({"Magnetic_Field": "float64",
+                                                    "Latitude": "float64",
+                                                    "Longitude": "float64",
+                                                    "UTM_Easting": "float64",
+                                                    "UTM_Northing": "float64"
+                                                    })
+        print(survey_frame_raw)
 
-        # survey_frame_raw.rename(columns={r"GPS_Latitude": r"Latitude", r"GPS_Longitude": r"Longitude"},
-        #                        inplace=True)
-        survey_frame_raw.columns = ['Date', 'Time', 'Easting', 'Northing', 'Magnetic_Field']
-        survey_frame_raw.astype({"Magnetic_Field": "float64",
-                                 "Latitude": "float64",
-                                 "Longitude": "float64",
-                                 "GPS_Easting": "float64",
-                                 "GPS_Northing": "float64"})
-
-        survey_id = os.path.basename(filename)
+        survey_id = os.path.basename(configs["file"])
         new_survey = Survey(survey_id)
         new_survey.setCheckState(0, Qt.Checked)
         project.tree.addTopLevelItem(new_survey)
