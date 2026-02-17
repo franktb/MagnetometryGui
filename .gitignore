@@ -1,3 +1,8 @@
 # Python bytecode
 *.pyc
 __pycache__/
+
+
+# Data files
+*.tif
+*.csv
