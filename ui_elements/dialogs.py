@@ -69,7 +69,7 @@ class ColumnSelectDlg(QDialog):
                 self,
                 "Latitudes and longitudes are missing.",
                 "Those will be estimated based on provided eastings and northings.",
-                buttons=QMessageBox.Ok | QMessageBox.Cancel,
+                buttons=QMessageBox.Ok, #| QMessageBox.Cancel,
                 defaultButton=QMessageBox.Ok,
             )
             if info_box == QMessageBox.Ok:
@@ -84,7 +84,7 @@ class ColumnSelectDlg(QDialog):
                 self,
                 "Empty input!",
                 "Some fields are empty! Continue editing?",
-                buttons=QMessageBox.Ok | QMessageBox.Discard,
+                buttons=QMessageBox.Ok, #| QMessageBox.Discard,
                 defaultButton=QMessageBox.Discard,
             )
 
