@@ -20,7 +20,6 @@ class ColumnSelectDlg(QDialog):
         self.validator = QIntValidator(0, 100000, self)
         self.ui.lineEdit_skipHeaderRows.setValidator(self.validator)
 
-
     def open_file_dialog(self):
         selected_survey = QFileDialog.getOpenFileName(filter="All Files(*);;Text files(*.csv *.txt)")
         if selected_survey[0].endswith((".txt", ".csv")):
@@ -40,10 +39,46 @@ class ColumnSelectDlg(QDialog):
             "delimiter": self.ui.lineEdit_delimiter.text()
         }
 
+        latlon_provided = all([inputs["lat"], inputs["long"]])
+        eastnorth_provided = all([inputs["east"], inputs["north"]])
+
+        latlon_missing = not any([inputs["lat"], inputs["long"]])
+        eastnorth_missing = not any([inputs["east"], inputs["north"]])
+
         if all([lineEdit != "" for lineEdit in inputs.values()]):
             print("HEREEEEE")
             self.data_signal.emit(inputs)
             self.accept()
+
+        elif latlon_provided and eastnorth_missing:
+            info_box = QMessageBox.information(
+                self,
+                "Eastings and northings are missing.",
+                "Those will be estimated based on provided latitudes and longitudes.",
+                buttons=QMessageBox.Ok | QMessageBox.Cancel,
+                defaultButton=QMessageBox.Ok,
+            )
+            if info_box == QMessageBox.Ok:
+                inputs["east"] = None
+                inputs["north"] = None
+                self.data_signal.emit(inputs)
+                self.accept()
+
+        elif eastnorth_provided and latlon_missing:
+            info_box = QMessageBox.information(
+                self,
+                "Latitudes and longitudes are missing.",
+                "Those will be estimated based on provided eastings and northings.",
+                buttons=QMessageBox.Ok | QMessageBox.Cancel,
+                defaultButton=QMessageBox.Ok,
+            )
+            if info_box == QMessageBox.Ok:
+                inputs["lat"] = None
+                inputs["long"] = None
+                self.data_signal.emit(inputs)
+                self.accept()
+
+
         else:
             alert_box = QMessageBox.critical(
                 self,
@@ -53,7 +88,7 @@ class ColumnSelectDlg(QDialog):
                 defaultButton=QMessageBox.Discard,
             )
 
-            if alert_box==QMessageBox.Discard:
+            if alert_box == QMessageBox.Discard:
                 self.reject()
 
 

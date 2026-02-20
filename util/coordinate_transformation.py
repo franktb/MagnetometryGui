@@ -1,5 +1,6 @@
 import geopandas as gpd
 
+
 class CoordinateTransformation():
     @staticmethod
     def longlat_to_eastnorth(long_series, lat_series):
@@ -13,7 +14,7 @@ class CoordinateTransformation():
         Returns: 1D array of easting values, 1D array of northing values
 
         """
-        geo_series_longlat = gpd.GeoSeries(gpd.points_from_xy(long_series,lat_series), crs="EPSG:4326")
+        geo_series_longlat = gpd.GeoSeries(gpd.points_from_xy(long_series, lat_series), crs="EPSG:4326")
         geo_series_eastnorth = geo_series_longlat.to_crs(epsg=32629)
         return geo_series_eastnorth.x, geo_series_eastnorth.y
 

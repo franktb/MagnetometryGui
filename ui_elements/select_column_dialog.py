@@ -199,16 +199,16 @@ class Ui_ColumnSelectDialog(object):
     # setupUi
 
     def retranslateUi(self, ColumnSelectDialog):
-        ColumnSelectDialog.setWindowTitle(QCoreApplication.translate("ColumnSelectDialog", u"Provide CSV column layout", None))
+        ColumnSelectDialog.setWindowTitle(QCoreApplication.translate("ColumnSelectDialog", u"Custom CSV import", None))
         self.label_7.setText(QCoreApplication.translate("ColumnSelectDialog", u"File:", None))
         self.selectFileButton.setText(QCoreApplication.translate("ColumnSelectDialog", u"Select", None))
         self.label_11.setText(QCoreApplication.translate("ColumnSelectDialog", u"Please provide the corresponding column names:", None))
         self.label.setText(QCoreApplication.translate("ColumnSelectDialog", u"Reading time:", None))
         self.label_8.setText(QCoreApplication.translate("ColumnSelectDialog", u"Reading day:", None))
         self.label_2.setText(QCoreApplication.translate("ColumnSelectDialog", u"Magnetic field:", None))
-        self.label_3.setText(QCoreApplication.translate("ColumnSelectDialog", u"GPS latitude:", None))
-        self.label_4.setText(QCoreApplication.translate("ColumnSelectDialog", u"GPS longitude:", None))
-        self.label_5.setText(QCoreApplication.translate("ColumnSelectDialog", u"GPS eastings:", None))
+        self.label_3.setText(QCoreApplication.translate("ColumnSelectDialog", u"GPS Latitude:", None))
+        self.label_4.setText(QCoreApplication.translate("ColumnSelectDialog", u"GPS Longitude:", None))
+        self.label_5.setText(QCoreApplication.translate("ColumnSelectDialog", u"GPS Eastings:", None))
         self.label_6.setText(QCoreApplication.translate("ColumnSelectDialog", u"GPS Northings:", None))
         self.label_9.setText(QCoreApplication.translate("ColumnSelectDialog", u"Skip rows:", None))
         self.label_10.setText(QCoreApplication.translate("ColumnSelectDialog", u"Delimiter:", None))

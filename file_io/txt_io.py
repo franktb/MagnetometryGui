@@ -145,16 +145,37 @@ class ReadMagCSV():
 
     def read_from_customCSV(self, configs, project):
         print(configs["file"])
+        latlong_missing = False
+        eastnorth_missing = False
+
+        if all([item != None for item in configs.values()]):
+            usecols = [configs["date"],
+                       configs["time"],
+                       configs["mag"],
+                       configs["lat"],
+                       configs["long"],
+                       configs["east"],
+                       configs["north"]]
+        elif configs["lat"] == None or configs["long"] == None:
+            latlong_missing = True
+            usecols = [configs["date"],
+                       configs["time"],
+                       configs["mag"],
+                       configs["east"],
+                       configs["north"]]
+        elif configs["east"] == None or configs["north"] == None:
+            eastnorth_missing = True
+            usecols = [configs["date"],
+                       configs["time"],
+                       configs["mag"],
+                       configs["lat"],
+                       configs["long"]]
+
+        print(usecols)
         survey_frame_raw = pd.read_csv(configs["file"],
                                        delimiter=configs["delimiter"],
                                        skiprows=configs["skip"],
-                                       usecols=[configs["date"],
-                                                configs["time"],
-                                                configs["mag"],
-                                                configs["lat"],
-                                                configs["long"],
-                                                configs["east"],
-                                                configs["north"]],
+                                       usecols=usecols,
                                        engine="c",
                                        low_memory=False)
 
@@ -165,11 +186,38 @@ class ReadMagCSV():
         survey_frame_raw = survey_frame_raw.drop(
             columns=[configs["date"], configs["time"]]
         )
-        survey_frame_raw.rename(columns={configs["mag"]: r"Magnetic_Field",
-                                         configs["lat"]: r"Latitude",
-                                         configs["long"]: r"Longitude",
-                                         configs["east"]: r"UTM_Easting",
-                                         configs["north"]: r"UTM_Northing"}, inplace=True)
+
+        if latlong_missing:
+            converted_long, converted_lat = CoordinateTransformation.eastnorth_to_latlong(
+                survey_frame_raw[configs["east"]].astype(float),
+                survey_frame_raw[configs["north"]].astype(float))
+
+            survey_frame_raw.loc[:, "Longitude"] = converted_long
+            survey_frame_raw.loc[:, "Latitude"] = converted_lat
+
+            survey_frame_raw.rename(columns={configs["mag"]: r"Magnetic_Field",
+                                             configs["east"]: r"UTM_Easting",
+                                             configs["north"]: r"UTM_Northing"}, inplace=True)
+
+        if eastnorth_missing:
+            converted_easting, converted_northing = CoordinateTransformation.longlat_to_eastnorth(
+                survey_frame_raw[configs["long"]].astype(float),
+                survey_frame_raw[configs["lat"]].astype(float))
+
+            survey_frame_raw.loc[:, "UTM_Easting"] = converted_easting
+            survey_frame_raw.loc[:, "UTM_Northing"] = converted_northing
+
+            survey_frame_raw.rename(columns={configs["mag"]: r"Magnetic_Field",
+                                             configs["lat"]: r"Latitude",
+                                             configs["long"]: r"Longitude"}, inplace=True)
+
+        if not (latlong_missing or eastnorth_missing):
+            survey_frame_raw.rename(columns={configs["mag"]: r"Magnetic_Field",
+                                             configs["lat"]: r"Latitude",
+                                             configs["long"]: r"Longitude",
+                                             configs["east"]: r"UTM_Easting",
+                                             configs["north"]: r"UTM_Northing"}, inplace=True)
+
         survey_frame_raw = survey_frame_raw.astype({"Magnetic_Field": "float64",
                                                     "Latitude": "float64",
                                                     "Longitude": "float64",
