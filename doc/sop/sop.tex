@@ -213,6 +213,22 @@ An example how a \verb|*.XYZ| files is suppose to be formatted is given in listi
 
 \subsubsection{Custom CSV import}
 \label{sec:customCSVimport}
+The software also support processing custom, meaning files different formatted than Marine Magnetics Bob or SeaLink \verb|*.csv| files.
+However, there are a couple assumptions on the \verb|*.csv| which has to be ensured by the user.
+\begin{itemize}
+	\item The file has to contain in every row the same amount of columns.
+	\item Special characters encoding a missing value or any other surprising event have to be replace with an empty string, i.e. an empty field.
+	\item The file has to contain a header naming the columns.
+\end{itemize}
+A dialog, which can be spawn upon clicking on \enquote{From custom csv} in the drop-down menu (see Fig.~\ref{fig:tree_import}), will ask for the file that is to be imported and which columns to use for what purpose.
+\begin{figure}
+	\centering
+	\includegraphics[width=.5\textwidth]{./pic/Custom_CSV_Import_Dialog.png}
+	\caption{
+		The dialog provides an interface to the user where he can denote which names column corresponds to entity, e.g. time, longitude, etc.
+	}
+	\label{fig:custom_scv_import_dialog}
+\end{figure}
 
 
 \subsection{Time series processing}
@@ -317,7 +333,7 @@ For a more fine selection, a polynomial select tool \inlinegraphics{./../../ui_e
 
 \subsection{Export}
 
-Finally, the processed anomaly grid can be exported over the drop-down menu {\em file} and then selecting either a text-based \verb|*csv| or a \verb|*.tiff| based export.
+Finally, the processed anomaly grid can be exported over the drop-down menu {\em file} and then selecting either a text-based \verb|*.csv| or a \verb|*.tiff| based export.
 The latter one exports a geotiff which could imported into any GIS software and further processes.
 
 \section{Experimental: Downward continuation}
