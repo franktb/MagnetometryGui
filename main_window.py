@@ -68,7 +68,7 @@ class MainWindow(QMainWindow):
 
         self.ui.actionanomalyDetection.triggered.connect(self.detect_anomalies)
 
-        self.mapping_2D_canvas = FigureCanvas(Figure())
+        self.mapping_2D_canvas = FigureCanvas(Figure(constrained_layout=True))
         self.mapping_2D_canvas.setFocusPolicy(Qt.StrongFocus)
         self.mapping_2D_canvas.setFocus()
         # self.mapping_2D_canvas = MplCanvas(self, 5,3,150)
@@ -79,12 +79,14 @@ class MainWindow(QMainWindow):
         self.cbar = None
         self.contourfplot = None
 
-        self.time_series_canvas = FigureCanvas(Figure())
+        self.time_series_canvas = FigureCanvas(Figure(constrained_layout=True))
+        self.time_series_canvas.setMinimumHeight(150)
         self.ui.verticalLayoutTimeSeriesCanvas.addWidget(NavigationToolbar(self.time_series_canvas))
         self.ui.verticalLayoutTimeSeriesCanvas.addWidget(self.time_series_canvas)
         self.time_series_ax = self.time_series_canvas.figure.subplots()
 
-        self.time_series_canvas_res = FigureCanvas(Figure())
+        self.time_series_canvas_res = FigureCanvas(Figure(constrained_layout=True))
+        self.time_series_canvas_res.setMinimumHeight(150)
         self.ui.verticalLayoutTimeSeriesCanvas_2.addWidget(NavigationToolbar(self.time_series_canvas_res))
         self.ui.verticalLayoutTimeSeriesCanvas_2.addWidget(self.time_series_canvas_res)
         self.time_series_ax_res = self.time_series_canvas_res.figure.subplots()
