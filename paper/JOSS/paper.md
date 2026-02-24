@@ -1,5 +1,5 @@
 ---
-title: "InfoMag: A graphical user interface for INFOMAR's magnetometry data"
+title: "InfoMag: A graphical user interface for magnetometry data"
 tags:
   - Python
   - INFOMAR
@@ -89,7 +89,7 @@ To validate the downward continuation module, magnetometry data will be collecte
 The validation results will be presented in a separate publication, together with a theoretical review and a case study using INFOMAR magnetometry data, and the incorporation of bathymetric information.
 
 # Acknowledgements
-Financial support by the Geological Survey Ireland is gratefully acknowledged.
+This research was funded by Geological Survey Ireland under the Short Call 2024 programme (Project 2024‑SC‑007).
 
 # References
 
