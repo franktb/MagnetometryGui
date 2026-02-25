@@ -27,6 +27,8 @@ bibliography: paper.bib
 Magnetometry measures variations in the Earth’s magnetic field caused by ferromagnetic objects.
 In the context of maritime geoscience, these are mostly caused by large-scale geological formations or shipwrecks and unexploded ordnance (UXO), whereas the latter are of particular interest for marine development.
 Here, we present a graphical user interface (GUI) that wraps a processing pipeline to assist users in reading raw magnetometry data, processing it and eventually exporting an anomaly grid for further processing.
+And while being originally designed for INFORMAR, InfoMag can also be used to process custom datasets of marine magnetometry data and similarly shaped data, e.g., aerial data.
+
 
 
 # Statement of need
@@ -37,9 +39,14 @@ While substantial portions of the bathymetry and backscatter data have been proc
 Processing raw magnetometry data presents several challenges, including sensor noise, acquisition artefacts, and corrupted measurements during sensor deployment or recovery.
 An interactive visualisation of the raw data is essential for identifying such issues and enabling more efficient and comfortable cleaning.
 Consequently, there is an urgent need for a user interface that allows users to visualise and interact with the raw data.
+Moreover, this lack of end-user processing software for magnetometry data is not limited to the INFOMAR dataset.
 
-Furthermore, since INFOMAR data is surface-acquired, an additional step is needed to downward-continue the estimated anomaly grid to the seabed.
-This enables a meaningful comparison to industry datasets, which are typically obtained close to the seabed.
+Furthermore, INFOMAR data is surface-acquired.
+To enable a meaningful comparison to industry datasets, which are typically obtained close to the seabed, an additional step called downward-continuation is needed.
+This process estimates the magnetic field close to the seabed based on the surface acquired data.
+However, downward-continuation is prone to noise due to its amplification during the process.
+
+
 
 # Methods and functionality
 To target a broad audience, including researchers, and to facilitate extensibility, the software is implemented in Python. 
