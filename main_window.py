@@ -1,3 +1,4 @@
+import pickle
 import sys
 import os
 import time
@@ -47,6 +48,8 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
 
         self.ui.actionNew_Project.triggered.connect(self.create_new_project)
+        self.ui.actionOpen_Project.triggered.connect(self.open_project)
+        self.ui.actionSave_Project.triggered.connect(self.save_project)
         self.ui.actionFrom_BOB_CSV.triggered.connect(self.select_BOB_CSV)
         self.ui.actionFrom_Sealink_Folder.triggered.connect(self.select_SeaLINKFolder)
         self.ui.actionFrom_Custom_CSV.triggered.connect(self.select_custom_CSV)
@@ -499,6 +502,16 @@ class MainWindow(QMainWindow):
             # self.project = TreeModel(project_name)
             self.ui.treeWidget = QTreeWidget(self.ui.centralwidget)
         return ok
+
+    def open_project(self):
+        print("open project")
+
+    def save_project(self):
+        root = self.TreeUtil.tree.invisibleRootItem()
+        for i in range(root.childCount()):
+            print(root.child(i))
+            print(root.child(i).child(0))
+            print(print(root.child(i).child(0).data_frame))
 
     def select_BOB_CSV(self):
         # if self.project != None:

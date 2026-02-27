@@ -31,7 +31,7 @@ class TreeUtil():
                         checked_items.append(child)
         self.checked_items_list = checked_items
         recurse(self.tree.invisibleRootItem())
-        survey_combined = pd.concat([item.data_frame for item in checked_items], ignore_index=True)
+        survey_combined = pd.concat([item.model.data_frame for item in checked_items], ignore_index=True)
         self.selected_df = survey_combined
         #print("survey combined")
         #print(survey_combined)
@@ -41,27 +41,27 @@ class TreeUtil():
     def ffill_outlier(self, max_mag, min_mag, max_long, min_long, max_lat, min_lat):
         for item in self.checked_items_list:
             self.data_manipulator.ffill_outlier_from_df(
-                item.data_frame,max_mag, min_mag, max_long, min_long, max_lat, min_lat)
+                item.model.data_frame,max_mag, min_mag, max_long, min_long, max_lat, min_lat)
         self.checked_items()
 
 
     def dropna_outlier(self, max_mag, min_mag, max_long, min_long, max_lat, min_lat):
         for item in self.checked_items_list:
             self.data_manipulator.dropna_outlier_from_df(
-                item.data_frame,max_mag, min_mag, max_long, min_long, max_lat, min_lat)
+                item.model.data_frame,max_mag, min_mag, max_long, min_long, max_lat, min_lat)
         self.checked_items()
 
     def drop_from_lasso_select(self, selected_points):
         for item in self.checked_items_list:
             thread = Thread(target=self.data_manipulator.drop_from_lasso_select,
-                            args=(item.data_frame,
+                            args=(item.model.data_frame,
                                   selected_points))
             thread.start()
 
     def drop_from_span_select(self,xmin,xmax):
         for item in self.checked_items_list:
             thread = Thread(target=self.data_manipulator.drop_from_span_select,
-                            args=(item.data_frame,
+                            args=(item.model.data_frame,
                                   xmin,
                                   xmax))
             thread.start()
@@ -74,6 +74,6 @@ class TreeUtil():
 
         for item in self.checked_items_list:
             filename = os.path.join(output_dir, item.text(0))
-            item.data_frame.to_csv(filename, index=False)
+            item.model.data_frame.to_csv(filename, index=False)
 
 

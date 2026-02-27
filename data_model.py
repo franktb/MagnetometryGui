@@ -22,10 +22,17 @@ class Survey(MyQTreeWidgetItem):
 
 
 class SurveyFrame(MyQTreeWidgetItem):
-    def __init__(self, name, data_frame, source_corrupted):
+    def __init__(self, name, model):
         super().__init__(name)
+        self.model = model
+
+
+class SurveyFrameModel:
+    def __init__(self, name, data_frame, source_corrupted):
+        self.name = name
         self.data_frame = data_frame
         self.source_corrupted = source_corrupted
+
 
 
 class Anomaly(MyQTreeWidgetItem):

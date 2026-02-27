@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from data_model import Survey, SurveyFrame
+from data_model import Survey, SurveyFrame, SurveyFrameModel
 from PySide6.QtCore import Qt
 from multiprocessing import Queue
 
@@ -51,7 +51,8 @@ class ReadMagCSV():
         new_survey = Survey(survey_id)
         new_survey.setCheckState(0, Qt.Checked)
         project.tree.addTopLevelItem(new_survey)
-        new_survey_frame = SurveyFrame(survey_id, survey_frame_raw, False)
+        new_survey_frame_model = SurveyFrameModel(survey_id, survey_frame_raw, False)
+        new_survey_frame = SurveyFrame(survey_id,new_survey_frame_model)
         new_survey_frame.setCheckState(0, Qt.Checked)
         new_survey.addChild(new_survey_frame)
         project.checked_items()
@@ -128,7 +129,8 @@ class ReadMagCSV():
                     survey_frame_raw['datetime'] = pd.to_datetime(
                         survey_frame_raw.pop('/Date') + ' ' + survey_frame_raw.pop('Time'))
 
-                    new_survey_frame = SurveyFrame(os.path.basename(file), survey_frame_raw, False)
+                    new_survey_frame_model = SurveyFrameModel(os.path.basename(file), survey_frame_raw, False)
+                    new_survey_frame = SurveyFrame(os.path.basename(file), new_survey_frame_model)
                     new_survey_frame.setCheckState(0, Qt.Checked)
                     new_survey.addChild(new_survey_frame)
 
@@ -230,7 +232,8 @@ class ReadMagCSV():
         new_survey = Survey(survey_id)
         new_survey.setCheckState(0, Qt.Checked)
         project.tree.addTopLevelItem(new_survey)
-        new_survey_frame = SurveyFrame(survey_id, survey_frame_raw, False)
+        new_survey_frame_model = SurveyFrameModel(survey_id, survey_frame_raw, False)
+        new_survey_frame = SurveyFrame(survey_id, new_survey_frame_model)
         new_survey_frame.setCheckState(0, Qt.Checked)
         new_survey.addChild(new_survey_frame)
         project.checked_items()
