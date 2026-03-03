@@ -48,5 +48,5 @@ class ProjectIO:
             json.dump(project, file, indent=4)
 
 
-    def load_project(self):
-        return 0
+    def open_project(self, selected_project, project):
+        print(selected_project)

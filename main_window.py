@@ -1,3 +1,4 @@
+import json
 import pickle
 import sys
 import os
@@ -518,6 +519,21 @@ class MainWindow(QMainWindow):
                             self.TreeUtil.tree,
                             target_dir=selected_folder,
                             project_name = self.project_name
+                            )
+            self.threadpool.start(worker)
+
+    def open_project(self):
+        selected_project = QFileDialog.getOpenFileName(filter="All Files(*);;Text files(*.json)")
+        if selected_project[0].endswith((".json")):
+            print(selected_project[0])
+            with open(selected_project[0], 'r') as f:
+                data = json.load(f)
+            self.project_name = data['name']
+            self.setWindowTitle(data['name'])
+
+            worker = Worker(self.ProjectIO.open_project,
+                            data,
+                            self.TreeUtil
                             )
             self.threadpool.start(worker)
 
