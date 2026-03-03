@@ -25,6 +25,7 @@ from skimage import feature, measure
 from figure_wrapper import SlippyMapNavigationToolbar
 from TreeWidget import TreeUtil
 from fft_window import FFTWindow
+from file_io.project_io import ProjectIO
 from file_io.tiff_io import WriteMag, Bathymetry
 from file_io.txt_io import WriteMagCSV, ReadMagCSV
 from timeseries_window import TimeSeriesWindow
@@ -163,6 +164,8 @@ class MainWindow(QMainWindow):
         self.readCSV = ReadMagCSV()
         self.writeCSV = WriteMagCSV()
         self.writeTif = WriteMag()
+
+        self.ProjectIO = ProjectIO()
 
         self.bath_IO = Bathymetry()
         # self.ui.treeWidget.setHeaderHidden(True)
@@ -499,7 +502,7 @@ class MainWindow(QMainWindow):
         project_name, ok = QInputDialog.getText(self, 'Input Dialog', 'Enter project name:')
         if ok:
             self.setWindowTitle(project_name)
-            # self.project = TreeModel(project_name)
+            self.project_name = project_name
             self.ui.treeWidget = QTreeWidget(self.ui.centralwidget)
         return ok
 
@@ -507,11 +510,16 @@ class MainWindow(QMainWindow):
         print("open project")
 
     def save_project(self):
-        root = self.TreeUtil.tree.invisibleRootItem()
-        for i in range(root.childCount()):
-            print(root.child(i))
-            print(root.child(i).child(0))
-            print(print(root.child(i).child(0).data_frame))
+        selected_folder = QFileDialog.getExistingDirectory(parent=self,
+                                                           caption="Select directory to save project.",
+                                                           options=QFileDialog.Option.ShowDirsOnly)
+        if selected_folder:
+            worker = Worker(self.ProjectIO.save_project,
+                            self.TreeUtil.tree,
+                            target_dir=selected_folder,
+                            project_name = self.project_name
+                            )
+            self.threadpool.start(worker)
 
     def select_BOB_CSV(self):
         # if self.project != None:
