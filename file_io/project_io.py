@@ -1,5 +1,10 @@
 import json
 from pathlib import Path
+import pandas as pd
+from PySide6.QtCore import Qt
+
+from TreeWidget import TreeUtil
+from data_model import Survey, SurveyFrame, SurveyFrameModel
 
 
 class ProjectIO:
@@ -48,5 +53,19 @@ class ProjectIO:
             json.dump(project, file, indent=4)
 
 
-    def open_project(self, selected_project, project):
-        print(selected_project)
+    def open_project(self, selected_project, project, file_path_json):
+        for survey in selected_project["surveys"]:
+
+            new_survey = Survey(survey["name"])
+            new_survey.setCheckState(0, Qt.Checked)
+            project.tree.addTopLevelItem(new_survey)
+
+            for frame in survey["frames"]:
+                project_path = Path(file_path_json).parent
+                survey_frame_raw = pd.read_parquet(project_path / str(frame["file"]))
+                new_survey_frame_model = SurveyFrameModel(frame["name"], survey_frame_raw, False)
+                new_survey_frame = SurveyFrame(frame["name"], new_survey_frame_model)
+                new_survey_frame.setCheckState(0, Qt.Checked)
+                new_survey.addChild(new_survey_frame)
+
+        project.checked_items()

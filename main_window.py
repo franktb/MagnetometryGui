@@ -21,8 +21,6 @@ import matplotlib.colors as colors
 from matplotlib.colors import TwoSlopeNorm
 from skimage import feature, measure
 
-
-
 from figure_wrapper import SlippyMapNavigationToolbar
 from TreeWidget import TreeUtil
 from fft_window import FFTWindow
@@ -40,7 +38,6 @@ from window_manager import WindowManager
 from worker import Worker, PWorker
 
 
-
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -56,8 +53,6 @@ class MainWindow(QMainWindow):
         self.ui.actionFrom_Sealink_Folder.triggered.connect(self.select_SeaLINKFolder)
         self.ui.actionFrom_Custom_CSV.triggered.connect(self.select_custom_CSV)
         self.ui.actionDraw1D.triggered.connect(self.wrapper_1d_selected)
-
-
 
         self.ui.actionDrawSelect.triggered.connect(self.draw_selection)
         self.ui.actionRemoveOutlier.triggered.connect(self.remove_outlier)
@@ -96,8 +91,6 @@ class MainWindow(QMainWindow):
         self.ui.verticalLayoutTimeSeriesCanvas_2.addWidget(self.time_series_canvas_res)
         self.time_series_ax_res = self.time_series_canvas_res.figure.subplots()
 
-
-
         self.ui.comboBox_Scale_type.currentIndexChanged.connect(self.update_scale)
         self.color_scale_type = self.ui.comboBox_Scale_type.currentText()
 
@@ -108,7 +101,7 @@ class MainWindow(QMainWindow):
         self.selected_df = pd.DataFrame()
         self.TreeUtil = TreeUtil(self.ui.treeWidget, self.selected_df)
         self.ui.treeWidget.setEditTriggers(QTreeWidget.DoubleClicked | QTreeWidget.SelectedClicked)
-        self.ui.treeWidget.itemChanged.connect(lambda item, column: self.update_selected_df(item,column))
+        self.ui.treeWidget.itemChanged.connect(lambda item, column: self.update_selected_df(item, column))
 
         self.ui.actionExport_Survey.triggered.connect(self.TreeUtil.write_surveys_to_csv)
 
@@ -174,7 +167,6 @@ class MainWindow(QMainWindow):
 
         self.grid_queue = Queue()
 
-
     def spawn_fft_window(self):
         WindowManager.open_or_focus_window(self,
                                            "fft_window",
@@ -192,7 +184,6 @@ class MainWindow(QMainWindow):
         if self.grid_x is not None:
             self.update_plot()
 
-
     def detect_anomalies(self):
         print("I am here")
         magnitude = sobel(self.grid_z)
@@ -208,23 +199,20 @@ class MainWindow(QMainWindow):
         y_coords = self.grid_y[y_indices, x_indices]
         self.anomalies = self.mapping_2D_ax.scatter(x_coords, y_coords)
 
-
         masked_grid_z = np.ma.masked_invalid(self.grid_z)
         edges = feature.canny(masked_grid_z)
-        #self.anomalies = self.mapping_2D_ax.scatter(edges1)
+        # self.anomalies = self.mapping_2D_ax.scatter(edges1)
         contours = measure.find_contours(edges, level=0.99)
-        #print(type(contour))
-        #print(contour.shape)
+        # print(type(contour))
+        # print(contour.shape)
 
         for contour in contours:
             self.mapping_2D_ax.plot(contour[:, 1], contour[:, 0])
 
-        #self.anomalies = self.mapping_2D_ax.scatter(x_coords, y_coords)
+        # self.anomalies = self.mapping_2D_ax.scatter(x_coords, y_coords)
 
         self.mapping_2D_canvas.draw_idle()
         print("anno done")
-
-
 
     def write_to_csv(self):
         filename, _ = QFileDialog.getSaveFileName(
@@ -258,13 +246,12 @@ class MainWindow(QMainWindow):
             if not filename.lower().endswith(".tif"):
                 filename += ".tif"
 
-            if hasattr(self, 'mask_clip') and self.mask_clip is not None and self.ui.layerWidget.item(4).checkState() == Qt.Checked:
+            if hasattr(self, 'mask_clip') and self.mask_clip is not None and self.ui.layerWidget.item(
+                    4).checkState() == Qt.Checked:
                 print("I AM HERE")
                 clipped_grid_z = np.ma.masked_where(~self.mask_clip, self.grid_z)
             else:
                 clipped_grid_z = np.ma.masked_invalid(self.grid_z)
-
-
 
             self.writeTif.write_to_GeoTiff(filename, self.grid_x, self.grid_y, clipped_grid_z)
 
@@ -326,13 +313,12 @@ class MainWindow(QMainWindow):
         if self.ui.layerWidget.item(4).checkState() == Qt.Checked:
             print("huhu")
 
-
         self.update_plot()
 
     def update_selected_df(self, item, column):
-        print("debug1",item.name, column)
-        print("debug2",item.text(0), column)
-        item.name = item.text(column) #the c++ implementation requires the column
+        print("debug1", item.name, column)
+        print("debug2", item.text(0), column)
+        item.name = item.text(column)  # the c++ implementation requires the column
         worker = Worker(self.TreeUtil.checked_items)
         self.threadpool.start(worker)
 
@@ -351,7 +337,6 @@ class MainWindow(QMainWindow):
     def draw_selection(self):
         self.TreeUtil.selected_df = self.TreeUtil.selected_df.sort_values(by='datetime')
 
-
         if not "Magnetic_Field_residual" in self.TreeUtil.selected_df:
             self.calc_residuals()
 
@@ -359,7 +344,6 @@ class MainWindow(QMainWindow):
             self.TreeUtil.selected_df.dropna(inplace=True)
 
             QMessageBox.warning(self, "Nan rows", "Nan rows has been removed to continue processing", )
-
 
         nth_select = int(self.ui.lineEdit_nthSelectWindow.text())
         self.data_coordinates = np.array(
@@ -428,15 +412,14 @@ class MainWindow(QMainWindow):
             start = time.time()
 
             # norm = colors.SymLogNorm(linthresh=1e-3, linscale=1.0, vmin=grid_z.min(), vmax=grid_z.max())
-            #masked_grid_z = np.ma.masked_invalid(self.grid_z)
+            # masked_grid_z = np.ma.masked_invalid(self.grid_z)
 
-            if hasattr(self, 'mask_clip') and self.mask_clip is not None and self.ui.layerWidget.item(3).checkState() == Qt.Checked:
+            if hasattr(self, 'mask_clip') and self.mask_clip is not None and self.ui.layerWidget.item(
+                    3).checkState() == Qt.Checked:
                 print("I AM HERE")
                 clipped_grid_z = np.ma.masked_where(~self.mask_clip, self.grid_z)
             else:
                 clipped_grid_z = np.ma.masked_invalid(self.grid_z)
-
-
 
             if self.color_scale_type == "Linear scale":
                 norm = TwoSlopeNorm(vmin=np.nanmin(clipped_grid_z), vcenter=0, vmax=np.nanmax(clipped_grid_z))
@@ -474,7 +457,6 @@ class MainWindow(QMainWindow):
             except:
                 pass
 
-
             if hasattr(self, 'masked_tracklines') and self.masked_tracklines is not None:
                 self.track_lines = self.mapping_2D_ax.scatter(self.masked_tracklines[0, :],
                                                               self.masked_tracklines[1, :], color="black", s=1)
@@ -491,8 +473,8 @@ class MainWindow(QMainWindow):
                                                                orientation="vertical")
             self.cbar.set_label('Anomaly [nT]')
 
-            #self.mapping_2D_ax.scatter(489426, 5693316)
-            #self.mapping_2D_ax.scatter(514400,5705500)
+            # self.mapping_2D_ax.scatter(489426, 5693316)
+            # self.mapping_2D_ax.scatter(514400,5705500)
 
             self.mapping_2D_canvas.draw_idle()
             # print("Number of collections:", len(self.contourfplot.collections))
@@ -504,11 +486,9 @@ class MainWindow(QMainWindow):
         if ok:
             self.setWindowTitle(project_name)
             self.project_name = project_name
-            self.ui.treeWidget = QTreeWidget(self.ui.centralwidget)
+            self.ui.treeWidget.clear()
+            #self.update_selected_df(self.TreeUtil.tree.invisibleRootItem(), 0)
         return ok
-
-    def open_project(self):
-        print("open project")
 
     def save_project(self):
         selected_folder = QFileDialog.getExistingDirectory(parent=self,
@@ -518,7 +498,7 @@ class MainWindow(QMainWindow):
             worker = Worker(self.ProjectIO.save_project,
                             self.TreeUtil.tree,
                             target_dir=selected_folder,
-                            project_name = self.project_name
+                            project_name=self.project_name
                             )
             self.threadpool.start(worker)
 
@@ -531,9 +511,12 @@ class MainWindow(QMainWindow):
             self.project_name = data['name']
             self.setWindowTitle(data['name'])
 
+            self.ui.treeWidget.clear()
+
             worker = Worker(self.ProjectIO.open_project,
                             data,
-                            self.TreeUtil
+                            self.TreeUtil,
+                            selected_project[0]
                             )
             self.threadpool.start(worker)
 
@@ -602,8 +585,6 @@ class MainWindow(QMainWindow):
         TimeSeriesManipulator.smoothing_and_residual_calculation(self.TreeUtil.selected_df,
                                                                  self.smoothing_window_length,
                                                                  self.ambient_window_length)
-
-
 
     def wrapper_1d_selected(self):
         self.TreeUtil.selected_df = self.TreeUtil.selected_df.sort_values(by='datetime')
