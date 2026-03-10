@@ -185,7 +185,6 @@ class MainWindow(QMainWindow):
             self.update_plot()
 
     def detect_anomalies(self):
-        print("I am here")
         magnitude = sobel(self.grid_z)
         threshold = np.percentile(magnitude, 98)  # or fixed value
         mask = magnitude >= threshold
@@ -415,27 +414,54 @@ class MainWindow(QMainWindow):
             # masked_grid_z = np.ma.masked_invalid(self.grid_z)
 
             if hasattr(self, 'mask_clip') and self.mask_clip is not None and self.ui.layerWidget.item(
-                    3).checkState() == Qt.Checked:
-                print("I AM HERE")
-                clipped_grid_z = np.ma.masked_where(~self.mask_clip, self.grid_z)
+                    4).checkState() == Qt.Checked:
+
+                rows, cols = np.where(self.mask_clip)
+
+                rmin, rmax = rows.min(), rows.max()
+                cmin, cmax = cols.min(), cols.max()
+
+                clipped_grid_x = self.grid_x[rmin:rmax + 1, cmin:cmax + 1]
+                clipped_grid_y = self.grid_y[rmin:rmax + 1, cmin:cmax + 1]
+                clipped_grid_z = self.grid_z[rmin:rmax + 1, cmin:cmax + 1]
+                mask_sub = self.mask_clip[rmin:rmax + 1, cmin:cmax + 1]
+
+                clipped_grid_z = np.where(mask_sub, clipped_grid_z, np.nan)
+
+
+
+
+                x_min, x_max = np.min(clipped_grid_x), np.max(clipped_grid_x)
+                y_min, y_max = np.min(clipped_grid_y), np.max(clipped_grid_y)
+
+                # Compute ranges
+                x_range = x_max - x_min
+                y_range = y_max - y_min
+
+                # Apply 5% padding
+                x_pad = 0.05 * x_range
+                y_pad = 0.05 * y_range
+
+                self.mapping_2D_ax.set_xlim([x_min - x_pad, x_max + x_pad])
+                self.mapping_2D_ax.set_ylim([y_min - y_pad, y_max + y_pad])
+
             else:
+                clipped_grid_x = self.grid_x
+                clipped_grid_y = self.grid_y
                 clipped_grid_z = np.ma.masked_invalid(self.grid_z)
 
             if self.color_scale_type == "Linear scale":
                 norm = TwoSlopeNorm(vmin=np.nanmin(clipped_grid_z), vcenter=0, vmax=np.nanmax(clipped_grid_z))
-                self.contourfplot = self.mapping_2D_ax.pcolormesh(self.grid_x,
-                                                                  self.grid_y,
+                self.contourfplot = self.mapping_2D_ax.pcolormesh(clipped_grid_x,
+                                                                  clipped_grid_y,
                                                                   clipped_grid_z,
                                                                   cmap='RdBu_r',
                                                                   norm=norm)
 
             elif self.color_scale_type == "Logarithmic scale":
-                self.contourfplot = self.mapping_2D_ax.pcolormesh(self.grid_x,
-                                                                  self.grid_y,
-                                                                  clipped_grid_z,  # 250,
-                                                                  # origin='lower',
-                                                                  # extent=(x_min, x_max, y_min, y_max),
-                                                                  # cmap='RdBu_r', norm=norm)
+                self.contourfplot = self.mapping_2D_ax.pcolormesh(clipped_grid_x,
+                                                                  clipped_grid_y,
+                                                                  clipped_grid_z,
                                                                   cmap='RdBu_r',
                                                                   norm="symlog"
                                                                   )
@@ -457,7 +483,8 @@ class MainWindow(QMainWindow):
             except:
                 pass
 
-            if hasattr(self, 'masked_tracklines') and self.masked_tracklines is not None:
+            if hasattr(self, 'masked_tracklines') and self.masked_tracklines is not None and self.ui.layerWidget.item(
+                    4).checkState() == Qt.Checked:
                 self.track_lines = self.mapping_2D_ax.scatter(self.masked_tracklines[0, :],
                                                               self.masked_tracklines[1, :], color="black", s=1)
             else:
