@@ -6,3 +6,7 @@ __pycache__/
 # Data files
 *.tif
 *.csv
+data/
+
+#Pycharm folder
+.idea
