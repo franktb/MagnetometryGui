@@ -222,15 +222,28 @@ class MainWindow(QMainWindow):
         )
         if not filename.lower().endswith(".csv"):
             filename += ".csv"
-        print(np.column_stack((self.grid_x, self.grid_y, self.grid_z)).shape)
-        flat_x = self.grid_x.ravel()
-        flat_y = self.grid_y.ravel()
-        flat_z = self.grid_z.ravel()
+
+        if hasattr(self, 'mask_clip') and self.mask_clip is not None and self.ui.layerWidget.item(
+                4).checkState() == Qt.Checked:
+            clipped_grid_x, clipped_grid_y, clipped_grid_z = clip_grid(self.grid_x,
+                                                                       self.grid_y,
+                                                                       self.grid_z,
+                                                                       self.mask_clip)
+            flat_x = clipped_grid_x.ravel()
+            flat_y = clipped_grid_y.ravel()
+            flat_z = clipped_grid_z.ravel()
+
+        else:
+            print(np.column_stack((self.grid_x, self.grid_y, self.grid_z)).shape)
+            flat_x = self.grid_x.ravel()
+            flat_y = self.grid_y.ravel()
+            flat_z = self.grid_z.ravel()
         df = pd.DataFrame({
             "UTM_Easting": flat_x,
             "UTM_Northing": flat_y,
             "Value": flat_z
         })
+        print(df)
         df.to_csv(filename, index=False)
 
     def write_to_geotiff(self):
