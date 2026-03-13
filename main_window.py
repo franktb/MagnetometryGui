@@ -264,10 +264,20 @@ class MainWindow(QMainWindow):
                                                                            self.grid_y,
                                                                            self.grid_z,
                                                                            self.mask_clip)
-                self.writeTif.write_to_GeoTiff(filename, clipped_grid_x, clipped_grid_y, clipped_grid_z)
+                worker = Worker(self.writeTif.write_to_GeoTiff,
+                                filename,
+                                clipped_grid_x,
+                                clipped_grid_y,
+                                clipped_grid_z)
+                self.threadpool.start(worker)
             else:
                 clipped_grid_z = np.ma.masked_invalid(self.grid_z)
-                self.writeTif.write_to_GeoTiff(filename, self.grid_x, self.grid_y, clipped_grid_z)
+                worker = Worker(self.writeTif.write_to_GeoTiff,
+                                filename,
+                                self.grid_x,
+                                self.grid_y,
+                                clipped_grid_z)
+                self.threadpool.start(worker)
 
     def diurnal_correction(self):
         return 0
