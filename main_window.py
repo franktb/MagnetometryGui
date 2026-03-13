@@ -30,7 +30,7 @@ from file_io.txt_io import WriteMagCSV, ReadMagCSV
 from timeseries_window import TimeSeriesWindow
 from ui_elements.ui_main_window import Ui_MainWindow
 from util.data_manipulation import DataManipulator
-from util.gridding import grid
+from util.gridding import grid, clip_grid
 from util.filter import running_mean_uniform_filter1d, sobel
 from ui_elements.dialogs import *
 from util.time_series_module import TimeSeriesManipulator
@@ -247,12 +247,14 @@ class MainWindow(QMainWindow):
 
             if hasattr(self, 'mask_clip') and self.mask_clip is not None and self.ui.layerWidget.item(
                     4).checkState() == Qt.Checked:
-                print("I AM HERE")
-                clipped_grid_z = np.ma.masked_where(~self.mask_clip, self.grid_z)
+                clipped_grid_x, clipped_grid_y, clipped_grid_z = clip_grid(self.grid_x,
+                                                                           self.grid_y,
+                                                                           self.grid_z,
+                                                                           self.mask_clip)
+                self.writeTif.write_to_GeoTiff(filename, clipped_grid_x, clipped_grid_y, clipped_grid_z)
             else:
                 clipped_grid_z = np.ma.masked_invalid(self.grid_z)
-
-            self.writeTif.write_to_GeoTiff(filename, self.grid_x, self.grid_y, clipped_grid_z)
+                self.writeTif.write_to_GeoTiff(filename, self.grid_x, self.grid_y, clipped_grid_z)
 
     def diurnal_correction(self):
         return 0
@@ -415,21 +417,10 @@ class MainWindow(QMainWindow):
 
             if hasattr(self, 'mask_clip') and self.mask_clip is not None and self.ui.layerWidget.item(
                     4).checkState() == Qt.Checked:
-
-                rows, cols = np.where(self.mask_clip)
-
-                rmin, rmax = rows.min(), rows.max()
-                cmin, cmax = cols.min(), cols.max()
-
-                clipped_grid_x = self.grid_x[rmin:rmax + 1, cmin:cmax + 1]
-                clipped_grid_y = self.grid_y[rmin:rmax + 1, cmin:cmax + 1]
-                clipped_grid_z = self.grid_z[rmin:rmax + 1, cmin:cmax + 1]
-                mask_sub = self.mask_clip[rmin:rmax + 1, cmin:cmax + 1]
-
-                clipped_grid_z = np.where(mask_sub, clipped_grid_z, np.nan)
-
-
-
+                clipped_grid_x, clipped_grid_y, clipped_grid_z = clip_grid(self.grid_x,
+                                                                           self.grid_y,
+                                                                           self.grid_z,
+                                                                           self.mask_clip)
 
                 x_min, x_max = np.min(clipped_grid_x), np.max(clipped_grid_x)
                 y_min, y_max = np.min(clipped_grid_y), np.max(clipped_grid_y)
