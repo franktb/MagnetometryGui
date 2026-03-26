@@ -134,7 +134,7 @@ The imported surveys appear in a tree structure on the left-hand site of the mai
 	\caption{
 		Raw files can be imported through a file dialogue that will be triggered by the drop-down menu {\em File}.
 	}
-	\label{fig:drowdown_import}
+	\label{fig:dropdown_import}
 \end{figure}
 
 \begin{walkthrough}
@@ -175,7 +175,7 @@ Second, we note that the Software will probe for \verb|UTM_Easting,UTM_Northing|
 If these columns are not present in the raw file they will be estimated form \verb|Longitude,Latitude|.
 An example how a \verb|*.XYZ| files is suppose to be formatted is given in listing \ref{lst:SeaLinkSnippet}.
 
-If both requirement are meet, the user can open a file dialogue through the dropdown menu \verb|File| (see Fig.~\ref{fig:drowdown_import}).
+If both requirement are meet, the user can open a file dialogue through the dropdown menu \verb|File| (see Fig.~\ref{fig:dropdown_import}).
 Within the spawned file dialogue the user can select either directly the desired survey folder \verb|CV_YY_NN| or its contained \verb|raw| folder and all files matching the requirements above will be imported.
 \begin{listing}[htbp]
 \lstinputlisting[
@@ -335,6 +335,26 @@ For a more fine selection, a polynomial select tool \inlinegraphics{./../../ui_e
 
 Finally, the processed anomaly grid can be exported over the drop-down menu {\em file} and then selecting either a text-based \verb|*.csv| or a \verb|*.tiff| based export.
 The latter one exports a geotiff which could imported into any GIS software and further processes.
+
+\subsection{Project}
+
+\subsubsection{Saving a project}
+To save the current project, select {\em Save Project} within the drop-down menu {\em File} (see Fig.\ref{fig:drowdown_import}).
+This will open a file dialogue.
+Within the file dialogue navigate to the desired location.
+The location should be an empty folder which could be arbitrary named.
+Within this folder the following will be created:
+\begin{itemize}
+	\item A \verb|project_name|.json file containing the project structure and meta information. 
+	\item A folder for each survey containing all associated survey frames as parquet. 
+\end{itemize}
+
+
+
+\subsubsection{Loading a project}
+To load a project, select {\em Load Project} within the drop-down menu {\em File} (see Fig.\ref{fig:drowdown_import}).
+This will open a file dialogue.
+Within the file dialogue navigate to the folder where the desired project was stored and select the corresponding \verb|*.json| file.
 
 \section{Experimental: Downward continuation}
 \label{sec:downwardContinuation}

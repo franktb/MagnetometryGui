@@ -46,7 +46,10 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        self.project_name = self.windowTitle()
+
         self.ui.actionNew_Project.triggered.connect(self.create_new_project)
+        self.ui.actionRename_Project.triggered.connect(self.rename_project)
         self.ui.actionOpen_Project.triggered.connect(self.open_project)
         self.ui.actionSave_Project.triggered.connect(self.save_project)
         self.ui.actionFrom_BOB_CSV.triggered.connect(self.select_BOB_CSV)
@@ -529,6 +532,13 @@ class MainWindow(QMainWindow):
             self.project_name = project_name
             self.ui.treeWidget.clear()
             #self.update_selected_df(self.TreeUtil.tree.invisibleRootItem(), 0)
+        return ok
+
+    def rename_project(self):
+        project_name, ok = QInputDialog.getText(self, 'Input Dialog', 'Enter project name:')
+        if ok:
+            self.setWindowTitle(project_name)
+            self.project_name = project_name
         return ok
 
     def save_project(self):

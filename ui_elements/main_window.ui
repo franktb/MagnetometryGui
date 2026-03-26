@@ -170,6 +170,7 @@
      <addaction name="actionGeoTiff"/>
     </widget>
     <addaction name="actionNew_Project"/>
+    <addaction name="actionRename_Project"/>
     <addaction name="actionOpen_Project"/>
     <addaction name="actionSave_Project"/>
     <addaction name="separator"/>
@@ -358,6 +359,11 @@
    </property>
    <property name="toolTip">
     <string>Draw a timeseries representation of selected surveys</string>
+   </property>
+  </action>
+  <action name="actionRename_Project">
+   <property name="text">
+    <string>Rename Project</string>
    </property>
   </action>
  </widget>
