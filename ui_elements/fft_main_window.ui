@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1014</width>
-    <height>667</height>
+    <width>1065</width>
+    <height>523</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,71 +17,19 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>110</x>
-      <y>30</y>
-      <width>651</width>
+      <x>30</x>
+      <y>20</y>
+      <width>711</width>
       <height>391</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout2DMappingCanvas"/>
    </widget>
-   <widget class="QLineEdit" name="lineEditDepth">
-    <property name="geometry">
-     <rect>
-      <x>840</x>
-      <y>100</y>
-      <width>113</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>50.0</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEditIterations">
-    <property name="geometry">
-     <rect>
-      <x>840</x>
-      <y>170</y>
-      <width>113</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>3</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>840</x>
-      <y>80</y>
-      <width>66</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Depth:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>840</x>
-      <y>140</y>
-      <width>66</width>
-      <height>19</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Iterations:</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton_StartIteration">
     <property name="geometry">
      <rect>
-      <x>840</x>
-      <y>230</y>
+      <x>30</x>
+      <y>430</y>
       <width>111</width>
       <height>27</height>
      </rect>
@@ -93,8 +41,8 @@
    <widget class="QPushButton" name="pushButton_layer">
     <property name="geometry">
      <rect>
-      <x>850</x>
-      <y>290</y>
+      <x>160</x>
+      <y>430</y>
       <width>88</width>
       <height>27</height>
      </rect>
@@ -103,13 +51,115 @@
      <string>Do Layer</string>
     </property>
    </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>20</y>
+      <width>281</width>
+      <height>391</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Depth:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEditDepth">
+       <property name="text">
+        <string>50.0</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Display:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox_display">
+       <item>
+        <property name="text">
+         <string>Fixed depth</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Bathymetry</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Iterations:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEditIterations">
+       <property name="text">
+        <string>3</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Eastings sampling rate:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit_eastingsSampleRate"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Northings sampling rate:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit_2"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Scale type:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox_scaleType">
+       <item>
+        <property name="text">
+         <string>Linear scale</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Logarithmic scale</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1014</width>
+     <width>1065</width>
      <height>24</height>
     </rect>
    </property>
