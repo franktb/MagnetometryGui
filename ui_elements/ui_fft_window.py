@@ -29,10 +29,15 @@ class Ui_FFTWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
+        self.pushButton_layer = QPushButton(self.centralwidget)
+        self.pushButton_layer.setObjectName(u"pushButton_layer")
+
+        self.gridLayout.addWidget(self.pushButton_layer, 3, 1, 1, 1)
+
         self.verticalLayout2DMappingCanvas = QVBoxLayout()
         self.verticalLayout2DMappingCanvas.setObjectName(u"verticalLayout2DMappingCanvas")
 
-        self.gridLayout.addLayout(self.verticalLayout2DMappingCanvas, 0, 0, 5, 1)
+        self.gridLayout.addLayout(self.verticalLayout2DMappingCanvas, 0, 0, 4, 1)
 
         self.pushButton_StartIteration = QPushButton(self.centralwidget)
         self.pushButton_StartIteration.setObjectName(u"pushButton_StartIteration")
@@ -59,9 +64,35 @@ class Ui_FFTWindow(object):
         self.comboBox_display = QComboBox(self.centralwidget)
         self.comboBox_display.addItem("")
         self.comboBox_display.addItem("")
+        self.comboBox_display.addItem("")
         self.comboBox_display.setObjectName(u"comboBox_display")
 
         self.verticalLayout.addWidget(self.comboBox_display)
+
+        self.gridLayout_2 = QGridLayout()
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.label_9 = QLabel(self.centralwidget)
+        self.label_9.setObjectName(u"label_9")
+
+        self.gridLayout_2.addWidget(self.label_9, 1, 0, 1, 1)
+
+        self.comboBoxDisplayedLayer = QComboBox(self.centralwidget)
+        self.comboBoxDisplayedLayer.setObjectName(u"comboBoxDisplayedLayer")
+
+        self.gridLayout_2.addWidget(self.comboBoxDisplayedLayer, 1, 1, 1, 1)
+
+        self.lineEditLayers = QLineEdit(self.centralwidget)
+        self.lineEditLayers.setObjectName(u"lineEditLayers")
+
+        self.gridLayout_2.addWidget(self.lineEditLayers, 0, 1, 1, 1)
+
+        self.label_7 = QLabel(self.centralwidget)
+        self.label_7.setObjectName(u"label_7")
+
+        self.gridLayout_2.addWidget(self.label_7, 0, 0, 1, 1)
+
+
+        self.verticalLayout.addLayout(self.gridLayout_2)
 
         self.label_2 = QLabel(self.centralwidget)
         self.label_2.setObjectName(u"label_2")
@@ -105,17 +136,12 @@ class Ui_FFTWindow(object):
 
         self.verticalLayout.addWidget(self.comboBox_scaleType)
 
-
-        self.gridLayout.addLayout(self.verticalLayout, 0, 1, 1, 1)
-
-        self.pushButton_layer = QPushButton(self.centralwidget)
-        self.pushButton_layer.setObjectName(u"pushButton_layer")
-
-        self.gridLayout.addWidget(self.pushButton_layer, 4, 1, 1, 1)
-
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.gridLayout.addItem(self.verticalSpacer, 1, 1, 1, 1)
+        self.verticalLayout.addItem(self.verticalSpacer)
+
+
+        self.gridLayout.addLayout(self.verticalLayout, 0, 1, 2, 1)
 
         self.gridLayout.setColumnStretch(0, 2)
         FFTWindow.setCentralWidget(self.centralwidget)
@@ -134,13 +160,18 @@ class Ui_FFTWindow(object):
 
     def retranslateUi(self, FFTWindow):
         FFTWindow.setWindowTitle(QCoreApplication.translate("FFTWindow", u"MainWindow", None))
+        self.pushButton_layer.setText(QCoreApplication.translate("FFTWindow", u"Do Layer", None))
         self.pushButton_StartIteration.setText(QCoreApplication.translate("FFTWindow", u"Do it!", None))
         self.label.setText(QCoreApplication.translate("FFTWindow", u"Depth:", None))
         self.lineEditDepth.setText(QCoreApplication.translate("FFTWindow", u"50.0", None))
         self.label_6.setText(QCoreApplication.translate("FFTWindow", u"Display:", None))
         self.comboBox_display.setItemText(0, QCoreApplication.translate("FFTWindow", u"Fixed depth", None))
-        self.comboBox_display.setItemText(1, QCoreApplication.translate("FFTWindow", u"Bathymetry", None))
+        self.comboBox_display.setItemText(1, QCoreApplication.translate("FFTWindow", u"Layers", None))
+        self.comboBox_display.setItemText(2, QCoreApplication.translate("FFTWindow", u"Bathymetry", None))
 
+        self.label_9.setText(QCoreApplication.translate("FFTWindow", u"Display:", None))
+        self.lineEditLayers.setText(QCoreApplication.translate("FFTWindow", u"5", None))
+        self.label_7.setText(QCoreApplication.translate("FFTWindow", u"Layers:", None))
         self.label_2.setText(QCoreApplication.translate("FFTWindow", u"Iterations:", None))
         self.lineEditIterations.setText(QCoreApplication.translate("FFTWindow", u"3", None))
         self.label_4.setText(QCoreApplication.translate("FFTWindow", u"Eastings sampling rate:", None))
@@ -149,6 +180,5 @@ class Ui_FFTWindow(object):
         self.comboBox_scaleType.setItemText(0, QCoreApplication.translate("FFTWindow", u"Linear scale", None))
         self.comboBox_scaleType.setItemText(1, QCoreApplication.translate("FFTWindow", u"Logarithmic scale", None))
 
-        self.pushButton_layer.setText(QCoreApplication.translate("FFTWindow", u"Do Layer", None))
     # retranslateUi
 

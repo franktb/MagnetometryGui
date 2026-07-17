@@ -7,6 +7,7 @@ from file_io.tiff_io import Bathymetry, WriteMag
 from ui_elements.ui_fft_window import Ui_FFTWindow
 from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.figure import Figure
+from PySide6.QtGui import QIntValidator
 
 from util.filter import DownwardContinuation
 from util.interpolation_module import MagCube
@@ -37,6 +38,12 @@ class FFTWindow(QMainWindow):
         self.ui.pushButton_StartIteration.clicked.connect(self.downward_continuation)
         self.ui.pushButton_layer.clicked.connect(self.downward_cube)
 
+        self.validator_layer = QIntValidator(0, 10, self)
+        self.ui.lineEditLayers.setValidator(self.validator_layer )
+        self.layer_count=int(self.ui.lineEditLayers.text())
+        self.ui.lineEditLayers.textEdited.connect(self.lineEditLayers_change)
+
+
         self.downward_field = None
 
         self.myDownward = DownwardContinuation()
@@ -45,6 +52,17 @@ class FFTWindow(QMainWindow):
         self.myMagCube = MagCube()
         self.myBathymetry = Bathymetry()
         self.tiffWriter = WriteMag()
+
+    def lineEdit_validate(self, line_edit):
+        state, text, _ = line_edit.validator().validate(line_edit.text(), 0)
+        return state, text
+
+    def lineEditLayers_change(self):
+        state, text = self.lineEdit_validate(self.ui.lineEditLayers)
+        if state == QIntValidator.Acceptable:
+            self.layer_count = int(text)
+        else:
+            self.ui.lineEditLayers.setText(str(self.layer_count))
 
     def closeEvent(self, event):
         self.parent.ui.action_spawn_FFTWindow.setChecked(False)
@@ -97,7 +115,9 @@ class FFTWindow(QMainWindow):
         print(depth_grid)
         np.savetxt("debugBAthGrid", depth_grid)
 
-        cube, layer_heights = self.myMagCube.compute_cube(depth_grid, np.nan_to_num(self.parent.grid_z))
+        cube, layer_heights = self.myMagCube.compute_cube(depth_grid,
+                                                          np.nan_to_num(self.parent.grid_z),
+                                                          layer_count=self.layer_count)
         cube = np.nan_to_num(cube)
 
 
