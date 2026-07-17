@@ -71,58 +71,78 @@ class Ui_FFTWindow(object):
 
         self.gridLayout_2 = QGridLayout()
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.label_9 = QLabel(self.centralwidget)
-        self.label_9.setObjectName(u"label_9")
+        self.lineEdit_eastingsSampleRate = QLineEdit(self.centralwidget)
+        self.lineEdit_eastingsSampleRate.setObjectName(u"lineEdit_eastingsSampleRate")
 
-        self.gridLayout_2.addWidget(self.label_9, 1, 0, 1, 1)
-
-        self.comboBoxDisplayedLayer = QComboBox(self.centralwidget)
-        self.comboBoxDisplayedLayer.setObjectName(u"comboBoxDisplayedLayer")
-
-        self.gridLayout_2.addWidget(self.comboBoxDisplayedLayer, 1, 1, 1, 1)
-
-        self.lineEditLayers = QLineEdit(self.centralwidget)
-        self.lineEditLayers.setObjectName(u"lineEditLayers")
-
-        self.gridLayout_2.addWidget(self.lineEditLayers, 0, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.lineEdit_eastingsSampleRate, 5, 1, 1, 1)
 
         self.label_7 = QLabel(self.centralwidget)
         self.label_7.setObjectName(u"label_7")
 
         self.gridLayout_2.addWidget(self.label_7, 0, 0, 1, 1)
 
+        self.label_10 = QLabel(self.centralwidget)
+        self.label_10.setObjectName(u"label_10")
 
-        self.verticalLayout.addLayout(self.gridLayout_2)
+        self.gridLayout_2.addWidget(self.label_10, 3, 0, 1, 1)
 
-        self.label_2 = QLabel(self.centralwidget)
-        self.label_2.setObjectName(u"label_2")
+        self.comboBoxDisplayedLayer = QComboBox(self.centralwidget)
+        self.comboBoxDisplayedLayer.setObjectName(u"comboBoxDisplayedLayer")
 
-        self.verticalLayout.addWidget(self.label_2)
+        self.gridLayout_2.addWidget(self.comboBoxDisplayedLayer, 1, 1, 1, 1)
 
-        self.lineEditIterations = QLineEdit(self.centralwidget)
-        self.lineEditIterations.setObjectName(u"lineEditIterations")
+        self.lineEditcubeYdown = QLineEdit(self.centralwidget)
+        self.lineEditcubeYdown.setObjectName(u"lineEditcubeYdown")
 
-        self.verticalLayout.addWidget(self.lineEditIterations)
+        self.gridLayout_2.addWidget(self.lineEditcubeYdown, 3, 1, 1, 1)
 
         self.label_4 = QLabel(self.centralwidget)
         self.label_4.setObjectName(u"label_4")
 
-        self.verticalLayout.addWidget(self.label_4)
+        self.gridLayout_2.addWidget(self.label_4, 5, 0, 1, 1)
 
-        self.lineEdit_eastingsSampleRate = QLineEdit(self.centralwidget)
-        self.lineEdit_eastingsSampleRate.setObjectName(u"lineEdit_eastingsSampleRate")
+        self.label_2 = QLabel(self.centralwidget)
+        self.label_2.setObjectName(u"label_2")
 
-        self.verticalLayout.addWidget(self.lineEdit_eastingsSampleRate)
+        self.gridLayout_2.addWidget(self.label_2, 4, 0, 1, 1)
+
+        self.lineEditIterations = QLineEdit(self.centralwidget)
+        self.lineEditIterations.setObjectName(u"lineEditIterations")
+
+        self.gridLayout_2.addWidget(self.lineEditIterations, 4, 1, 1, 1)
+
+        self.label_8 = QLabel(self.centralwidget)
+        self.label_8.setObjectName(u"label_8")
+
+        self.gridLayout_2.addWidget(self.label_8, 2, 0, 1, 1)
+
+        self.label_9 = QLabel(self.centralwidget)
+        self.label_9.setObjectName(u"label_9")
+
+        self.gridLayout_2.addWidget(self.label_9, 1, 0, 1, 1)
+
+        self.lineEditLayers = QLineEdit(self.centralwidget)
+        self.lineEditLayers.setObjectName(u"lineEditLayers")
+
+        self.gridLayout_2.addWidget(self.lineEditLayers, 0, 1, 1, 1)
+
+        self.lineEditcubeYup = QLineEdit(self.centralwidget)
+        self.lineEditcubeYup.setObjectName(u"lineEditcubeYup")
+
+        self.gridLayout_2.addWidget(self.lineEditcubeYup, 2, 1, 1, 1)
 
         self.label_5 = QLabel(self.centralwidget)
         self.label_5.setObjectName(u"label_5")
 
-        self.verticalLayout.addWidget(self.label_5)
+        self.gridLayout_2.addWidget(self.label_5, 6, 0, 1, 1)
 
         self.lineEdit_2 = QLineEdit(self.centralwidget)
         self.lineEdit_2.setObjectName(u"lineEdit_2")
 
-        self.verticalLayout.addWidget(self.lineEdit_2)
+        self.gridLayout_2.addWidget(self.lineEdit_2, 6, 1, 1, 1)
+
+
+        self.verticalLayout.addLayout(self.gridLayout_2)
 
         self.label_3 = QLabel(self.centralwidget)
         self.label_3.setObjectName(u"label_3")
@@ -169,13 +189,17 @@ class Ui_FFTWindow(object):
         self.comboBox_display.setItemText(1, QCoreApplication.translate("FFTWindow", u"Layers", None))
         self.comboBox_display.setItemText(2, QCoreApplication.translate("FFTWindow", u"Bathymetry", None))
 
-        self.label_9.setText(QCoreApplication.translate("FFTWindow", u"Display:", None))
-        self.lineEditLayers.setText(QCoreApplication.translate("FFTWindow", u"5", None))
         self.label_7.setText(QCoreApplication.translate("FFTWindow", u"Layers:", None))
+        self.label_10.setText(QCoreApplication.translate("FFTWindow", u"Depth low:", None))
+        self.lineEditcubeYdown.setText(QCoreApplication.translate("FFTWindow", u"-20", None))
+        self.label_4.setText(QCoreApplication.translate("FFTWindow", u"Eastings points:", None))
         self.label_2.setText(QCoreApplication.translate("FFTWindow", u"Iterations:", None))
         self.lineEditIterations.setText(QCoreApplication.translate("FFTWindow", u"3", None))
-        self.label_4.setText(QCoreApplication.translate("FFTWindow", u"Eastings sampling rate:", None))
-        self.label_5.setText(QCoreApplication.translate("FFTWindow", u"Northings sampling rate:", None))
+        self.label_8.setText(QCoreApplication.translate("FFTWindow", u"Depth up:", None))
+        self.label_9.setText(QCoreApplication.translate("FFTWindow", u"Display:", None))
+        self.lineEditLayers.setText(QCoreApplication.translate("FFTWindow", u"5", None))
+        self.lineEditcubeYup.setText(QCoreApplication.translate("FFTWindow", u"-10", None))
+        self.label_5.setText(QCoreApplication.translate("FFTWindow", u"Northings points:", None))
         self.label_3.setText(QCoreApplication.translate("FFTWindow", u"Scale type:", None))
         self.comboBox_scaleType.setItemText(0, QCoreApplication.translate("FFTWindow", u"Linear scale", None))
         self.comboBox_scaleType.setItemText(1, QCoreApplication.translate("FFTWindow", u"Logarithmic scale", None))

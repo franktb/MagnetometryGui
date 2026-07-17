@@ -22,10 +22,9 @@ class FFTWindow(QMainWindow):
         self.ui.setupUi(self)
         self.parent = parent
 
+        self.downward_2D_canvas = FigureCanvas(Figure(figsize=(5, 3)))
 
-        self.downward_2D_canvas = FigureCanvas(Figure(figsize=(5,3)))
-
-        self.ui.verticalLayout2DMappingCanvas.addWidget(SlippyMapNavigationToolbar(self.downward_2D_canvas,self,))
+        self.ui.verticalLayout2DMappingCanvas.addWidget(SlippyMapNavigationToolbar(self.downward_2D_canvas, self, ))
         self.ui.verticalLayout2DMappingCanvas.addWidget(self.downward_2D_canvas)
         self.downward_2D_ax = self.downward_2D_canvas.figure.subplots()
 
@@ -39,10 +38,9 @@ class FFTWindow(QMainWindow):
         self.ui.pushButton_layer.clicked.connect(self.downward_cube)
 
         self.validator_layer = QIntValidator(0, 10, self)
-        self.ui.lineEditLayers.setValidator(self.validator_layer )
+        self.ui.lineEditLayers.setValidator(self.validator_layer)
         self.ui.lineEditLayers.textEdited.connect(self.lineEditLayers_changed)
-        self.lineEditLayers_changed() #set up the comboBoxDisplayedLayer as well
-
+        self.lineEditLayers_changed()  # set up the comboBoxDisplayedLayer as well
 
         self.downward_field = None
 
@@ -79,7 +77,6 @@ class FFTWindow(QMainWindow):
     def iterationsEdited(self):
         self.n_iterations = int(self.ui.lineEditIterations.text())
 
-
     def check_worker_result(self):
         if not self.fft_queue.empty():
             self.timer.stop()
@@ -94,24 +91,32 @@ class FFTWindow(QMainWindow):
 
     def downward_continuation(self):
         print("lets do it")
-        #self.myDownward.iterative_downward_finite(self.parent.grid_z,self.depth, self.n_iterations)
+        # self.myDownward.iterative_downward_finite(self.parent.grid_z,self.depth, self.n_iterations)
 
         print("do it depth", self.depth)
         myPworker = PWorker(self.myDownward.iterative_downward_finite,
                             np.nan_to_num(self.parent.grid_z),
                             self.depth,
-                            #self.n_iterations,
+                            # self.n_iterations,
                             result_queue=self.fft_queue)
         myPworker.start()
         self.timer = QTimer()
         self.timer.timeout.connect(self.check_worker_result)
         self.timer.start(100)
 
+    def downward_cube(self, min_depth, max_depth):
+        cube, layer_heights = self.myMagCube.compute_cube(min_depth=min_depth,
+                                                          max_depth=max_depth,
+                                                          grid_z=np.nan_to_num(self.parent.grid_z),
+                                                          layer_count=self.layer_count)
+        self.cube = np.nan_to_num(cube)
 
-    def downward_cube(self):
+        # cube, layer_depths = self.myMagCube.sample_cube_at_height(cube, layer_heights, depth_grid)
+        # self.tiffWriter.write_to_GeoTiff("depth.tif", self.parent.grid_x, self.parent.grid_y, maglayer)
+
+    def downward_bathymetry(self):
         filenames = ["./BathTiffs/BY_CV16_01_CelticSea_5m_U29N.tif",
                      "./BathTiffs/BY_CV16_02_Cork_5m_U29N.tif"]
-
 
         depth_grid = self.myBathymetry.read_from_TiffFolder(filenames,
                                                             self.parent.grid_x,
@@ -124,10 +129,8 @@ class FFTWindow(QMainWindow):
                                                           layer_count=self.layer_count)
         cube = np.nan_to_num(cube)
 
-
         maglayer = self.myMagCube.sample_cube_at_height(cube, layer_heights, depth_grid)
         self.tiffWriter.write_to_GeoTiff("depth.tif", self.parent.grid_x, self.parent.grid_y, maglayer)
-
 
     def update_plot(self):
         try:
@@ -146,15 +149,14 @@ class FFTWindow(QMainWindow):
         masked_grid_z = np.ma.masked_invalid(self.downward_field)
 
         self.contourfplot = self.downward_2D_ax.pcolormesh(self.parent.grid_x,
-                                                          self.parent.grid_y,
-                                                          masked_grid_z,  # 250,
-                                                          cmap='RdBu_r',
-                                                          norm="symlog"
-                                                          )
+                                                           self.parent.grid_y,
+                                                           masked_grid_z,  # 250,
+                                                           cmap='RdBu_r',
+                                                           norm="symlog"
+                                                           )
 
         self.cbar = self.downward_2D_canvas.figure.colorbar(self.contourfplot, ax=self.downward_2D_ax,
-                                                           orientation="vertical")
-
+                                                            orientation="vertical")
 
         self.cbar.set_label('Anomaly [nT]')
         self.downward_2D_canvas.draw_idle()
