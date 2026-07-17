@@ -13,6 +13,18 @@ class MagCube():
                      max_depth: float,
                      grid_z,
                      layer_count: int = 5):
+        """
+        Estimates the magnetic field for a volume (cube) below the surface, sampled at a given size of layers.
+
+        Args:
+            min_depth: depth of upper layer of the magnetic field cube
+            max_depth: depth of lower layer of the magnetic field cube
+            grid_z: the magnetic field at the surface
+            layer_count: the amount how often the cube should be sampled
+
+        Returns: the magnetic (volume) field as a cube, sampled at a given amount of layers
+
+        """
         layers = []
         layer_depths = np.linspace(min_depth, max_depth, layer_count)
 
