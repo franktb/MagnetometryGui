@@ -40,8 +40,8 @@ class FFTWindow(QMainWindow):
 
         self.validator_layer = QIntValidator(0, 10, self)
         self.ui.lineEditLayers.setValidator(self.validator_layer )
-        self.layer_count=int(self.ui.lineEditLayers.text())
-        self.ui.lineEditLayers.textEdited.connect(self.lineEditLayers_change)
+        self.ui.lineEditLayers.textEdited.connect(self.lineEditLayers_changed)
+        self.lineEditLayers_changed() #set up the comboBoxDisplayedLayer as well
 
 
         self.downward_field = None
@@ -57,10 +57,14 @@ class FFTWindow(QMainWindow):
         state, text, _ = line_edit.validator().validate(line_edit.text(), 0)
         return state, text
 
-    def lineEditLayers_change(self):
+    def lineEditLayers_changed(self):
         state, text = self.lineEdit_validate(self.ui.lineEditLayers)
         if state == QIntValidator.Acceptable:
             self.layer_count = int(text)
+            self.ui.comboBoxDisplayedLayer.clear()
+            items = [str(i) for i in range(1, self.layer_count + 1)]
+            print(items)
+            self.ui.comboBoxDisplayedLayer.addItems(items)
         else:
             self.ui.lineEditLayers.setText(str(self.layer_count))
 
