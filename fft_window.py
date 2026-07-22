@@ -34,7 +34,7 @@ class FFTWindow(QMainWindow):
         self.n_iterations = int(self.ui.lineEditIterations.text())
         self.ui.lineEditIterations.textEdited.connect(self.iterationsEdited)
 
-        self.ui.pushButton_StartIteration.clicked.connect(self.downward_continuation)
+        self.ui.pushButton_StartIteration.clicked.connect(self.start_selected_downward)
         self.ui.pushButton_layer.clicked.connect(self.downward_cube)
 
         self.validator_layer = QIntValidator(0, 10, self)
@@ -42,7 +42,10 @@ class FFTWindow(QMainWindow):
         self.ui.lineEditLayers.textEdited.connect(self.lineEditLayers_changed)
         self.lineEditLayers_changed()  # set up the comboBoxDisplayedLayer as well
 
+
+        self.ui.comboBoxDisplayedLayer.currentIndexChanged.connect(self.comboBoxDisplayedLayer_changed)
         self.downward_field = None
+        self.cube = None
 
         self.myDownward = DownwardContinuation()
         self.fft_queue = Queue()
@@ -66,6 +69,14 @@ class FFTWindow(QMainWindow):
         else:
             self.ui.lineEditLayers.setText(str(self.layer_count))
 
+    def comboBoxDisplayedLayer_changed(self):
+        if self.cube is not None:
+            print("hello")
+            print(self.ui.comboBoxDisplayedLayer.currentIndex())
+            self.update_plot(self.cube[self.ui.comboBoxDisplayedLayer.currentIndex(),:,:])
+
+
+
     def closeEvent(self, event):
         self.parent.ui.action_spawn_FFTWindow.setChecked(False)
         self.parent.fft_window = None
@@ -87,7 +98,18 @@ class FFTWindow(QMainWindow):
                 return
 
             self.downward_field = result
-            self.update_plot()
+            self.update_plot(result)
+
+    def start_selected_downward(self):
+        if self.ui.comboBox_display.currentIndex() == 0:
+            self.downward_continuation()
+        if self.ui.comboBox_display.currentIndex() == 1:
+            self.downward_cube(10,30)
+
+
+        if self.ui.comboBox_display.currentIndex() == 2:
+            print(self.ui.comboBox_display.currentText(),2)
+
 
     def downward_continuation(self):
         print("lets do it")
@@ -132,7 +154,7 @@ class FFTWindow(QMainWindow):
         maglayer = self.myMagCube.sample_cube_at_height(cube, layer_heights, depth_grid)
         self.tiffWriter.write_to_GeoTiff("depth.tif", self.parent.grid_x, self.parent.grid_y, maglayer)
 
-    def update_plot(self):
+    def update_plot(self, downward_field):
         try:
             self.cbar.remove()
         except:
@@ -146,7 +168,7 @@ class FFTWindow(QMainWindow):
         self.downward_2D_ax.set_xlim([x_min - 0.1, x_max + 0.1])
         self.downward_2D_ax.set_ylim([y_min - 0.1, y_max + 0.1])
 
-        masked_grid_z = np.ma.masked_invalid(self.downward_field)
+        masked_grid_z = np.ma.masked_invalid(downward_field)
 
         self.contourfplot = self.downward_2D_ax.pcolormesh(self.parent.grid_x,
                                                            self.parent.grid_y,
