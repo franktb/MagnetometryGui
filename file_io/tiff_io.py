@@ -101,6 +101,7 @@ class Bathymetry():
     def merge_TiffFolder(self,filenames, grid_x, grid_y, upscale_factor=0.25):
         merged = np.full_like(grid_x, np.nan, dtype=float)
         for fname in filenames:
+            print(fname)
             interpolated = self.read_and_interpolate_geotiff(fname, grid_x, grid_y, upscale_factor)
             merged = np.where(~np.isnan(interpolated), interpolated, merged)
 

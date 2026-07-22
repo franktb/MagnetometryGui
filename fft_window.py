@@ -105,10 +105,9 @@ class FFTWindow(QMainWindow):
             self.downward_continuation()
         if self.ui.comboBox_display.currentIndex() == 1:
             self.downward_cube(10,30)
-
-
         if self.ui.comboBox_display.currentIndex() == 2:
             print(self.ui.comboBox_display.currentText(),2)
+            self.downward_bathymetry()
 
 
     def downward_continuation(self):
@@ -137,21 +136,24 @@ class FFTWindow(QMainWindow):
         # self.tiffWriter.write_to_GeoTiff("depth.tif", self.parent.grid_x, self.parent.grid_y, maglayer)
 
     def downward_bathymetry(self):
-        filenames = ["./BathTiffs/BY_CV16_01_CelticSea_5m_U29N.tif",
-                     "./BathTiffs/BY_CV16_02_Cork_5m_U29N.tif"]
+        filenames = ["/home/frank/UCC/MagnetometryGui/data/BathTiffs/BY_CV16_01_CelticSea_5m_U29N.tif",
+                     "/home/frank/UCC/MagnetometryGui/data/BathTiffs/BY_CV16_02_Cork_5m_U29N.tif"]
 
         depth_grid = self.myBathymetry.read_from_TiffFolder(filenames,
                                                             self.parent.grid_x,
                                                             self.parent.grid_y)
         print(depth_grid)
         np.savetxt("debugBAthGrid", depth_grid)
-
-        cube, layer_heights = self.myMagCube.compute_cube(depth_grid,
-                                                          np.nan_to_num(self.parent.grid_z),
+        min_depth = np.nanmin(depth_grid)
+        max_depth = np.nanmax(depth_grid)
+        cube, layer_heights = self.myMagCube.compute_cube(min_depth=min_depth,
+                                                          max_depth=max_depth,
+                                                          grid_z=np.nan_to_num(self.parent.grid_z),
                                                           layer_count=self.layer_count)
         cube = np.nan_to_num(cube)
 
         maglayer = self.myMagCube.sample_cube_at_height(cube, layer_heights, depth_grid)
+        self.update_plot(maglayer)
         self.tiffWriter.write_to_GeoTiff("depth.tif", self.parent.grid_x, self.parent.grid_y, maglayer)
 
     def update_plot(self, downward_field):
