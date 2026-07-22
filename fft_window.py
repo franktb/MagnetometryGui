@@ -1,6 +1,7 @@
 from multiprocessing import Queue
+from pathlib import Path
 
-from PySide6.QtWidgets import QMainWindow
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 from PySide6.QtCore import QThreadPool, Slot, Signal, Qt, QTimer
 from figure_wrapper import SlippyMapNavigationToolbar
 from file_io.tiff_io import Bathymetry, WriteMag
@@ -11,7 +12,7 @@ from PySide6.QtGui import QIntValidator
 
 from util.filter import DownwardContinuation
 from util.interpolation_module import MagCube
-from worker import PWorker
+from worker import Worker, PWorker
 import numpy as np
 
 
@@ -23,6 +24,8 @@ class FFTWindow(QMainWindow):
         self.parent = parent
 
         self.downward_2D_canvas = FigureCanvas(Figure(figsize=(5, 3)))
+
+        self.ui.actionImport_Bathymetry.triggered.connect(self.select_bathymetry_tiff)
 
         self.ui.verticalLayout2DMappingCanvas.addWidget(SlippyMapNavigationToolbar(self.downward_2D_canvas, self, ))
         self.ui.verticalLayout2DMappingCanvas.addWidget(self.downward_2D_canvas)
@@ -53,6 +56,19 @@ class FFTWindow(QMainWindow):
         self.myMagCube = MagCube()
         self.myBathymetry = Bathymetry()
         self.tiffWriter = WriteMag()
+
+        self.bathymetry_tiff = []
+
+
+    def select_bathymetry_tiff(self):
+        selected_tiff = QFileDialog.getOpenFileName(filter="All Files(*);;Tiff Files(*.tif *.tiff *.geotiff)")
+        if selected_tiff[0].endswith((".tif", ".tiff", ".geotiff")):
+            self.bathymetry_tiff.append(selected_tiff[0])
+            self.ui.listWidget_BathymetryTiffs.addItem(Path(selected_tiff[0]).name)
+            print(self.bathymetry_tiff)
+        else:
+            QMessageBox.critical(self, "File IO Error", "No tif file selected!", )
+
 
     def lineEdit_validate(self, line_edit):
         state, text, _ = line_edit.validator().validate(line_edit.text(), 0)
@@ -136,25 +152,25 @@ class FFTWindow(QMainWindow):
         # self.tiffWriter.write_to_GeoTiff("depth.tif", self.parent.grid_x, self.parent.grid_y, maglayer)
 
     def downward_bathymetry(self):
-        filenames = ["/home/frank/UCC/MagnetometryGui/data/BathTiffs/BY_CV16_01_CelticSea_5m_U29N.tif",
-                     "/home/frank/UCC/MagnetometryGui/data/BathTiffs/BY_CV16_02_Cork_5m_U29N.tif"]
+        if self.bathymetry_tiff: #evaluates to false if list is empty
+            depth_grid = self.myBathymetry.read_from_TiffFolder(self.bathymetry_tiff,
+                                                                self.parent.grid_x,
+                                                                self.parent.grid_y)
+            print(depth_grid)
+            np.savetxt("debugBAthGrid", depth_grid)
+            min_depth = np.nanmin(depth_grid)
+            max_depth = np.nanmax(depth_grid)
+            cube, layer_heights = self.myMagCube.compute_cube(min_depth=min_depth,
+                                                              max_depth=max_depth,
+                                                              grid_z=np.nan_to_num(self.parent.grid_z),
+                                                              layer_count=self.layer_count)
+            cube = np.nan_to_num(cube)
 
-        depth_grid = self.myBathymetry.read_from_TiffFolder(filenames,
-                                                            self.parent.grid_x,
-                                                            self.parent.grid_y)
-        print(depth_grid)
-        np.savetxt("debugBAthGrid", depth_grid)
-        min_depth = np.nanmin(depth_grid)
-        max_depth = np.nanmax(depth_grid)
-        cube, layer_heights = self.myMagCube.compute_cube(min_depth=min_depth,
-                                                          max_depth=max_depth,
-                                                          grid_z=np.nan_to_num(self.parent.grid_z),
-                                                          layer_count=self.layer_count)
-        cube = np.nan_to_num(cube)
-
-        maglayer = self.myMagCube.sample_cube_at_height(cube, layer_heights, depth_grid)
-        self.update_plot(maglayer)
-        self.tiffWriter.write_to_GeoTiff("depth.tif", self.parent.grid_x, self.parent.grid_y, maglayer)
+            maglayer = self.myMagCube.sample_cube_at_height(cube, layer_heights, depth_grid)
+            self.update_plot(maglayer)
+            self.tiffWriter.write_to_GeoTiff("depth.tif", self.parent.grid_x, self.parent.grid_y, maglayer)
+        else:
+            QMessageBox.critical(self, "File IO Error", "No bathymetry files imported!", )
 
     def update_plot(self, downward_field):
         try:

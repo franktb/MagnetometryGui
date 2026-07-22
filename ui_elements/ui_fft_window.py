@@ -11,38 +11,31 @@
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
+    QCursor, QFont, QFontDatabase, QGradient,
+    QIcon, QImage, QKeySequence, QLinearGradient,
+    QPainter, QPalette, QPixmap, QRadialGradient,
+    QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QLabel,
-    QLineEdit, QMainWindow, QMenuBar, QPushButton,
-    QSizePolicy, QSpacerItem, QStatusBar, QVBoxLayout,
-    QWidget)
+    QLineEdit, QListWidget, QListWidgetItem, QMainWindow,
+    QMenu, QMenuBar, QPushButton, QSizePolicy,
+    QSpacerItem, QStatusBar, QVBoxLayout, QWidget)
 
 class Ui_FFTWindow(object):
     def setupUi(self, FFTWindow):
         if not FFTWindow.objectName():
             FFTWindow.setObjectName(u"FFTWindow")
         FFTWindow.resize(1390, 892)
+        self.actionImport_Bathymetry = QAction(FFTWindow)
+        self.actionImport_Bathymetry.setObjectName(u"actionImport_Bathymetry")
         self.centralwidget = QWidget(FFTWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.pushButton_layer = QPushButton(self.centralwidget)
-        self.pushButton_layer.setObjectName(u"pushButton_layer")
-
-        self.gridLayout.addWidget(self.pushButton_layer, 3, 1, 1, 1)
-
-        self.verticalLayout2DMappingCanvas = QVBoxLayout()
-        self.verticalLayout2DMappingCanvas.setObjectName(u"verticalLayout2DMappingCanvas")
-
-        self.gridLayout.addLayout(self.verticalLayout2DMappingCanvas, 0, 0, 4, 1)
-
         self.pushButton_StartIteration = QPushButton(self.centralwidget)
         self.pushButton_StartIteration.setObjectName(u"pushButton_StartIteration")
 
-        self.gridLayout.addWidget(self.pushButton_StartIteration, 2, 1, 1, 1)
+        self.gridLayout.addWidget(self.pushButton_StartIteration, 2, 2, 1, 1)
 
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -161,17 +154,37 @@ class Ui_FFTWindow(object):
         self.verticalLayout.addItem(self.verticalSpacer)
 
 
-        self.gridLayout.addLayout(self.verticalLayout, 0, 1, 2, 1)
+        self.gridLayout.addLayout(self.verticalLayout, 0, 2, 2, 1)
 
-        self.gridLayout.setColumnStretch(0, 2)
+        self.pushButton_layer = QPushButton(self.centralwidget)
+        self.pushButton_layer.setObjectName(u"pushButton_layer")
+
+        self.gridLayout.addWidget(self.pushButton_layer, 3, 2, 1, 1)
+
+        self.verticalLayout2DMappingCanvas = QVBoxLayout()
+        self.verticalLayout2DMappingCanvas.setObjectName(u"verticalLayout2DMappingCanvas")
+
+        self.gridLayout.addLayout(self.verticalLayout2DMappingCanvas, 0, 1, 4, 1)
+
+        self.listWidget_BathymetryTiffs = QListWidget(self.centralwidget)
+        self.listWidget_BathymetryTiffs.setObjectName(u"listWidget_BathymetryTiffs")
+
+        self.gridLayout.addWidget(self.listWidget_BathymetryTiffs, 0, 0, 3, 1)
+
+        self.gridLayout.setColumnStretch(1, 1)
         FFTWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(FFTWindow)
         self.menubar.setObjectName(u"menubar")
         self.menubar.setGeometry(QRect(0, 0, 1390, 24))
+        self.menuFile = QMenu(self.menubar)
+        self.menuFile.setObjectName(u"menuFile")
         FFTWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(FFTWindow)
         self.statusbar.setObjectName(u"statusbar")
         FFTWindow.setStatusBar(self.statusbar)
+
+        self.menubar.addAction(self.menuFile.menuAction())
+        self.menuFile.addAction(self.actionImport_Bathymetry)
 
         self.retranslateUi(FFTWindow)
 
@@ -180,7 +193,7 @@ class Ui_FFTWindow(object):
 
     def retranslateUi(self, FFTWindow):
         FFTWindow.setWindowTitle(QCoreApplication.translate("FFTWindow", u"MainWindow", None))
-        self.pushButton_layer.setText(QCoreApplication.translate("FFTWindow", u"Do Layer", None))
+        self.actionImport_Bathymetry.setText(QCoreApplication.translate("FFTWindow", u"Import Bathymetry", None))
         self.pushButton_StartIteration.setText(QCoreApplication.translate("FFTWindow", u"Do it!", None))
         self.label.setText(QCoreApplication.translate("FFTWindow", u"Depth:", None))
         self.lineEditDepth.setText(QCoreApplication.translate("FFTWindow", u"50.0", None))
@@ -204,5 +217,7 @@ class Ui_FFTWindow(object):
         self.comboBox_scaleType.setItemText(0, QCoreApplication.translate("FFTWindow", u"Linear scale", None))
         self.comboBox_scaleType.setItemText(1, QCoreApplication.translate("FFTWindow", u"Logarithmic scale", None))
 
+        self.pushButton_layer.setText(QCoreApplication.translate("FFTWindow", u"Do Layer", None))
+        self.menuFile.setTitle(QCoreApplication.translate("FFTWindow", u"File", None))
     # retranslateUi
 
