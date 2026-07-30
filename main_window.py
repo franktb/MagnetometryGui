@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
         fifthlayer.setCheckState(Qt.Unchecked)
         self.ui.layerWidget.addItem(fifthlayer)
 
-        self.ui.layerWidget.itemChanged.connect(self.layer_update)
+        self.ui.layerWidget.itemChanged.connect(self.update_plot)
 
         self.data_manipulator = DataManipulator()
         self.data_coordinates = None
@@ -197,22 +197,19 @@ class MainWindow(QMainWindow):
         y_indices, x_indices = np.where(mask)
         # magnitudes_filtered = magnitude[mask]
 
-        x_coords = self.grid_x[y_indices, x_indices]
-        y_coords = self.grid_y[y_indices, x_indices]
-        self.anomalies = self.mapping_2D_ax.scatter(x_coords, y_coords)
+        self.x_coords_anomalies = self.grid_x[y_indices, x_indices]
+        self.y_coords_anomalies = self.grid_y[y_indices, x_indices]
+        #self.anomalies = self.mapping_2D_ax.scatter(self.x_coords_anomalies, self.y_coords_anomalies)
 
+        """
         masked_grid_z = np.ma.masked_invalid(self.grid_z)
         edges = feature.canny(masked_grid_z)
         # self.anomalies = self.mapping_2D_ax.scatter(edges1)
         contours = measure.find_contours(edges, level=0.99)
-        # print(type(contour))
-        # print(contour.shape)
-
         for contour in contours:
             self.mapping_2D_ax.plot(contour[:, 1], contour[:, 0])
-
         # self.anomalies = self.mapping_2D_ax.scatter(x_coords, y_coords)
-
+        """
         self.mapping_2D_canvas.draw_idle()
         print("anno done")
 
@@ -322,25 +319,6 @@ class MainWindow(QMainWindow):
         state, text, _ = line_edit.validator().validate(line_edit.text(), 0)
         return state, text
 
-    def layer_update(self):
-        print("hello")
-        for i in range(self.ui.layerWidget.count()):
-            if self.ui.layerWidget.item(i).checkState() == Qt.Checked:
-                print(self.ui.layerWidget.item(i).text())
-
-        if self.ui.layerWidget.item(3).checkState() == Qt.Checked and self.track_lines != None:
-            print("YES")
-            self.track_lines.set_visible(True)
-            self.mapping_2D_canvas.draw_idle()
-
-        if self.ui.layerWidget.item(3).checkState() != Qt.Checked and self.track_lines != None:
-            self.track_lines.set_visible(False)
-            self.mapping_2D_canvas.draw_idle()
-
-        if self.ui.layerWidget.item(4).checkState() == Qt.Checked:
-            print("huhu")
-
-        self.update_plot()
 
     def update_selected_df(self, item, column):
         print("debug1", item.name, column)
@@ -500,8 +478,12 @@ class MainWindow(QMainWindow):
             except:
                 pass
 
-            if hasattr(self, 'masked_tracklines') and self.masked_tracklines is not None and self.ui.layerWidget.item(
-                    4).checkState() == Qt.Checked:
+            # Tracklines can be masked if the user clips a certain area
+            # If the user clipped a region only the trackline therein will be used for rendering
+            if (
+                getattr(self, "masked_tracklines", None) is not None #Tracklines can be masked if the user clips a certain area
+                and self.ui.layerWidget.item(4).checkState() == Qt.Checked
+            ):
                 self.track_lines = self.mapping_2D_ax.scatter(self.masked_tracklines[0, :],
                                                               self.masked_tracklines[1, :], color="black", s=1)
             else:
@@ -512,6 +494,21 @@ class MainWindow(QMainWindow):
                 self.track_lines.set_visible(True)
             else:
                 self.track_lines.set_visible(False)
+
+
+            try:
+                self.anomalies.remove()
+            except:
+                pass
+
+            if getattr(self, "x_coords_anomalies", None) is not None:
+                print("first cond meet")
+                self.anomalies = self.mapping_2D_ax.scatter(self.x_coords_anomalies, self.y_coords_anomalies)
+
+                if self.ui.layerWidget.item(2).checkState() == Qt.Checked:
+                    self.anomalies.set_visible(True)
+                else:
+                    self.anomalies.set_visible(False)
 
             self.cbar = self.mapping_2D_canvas.figure.colorbar(self.contourfplot, ax=self.mapping_2D_ax,
                                                                orientation="vertical")
@@ -531,7 +528,7 @@ class MainWindow(QMainWindow):
             self.setWindowTitle(project_name)
             self.project_name = project_name
             self.ui.treeWidget.clear()
-            #self.update_selected_df(self.TreeUtil.tree.invisibleRootItem(), 0)
+            # self.update_selected_df(self.TreeUtil.tree.invisibleRootItem(), 0)
         return ok
 
     def rename_project(self):
