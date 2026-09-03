@@ -6,6 +6,7 @@ from multiprocessing import Queue
 
 from util.coordinate_transformation import CoordinateTransformation
 from worker import PWorker
+import numpy as np
 
 
 class ReadMagCSV():
@@ -52,7 +53,7 @@ class ReadMagCSV():
         new_survey.setCheckState(0, Qt.Checked)
         project.tree.addTopLevelItem(new_survey)
         new_survey_frame_model = SurveyFrameModel(survey_id, survey_frame_raw, False)
-        new_survey_frame = SurveyFrame(survey_id,new_survey_frame_model)
+        new_survey_frame = SurveyFrame(survey_id, new_survey_frame_model)
         new_survey_frame.setCheckState(0, Qt.Checked)
         new_survey.addChild(new_survey_frame)
         project.checked_items()
@@ -229,6 +230,78 @@ class ReadMagCSV():
         print(survey_frame_raw)
 
         survey_id = os.path.basename(configs["file"])
+        new_survey = Survey(survey_id)
+        new_survey.setCheckState(0, Qt.Checked)
+        project.tree.addTopLevelItem(new_survey)
+        new_survey_frame_model = SurveyFrameModel(survey_id, survey_frame_raw, False)
+        new_survey_frame = SurveyFrame(survey_id, new_survey_frame_model)
+        new_survey_frame.setCheckState(0, Qt.Checked)
+        new_survey.addChild(new_survey_frame)
+        project.checked_items()
+
+    def read_from_SENSYS_CSV(self, filename, project, delimiter=",", skiprows="0"):
+        queue = Queue()
+        myPworker = PWorker(pd.read_csv,
+                            result_queue=queue,
+                            filepath_or_buffer=filename,
+                            #delimiter=delimiter,
+                            #skiprows=skiprows,
+                            usecols=[
+                                "Timestamp (s) UTC+0",
+                                "Corrected Longitude (deg)",
+                                "Corrected Latitude (deg)",
+                                "Depth (m)",
+                                "Sensys MagX 1 (T)",
+                                "Sensys MagY 1 (T)",
+                                "Sensys MagZ 1 (T)",
+                                #"Sensys MagX 2 (T)",
+                                #"Sensys MagY 2 (T)",
+                                #"Sensys MagZ 2 (T)",
+                                #"Sensys MagX 3 (T)",
+                                #"Sensys MagY 3 (T)",
+                                #"Sensys MagZ 3 (T)",
+                                #"Sensys MagX 4 (T)",
+                                #"Sensys MagY 4 (T)",
+                                #"Sensys MagZ 4 (T)",
+                                #"Sensys MagX 5 (T)",
+                                #"Sensys MagY 5 (T)",
+                                #"Sensys MagZ 5 (T)",
+                                #"Sensys MagX 6 (T)",
+                                #"Sensys MagY 6 (T)",
+                                #"Sensys MagZ 6 (T)",
+                            ],
+                            engine="c",
+                            low_memory=False,
+                            #dtype=str
+                            )
+        myPworker.start()
+        survey_frame_raw = queue.get()
+        myPworker.join()
+
+        print(survey_frame_raw)
+
+        # missing values are encoded as 0.0?
+        # Also Sensys MagX 1 (T) might contain NaN
+        # TODO: double check 0.0 and dropping Nan rows
+        survey_frame_raw = survey_frame_raw.replace(0.0, np.nan)
+        survey_frame_raw.dropna(inplace=True)
+
+        converted_easting, converted_northings = CoordinateTransformation.longlat_to_eastnorth(
+            survey_frame_raw["Corrected Longitude (deg)"].astype(float),
+            survey_frame_raw["Corrected Latitude (deg)"].astype(float))
+        survey_frame_raw.loc[:, "UTM_Easting"] = converted_easting
+        survey_frame_raw.loc[:, "UTM_Northing"] = converted_northings
+
+        survey_frame_raw['datetime'] = pd.to_datetime(survey_frame_raw.pop('Timestamp (s) UTC+0').astype(float), unit='s')
+
+        survey_frame_raw["Magnetic_Field"] = np.linalg.norm(survey_frame_raw[[
+            "Sensys MagX 1 (T)",
+            "Sensys MagY 1 (T)",
+            "Sensys MagZ 1 (T)"
+        ]].to_numpy(),axis=1 ) * 1e9
+
+
+        survey_id = os.path.basename(filename)
         new_survey = Survey(survey_id)
         new_survey.setCheckState(0, Qt.Checked)
         project.tree.addTopLevelItem(new_survey)

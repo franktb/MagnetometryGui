@@ -160,6 +160,7 @@
      <addaction name="actionFrom_BOB_CSV"/>
      <addaction name="actionFrom_Sealink_Folder"/>
      <addaction name="separator"/>
+     <addaction name="actionFrom_SENSYS_CSV"/>
      <addaction name="actionFrom_Custom_CSV"/>
     </widget>
     <widget class="QMenu" name="menuExport_Grid">
@@ -364,6 +365,11 @@
   <action name="actionRename_Project">
    <property name="text">
     <string>Rename Project</string>
+   </property>
+  </action>
+  <action name="actionFrom_SENSYS_CSV">
+   <property name="text">
+    <string>From SENSYS CSV</string>
    </property>
   </action>
  </widget>

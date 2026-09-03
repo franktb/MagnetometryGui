@@ -55,6 +55,7 @@ class MainWindow(QMainWindow):
         self.ui.actionFrom_BOB_CSV.triggered.connect(self.select_BOB_CSV)
         self.ui.actionFrom_Sealink_Folder.triggered.connect(self.select_SeaLINKFolder)
         self.ui.actionFrom_Custom_CSV.triggered.connect(self.select_custom_CSV)
+        self.ui.actionFrom_SENSYS_CSV.triggered.connect(self.select_SENSYS_CSV)
         self.ui.actionDraw1D.triggered.connect(self.wrapper_1d_selected)
 
         self.ui.actionDrawSelect.triggered.connect(self.draw_selection)
@@ -629,6 +630,23 @@ class MainWindow(QMainWindow):
         dlg.data_signal.connect(retrieve_user_input)
         dlg.exec()
 
+    def select_SENSYS_CSV(self):
+        selected_survey = QFileDialog.getOpenFileName(filter="All Files(*);;Text files(*.csv *.txt)")
+        if selected_survey[0].endswith((".txt", ".csv")):
+            worker = Worker(self.readCSV.read_from_SENSYS_CSV,
+                            selected_survey[0],
+                            delimiter=",",
+                            skiprows=5,
+                            project=self.TreeUtil
+                            )
+
+            # worker.start()
+            self.threadpool.start(worker)
+        else:
+            QMessageBox.critical(self, "File IO Error", "No text file selected!", )
+
+
+
     def calc_residuals(self):
         TimeSeriesManipulator.smoothing_and_residual_calculation(self.TreeUtil.selected_df,
                                                                  self.smoothing_window_length,
@@ -694,7 +712,7 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
-    # pd.set_option('display.max_columns', None)
+    pd.set_option('display.max_columns', None)
     pd.options.mode.copy_on_write = True  # becomes default in Pandas 3.0
     if getattr(sys, 'frozen', False):
         # For PyInstaller bundled app
