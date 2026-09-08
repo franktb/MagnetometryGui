@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1241</width>
-    <height>881</height>
+    <width>1574</width>
+    <height>1017</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,9 +21,6 @@
     <property name="horizontalSpacing">
      <number>9</number>
     </property>
-    <item row="0" column="0">
-     <layout class="QVBoxLayout" name="verticalLayoutTimeSeriesCanvas"/>
-    </item>
     <item row="0" column="1" rowspan="2">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -69,8 +66,17 @@
       </item>
      </layout>
     </item>
+    <item row="0" column="0">
+     <layout class="QVBoxLayout" name="verticalLayoutTimeSeriesCanvas"/>
+    </item>
     <item row="1" column="0">
      <layout class="QVBoxLayout" name="verticalLayoutTimeSeriesCanvas_2"/>
+    </item>
+    <item row="2" column="0">
+     <layout class="QVBoxLayout" name="verticalLayoutTimeSeriesCanvasDepth"/>
+    </item>
+    <item row="2" column="1">
+     <layout class="QVBoxLayout" name="verticalLayout_3"/>
     </item>
    </layout>
   </widget>
@@ -79,7 +85,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1241</width>
+     <width>1574</width>
      <height>24</height>
     </rect>
    </property>

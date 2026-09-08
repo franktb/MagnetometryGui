@@ -5,6 +5,9 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
+from ui_elements.FloatListWidget import FloatListWidget
+
+
 class TimeSeriesWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -24,6 +27,13 @@ class TimeSeriesWindow(QMainWindow):
         self.ui.verticalLayoutTimeSeriesCanvas_2.addWidget(self.time_series_canvas_res)
         self.time_series_ax_res = self.time_series_canvas_res.figure.subplots()
 
+        self.time_series_canvas_depth = FigureCanvas(Figure())
+        self.ui.verticalLayoutTimeSeriesCanvasDepth.addWidget(TimeSeriesNavigationToolbar(self.time_series_canvas, self))
+        self.ui.verticalLayoutTimeSeriesCanvasDepth.addWidget(self.time_series_canvas_depth)
+        self.time_series_ax_depth = self.time_series_canvas_depth.figure.subplots()
+
+        self.float_list = FloatListWidget()
+        self.ui.verticalLayout_3.addWidget(self.float_list)
 
     def wrapper_1d_select(self):
         self.draw_1d_selected()

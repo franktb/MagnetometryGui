@@ -26,7 +26,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1241, 881)
+        MainWindow.resize(1574, 1017)
         self.actionDraw1D = QAction(MainWindow)
         self.actionDraw1D.setObjectName(u"actionDraw1D")
         icon = QIcon()
@@ -43,11 +43,6 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
         self.gridLayout.setHorizontalSpacing(9)
-        self.verticalLayoutTimeSeriesCanvas = QVBoxLayout()
-        self.verticalLayoutTimeSeriesCanvas.setObjectName(u"verticalLayoutTimeSeriesCanvas")
-
-        self.gridLayout.addLayout(self.verticalLayoutTimeSeriesCanvas, 0, 0, 1, 1)
-
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label_2 = QLabel(self.centralwidget)
@@ -77,16 +72,31 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addLayout(self.verticalLayout, 0, 1, 2, 1)
 
+        self.verticalLayoutTimeSeriesCanvas = QVBoxLayout()
+        self.verticalLayoutTimeSeriesCanvas.setObjectName(u"verticalLayoutTimeSeriesCanvas")
+
+        self.gridLayout.addLayout(self.verticalLayoutTimeSeriesCanvas, 0, 0, 1, 1)
+
         self.verticalLayoutTimeSeriesCanvas_2 = QVBoxLayout()
         self.verticalLayoutTimeSeriesCanvas_2.setObjectName(u"verticalLayoutTimeSeriesCanvas_2")
 
         self.gridLayout.addLayout(self.verticalLayoutTimeSeriesCanvas_2, 1, 0, 1, 1)
 
+        self.verticalLayoutTimeSeriesCanvasDepth = QVBoxLayout()
+        self.verticalLayoutTimeSeriesCanvasDepth.setObjectName(u"verticalLayoutTimeSeriesCanvasDepth")
+
+        self.gridLayout.addLayout(self.verticalLayoutTimeSeriesCanvasDepth, 2, 0, 1, 1)
+
+        self.verticalLayout_3 = QVBoxLayout()
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+
+        self.gridLayout.addLayout(self.verticalLayout_3, 2, 1, 1, 1)
+
         self.gridLayout.setColumnStretch(0, 4)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1241, 24))
+        self.menubar.setGeometry(QRect(0, 0, 1574, 24))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
