@@ -1,3 +1,0 @@
-import numpy as np
-
-def compute_mask(lat_array: np.ndarray, target_lats: np.ndarray, tol: float) -> np.ndarray: ...
