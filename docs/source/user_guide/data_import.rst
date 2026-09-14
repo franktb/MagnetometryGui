@@ -1,5 +1,5 @@
 Data import
-=====
+===========
 
 
 
@@ -20,21 +20,9 @@ Upon completion the imported surveys will appear in the file tree.
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
-   sealink.rst
-
-.. toctree::
-   :maxdepth: 2
-
-   bob.rst
-
-.. toctree::
-   :maxdepth: 2
-
-   sensys.rst
-
-.. toctree::
-   :maxdepth: 2
-
-   custom_csv.rst
+   sealink
+   bob
+   sensys
+   custom_csv

@@ -1,5 +1,5 @@
 User Guide
-=====
+==========
 
 Introduction
 ------------
@@ -22,7 +22,7 @@ This test data will be used to guide through an example walk-through through the
    An additional branch provides an opportunity to import bathymetry data to interpolate the downward filed at the provided altitudes.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Data import
+   :maxdepth: 3
 
    data_import
+   time_series
