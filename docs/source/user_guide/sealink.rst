@@ -23,9 +23,10 @@ First, a homogeneous number of columns within each file is expected since at the
 
 Second, the software assume the existence of the following columns names:
 ``/Date,Time,Field_Mag1,Longitude,Latitude``.
-First, note that due to Sealinks exported file structure the column name is ``/Date`` without a space.
+Note that due to Sealinks exported file structure the column name is ``/Date`` without a space.
 Moreover, |slash-space| with a space is used to filter for mid-file headers, i.e. all lines starting with |slash-space|  will be ignored.
-Second, we note that the Software will probe for ``UTM_Easting,UTM_Northing``.
+
+During the import, the Software will probe for ``UTM_Easting,UTM_Northing``.
 If these columns are not present in the raw file they will be estimated form ``Longitude,Latitude``.
 An example how a ``*.XYZ`` files is suppose to be formatted is given in :numref:`lst:SeaLinkSnippet`.
 
