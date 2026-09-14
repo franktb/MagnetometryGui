@@ -4,9 +4,11 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 import sys
+import shutil
 from pathlib import Path
 
-sys.path.insert(0, str(Path('..', 'src').resolve()))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "src"))
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -39,3 +41,14 @@ html_theme = "pydata_sphinx_theme"
 html_static_path = ['_static']
 
 numfig = True
+
+
+
+
+ICONS = ROOT / "src" / "ui_elements" / "icons"
+DOCS_STATIC = Path(__file__).parent / "_static" / "icons"
+
+DOCS_STATIC.mkdir(parents=True, exist_ok=True)
+
+for icon in ICONS.glob("*.png"):
+    shutil.copy2(icon, DOCS_STATIC / icon.name)
