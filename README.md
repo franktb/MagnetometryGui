@@ -17,4 +17,8 @@ pyinstaller ./main_window.spec
 
 
 ## AI Disclaimer
-This project uses AI-assisted development. Some code, documentation, and/or other content may have been generated or assisted by AI. Development was assisted using the free version of ChatGPT. All AI-generated contributions are reviewed and tested by the project maintainer, but users should independently verify the code before using it.
+This project uses AI-assisted development.
+Some code, documentation, and/or other content may have been generated or assisted by AI.
+To check the grammar within documentation, tools like free version of ChatGPT and paid version of Grammerly has been used. 
+Furthermore, the development was assisted using the free version of ChatGPT.
+All AI-generated contributions are reviewed and tested by the project maintainer, but users should independently verify the code before using it.
