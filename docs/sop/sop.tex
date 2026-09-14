@@ -234,8 +234,8 @@ A dialog, which can be spawn upon clicking on \enquote{From custom csv} in the d
 \subsection{Time series processing}
 Next, we recommend inspecting the time-series through the \enquote{timeseries}-window, which can be opened through the dropdown menu {\em view}.
 The \enquote{timeseries}-window facilitates two key tasks: displaying the time-series and manipulating it.
-The time series itself can be displayed by clicking on \inlinegraphics{./../../ui_elements/icons/area-chart-icon.png}.
-This also replicates the time-series on the main window and vice versa if \inlinegraphics{./../../ui_elements/icons/area-chart-icon.png} is clicked on the main window.
+The time series itself can be displayed by clicking on \inlinegraphics{./../../src/ui_elements/icons/area-chart-icon.png}.
+This also replicates the time-series on the main window and vice versa if \inlinegraphics{./../../src/ui_elements/icons/area-chart-icon.png} is clicked on the main window.
 Moreover, this operation internally smooths the time series and calculates the residuals as the difference between the ambient field, estimated as a slow running mean, and the current field, estimated as a fast running mean.
 The used window size of both means is preset upon preliminary work.
 However, it can be adjusted through the text fields on the right-hand sight of either the main window ot the times series window. 
@@ -246,18 +246,18 @@ A diurnal correction using data from the Valencia observatory\footnote{\url{http
 Inside the plot, the time series could be investigated using zooming and panning.
 The unprocessed time-series data might show huge negative spikes as depicted in Fig.~\ref{fig:scissorInterval}.
 This is due to the fact that some raw data values are approaching $0\text{[nT]}$, probably during recovering the magnetometer.
-The scissor tool \inlinegraphics{./../../ui_elements/icons/cut-scissor-icon.png} is designed to remove these intervals form the time-series.
+The scissor tool \inlinegraphics{./../../src/ui_elements/icons/cut-scissor-icon.png} is designed to remove these intervals form the time-series.
 The tool can be activated by clicking on the corresponding icon.
 This allows the user to select a red rectangle by moving its edges, defining the interval that is to be excluded (see Fig.\ref{fig:processedTimeSeries}).
 The rectangle can be adjusted until the selection is confirmed by clicking the scissor icon again and a final dialogue will confirm the decision.
 We note that at the moment the visualisation will not refresh itself automatically.
-This can be achieved by clicking again on \inlinegraphics{./../../ui_elements/icons/area-chart-icon.png}.
+This can be achieved by clicking again on \inlinegraphics{./../../src/ui_elements/icons/area-chart-icon.png}.
 \begin{figure}
 	\centering
 	\includegraphics[width=.9\textwidth]{./pic/IntervalRemovalTimesieres.png}
 	\caption{
 		The imported raw times series might contain values approaching $0\text{[nT]}$, perturbing the calculated residuals.
-		The \inlinegraphics{./../../ui_elements/icons/cut-scissor-icon.png} allows to remove an interval of undesired data points, configured as red rectangle.}
+		The \inlinegraphics{./../../src/ui_elements/icons/cut-scissor-icon.png} allows to remove an interval of undesired data points, configured as red rectangle.}
 	\label{fig:scissorInterval}
 \end{figure}
 
@@ -269,14 +269,14 @@ This can be achieved by clicking again on \inlinegraphics{./../../ui_elements/ic
 	\centering
 	\includegraphics[width=.9\textwidth]{./pic/TimeSeriesWindow.png}
 	\caption{
-		A cleaned time-series using the \inlinegraphics{./../../ui_elements/icons/cut-scissor-icon.png} tool as depicted in Fig.~\ref{fig:scissorInterval}.
+		A cleaned time-series using the \inlinegraphics{./../../src/ui_elements/icons/cut-scissor-icon.png} tool as depicted in Fig.~\ref{fig:scissorInterval}.
 	}
 	\label{fig:processedTimeSeries}
 \end{figure}
 
 \subsection{Anomaly grid processing}
 The next step is the creation of the anomaly map.
-This can be achieved upon selecting \inlinegraphics{./../../ui_elements/icons/drawingIcon.png}.
+This can be achieved upon selecting \inlinegraphics{./../../src/ui_elements/icons/drawingIcon.png}.
 The initial result will look similar to Fig.~\ref{fig:initalAnomaly}.
 \begin{remark}
 	We note that the gridding step might take some time in particular if a high resolution is required.
@@ -295,9 +295,9 @@ This is due to the fact that at the moment the software interpolates the anomaly
 	\label{fig:initalAnomaly}
 \end{figure}
 Outliers, such as the single point located near the coast will cause undesired artifacts as shown in Fig.~\ref{fig:initalAnomaly}.
-Those can be removed using the the scissor tool \inlinegraphics{./../../ui_elements/icons/cut-scissor-icon.png}.
+Those can be removed using the the scissor tool \inlinegraphics{./../../src/ui_elements/icons/cut-scissor-icon.png}.
 Upon, activation the user can lasso-select an arbitrary set of points which will be removed.
-The lasso is controlled by the user drawing a free-hand curve through left-clicking desired points on the map and subsequent closed upon deselecting \inlinegraphics{./../../ui_elements/icons/cut-scissor-icon.png} again.
+The lasso is controlled by the user drawing a free-hand curve through left-clicking desired points on the map and subsequent closed upon deselecting \inlinegraphics{./../../src/ui_elements/icons/cut-scissor-icon.png} again.
 Similar to cleaning time series, the selection can be confirmed or discarded in a final dialogue. 
 This process is illustrated in Fig.~\ref{fig:lassoSelectAnomaly}.
 \begin{figure}
@@ -308,7 +308,7 @@ This process is illustrated in Fig.~\ref{fig:lassoSelectAnomaly}.
 	}
 	\label{fig:lassoSelectAnomaly}
 \end{figure}
-For a more fine selection, a polynomial select tool \inlinegraphics{./../../ui_elements/icons/object-select-icon.png} is provided.
+For a more fine selection, a polynomial select tool \inlinegraphics{./../../src/ui_elements/icons/object-select-icon.png} is provided.
 
 
 
@@ -316,7 +316,7 @@ For a more fine selection, a polynomial select tool \inlinegraphics{./../../ui_e
 	\centering
 	\includegraphics[width=.9\textwidth]{./pic/ClippingTool.png}
 	\caption{
-		\inlinegraphics{./../../ui_elements/icons/object-select-icon.png} allows to clip a desired region using a polygon. The clipped region will be used for further processing and export.
+		\inlinegraphics{./../../src/ui_elements/icons/object-select-icon.png} allows to clip a desired region using a polygon. The clipped region will be used for further processing and export.
 	}
 	\label{fig:polySelect}
 \end{figure}
@@ -325,7 +325,7 @@ For a more fine selection, a polynomial select tool \inlinegraphics{./../../ui_e
 	\centering
 	\includegraphics[width=.9\textwidth]{./pic/ClippedRegion.png}
 	\caption{
-		A zoomed view on the clipped region using the \inlinegraphics{./../../ui_elements/icons/object-select-icon.png} as indicated in Fig.~\ref{fig:polySelect}.
+		A zoomed view on the clipped region using the \inlinegraphics{./../../src/ui_elements/icons/object-select-icon.png} as indicated in Fig.~\ref{fig:polySelect}.
 	}
 	\label{fig:clipedRegion}
 \end{figure}
