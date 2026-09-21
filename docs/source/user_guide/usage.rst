@@ -26,3 +26,6 @@ This test data will be used to guide through an example walk-through through the
 
    data_import
    time_series
+   grid_processing
+   export
+   project

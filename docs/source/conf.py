@@ -44,7 +44,9 @@ numfig = True
 
 
 
-
+"""
+copies icons into _static such that they can be reference using relative paths.
+"""
 ICONS = ROOT / "src" / "ui_elements" / "icons"
 DOCS_STATIC = Path(__file__).parent / "_static" / "icons"
 

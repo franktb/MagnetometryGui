@@ -21,11 +21,11 @@ We note that this approach assumes a constant ambient field for the duration of 
 A diurnal correction using data from the Valencia observatory\footnote{\url{https://data.magie.ie/}} might be included in the future.
 \end{remark}
 Inside the plot, the time series could be investigated using zooming and panning.
-The unprocessed time-series data might show huge negative spikes as depicted in Fig.~\ref{fig:scissorInterval}.
+The unprocessed time-series data might show huge negative spikes as depicted in :numref:`fig:scissorInterval`.
 This is due to the fact that some raw data values are approaching $0\text{[nT]}$, probably during recovering the magnetometer.
 The scissor tool |scissor-icon| is designed to remove these intervals form the time-series.
 The tool can be activated by clicking on the corresponding icon.
-This allows the user to select a red rectangle by moving its edges, defining the interval that is to be excluded (see Fig.\ref{fig:processedTimeSeries}).
+This allows the user to select a red rectangle by moving its edges, defining the interval that is to be excluded (see :numref:`fig:processedTimeSeries`).
 The rectangle can be adjusted until the selection is confirmed by clicking the scissor icon again and a final dialogue will confirm the decision.
 We note that at the moment the visualisation will not refresh itself automatically.
 This can be achieved by clicking again on |chart-icon|.
@@ -37,5 +37,11 @@ This can be achieved by clicking again on |chart-icon|.
    :width: 100%
 
    The imported raw times series might contain values approaching $0\text{[nT]}$, perturbing the calculated residuals.
-   The |scissor-icon| allows to remove an interval of undesired data points, configured as red rectangle.}
+   The |scissor-icon| allows to remove an interval of undesired data points, configured as red rectangle.
 
+.. _fig:processedTimeSeries:
+
+.. figure:: pics/TimeSeriesWindow.png
+   :width: 100%
+
+   A cleaned time-series using the |scissor-icon| tool as depicted in :numref:`fig:scissorInterval`.
