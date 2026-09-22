@@ -16,3 +16,4 @@ documentation for details.
    :caption: User Guide
 
    user_guide/usage
+   building/building
