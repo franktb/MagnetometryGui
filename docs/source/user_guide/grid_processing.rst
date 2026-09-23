@@ -4,13 +4,13 @@ Anomaly grid processing
 =======================
 
 
-.. |draw-icon| image:: ../../_static/icons/drawingIcon.png
+.. |draw-icon| image:: ../_static/icons/drawingIcon.png
    :height: 1em
 
-.. |scissor-icon| image:: ../../_static/icons/cut-scissor-icon.png
+.. |scissor-icon| image:: ../_static/icons/cut-scissor-icon.png
    :height: 1em
 
-.. |select_icon| image:: ../../_static/icons/object-select-icon.png
+.. |select_icon| image:: ../_static/icons/object-select-icon.png
    :height: 1em
 
 The next step is the creation of the anomaly map.
