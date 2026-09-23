@@ -10,8 +10,7 @@ First, a homogeneous number of columns within each file is expected since at the
 
 Second, the software assume the existence of the following columns names:
 ``Reading_Date,Reading_Time,Magnetic_Field,Longitude,Latitude,UTM_Easting,UTM_Northing``.
-An example how a ``*.XYZ`` files is suppose to be formatted is given in :numref:`lst:BobSnippet`.
-
+An example of the required format for a ``*.txt`` file to be successfully imported by the BOB-importer is provided in :numref:`lst:BobSnippet`.
 
 .. _lst:BobSnippet:
 
