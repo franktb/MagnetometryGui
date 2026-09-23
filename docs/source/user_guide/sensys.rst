@@ -15,6 +15,7 @@ To ensure consistency with the other data formats, the importer calculates the m
 .. math::
 
    \bar{B} = \sqrt{B_x^2 + B_y^2 + B_z^2}.
+and subsequent scaled to nT, i.e. multiplied by 1e9.
 
 An example of the required format for a ``*.csv`` file to be successfully imported by the SENSYS-importer is provided in :numref:`lst:SensysSnippet`.
 

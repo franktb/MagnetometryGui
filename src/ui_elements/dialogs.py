@@ -46,7 +46,6 @@ class ColumnSelectDlg(QDialog):
         eastnorth_missing = not any([inputs["east"], inputs["north"]])
 
         if all([lineEdit != "" for lineEdit in inputs.values()]):
-            print("HEREEEEE")
             self.data_signal.emit(inputs)
             self.accept()
 

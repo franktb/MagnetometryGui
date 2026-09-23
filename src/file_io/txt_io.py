@@ -1,16 +1,33 @@
-import pandas as pd
 import os
-from data_model import Survey, SurveyFrame, SurveyFrameModel
-from PySide6.QtCore import Qt
+import pandas as pd
+import numpy as np
 from multiprocessing import Queue
+from PySide6.QtCore import Qt
 
 from util.coordinate_transformation import CoordinateTransformation
+from data_model import Survey, SurveyFrame, SurveyFrameModel
 from worker import PWorker
-import numpy as np
 
 
 class ReadMagCSV():
-    def read_from_BOBCSV(self, filename, delimiter, skiprows, project):
+    def read_from_BOBCSV(self,
+                         filename,
+                         delimiter,
+                         skiprows,
+                         project):
+        """
+        This methods works as a wrapper around pandas .csv parser.
+        It reads a given .csv files and directly includes the data into the project data tree.
+
+        Args:
+            filename: the filename passed to pandas.read_csv
+            delimiter: the delimiter passed to pandas.read_csv
+            skiprows: the amount of rows to skip, passed to pandas.read_csv
+            project: the reference to the project data tree
+
+        Returns:
+
+        """
         queue = Queue()
         myPworker = PWorker(pd.read_csv,
                             result_queue=queue,
@@ -27,7 +44,7 @@ class ReadMagCSV():
         survey_frame_raw = queue.get()
         myPworker.join()
 
-        # The BOB software indicated missing GPS locations by "*"
+        # The BOB software indicates missing GPS locations by "*"
         survey_frame_raw = survey_frame_raw[survey_frame_raw["GPS_Longitude"].str.contains(r"\*") == False]
 
         # Two-step datetime parsing since "parse_dates" was deprecated at development time
@@ -58,12 +75,17 @@ class ReadMagCSV():
         new_survey.addChild(new_survey_frame)
         project.checked_items()
 
-    def read_from_SeaLINKFolderXYZ(self, path, project):
+    def read_from_SeaLINKFolderXYZ(self,
+                                   path,
+                                   project):
         """
 
-        :param path:
-        :param project:
-        :return:
+        Args:
+            path: the path to the directory containing the XYZ files
+            project: the reference to the project data tree
+
+        Returns:
+
         """
 
         # For a full record the following columns are required.
@@ -146,8 +168,19 @@ class ReadMagCSV():
 
         project.checked_items()
 
-    def read_from_customCSV(self, configs, project):
-        print(configs["file"])
+    def read_from_customCSV(self,
+                            configs,
+                            project):
+        """
+
+        Args:
+            configs: the user input provided in ColumnSelectDlg (might be malformatted / wrong)
+            project: the reference to the project data tree
+
+        Returns:
+
+        """
+
         latlong_missing = False
         eastnorth_missing = False
 
@@ -239,13 +272,17 @@ class ReadMagCSV():
         new_survey.addChild(new_survey_frame)
         project.checked_items()
 
-    def read_from_SENSYS_CSV(self, filename, project, delimiter=",", skiprows="0"):
+    def read_from_SENSYS_CSV(self,
+                             filename,
+                             project,
+                             delimiter=",",
+                             skiprows="0"):
         queue = Queue()
         myPworker = PWorker(pd.read_csv,
                             result_queue=queue,
                             filepath_or_buffer=filename,
-                            #delimiter=delimiter,
-                            #skiprows=skiprows,
+                            # delimiter=delimiter,
+                            # skiprows=skiprows,
                             usecols=[
                                 "Timestamp (s) UTC+0",
                                 "Corrected Longitude (deg)",
@@ -254,25 +291,25 @@ class ReadMagCSV():
                                 "Sensys MagX 1 (T)",
                                 "Sensys MagY 1 (T)",
                                 "Sensys MagZ 1 (T)",
-                                #"Sensys MagX 2 (T)",
-                                #"Sensys MagY 2 (T)",
-                                #"Sensys MagZ 2 (T)",
-                                #"Sensys MagX 3 (T)",
-                                #"Sensys MagY 3 (T)",
-                                #"Sensys MagZ 3 (T)",
-                                #"Sensys MagX 4 (T)",
-                                #"Sensys MagY 4 (T)",
-                                #"Sensys MagZ 4 (T)",
-                                #"Sensys MagX 5 (T)",
-                                #"Sensys MagY 5 (T)",
-                                #"Sensys MagZ 5 (T)",
-                                #"Sensys MagX 6 (T)",
-                                #"Sensys MagY 6 (T)",
-                                #"Sensys MagZ 6 (T)",
+                                # "Sensys MagX 2 (T)",
+                                # "Sensys MagY 2 (T)",
+                                # "Sensys MagZ 2 (T)",
+                                # "Sensys MagX 3 (T)",
+                                # "Sensys MagY 3 (T)",
+                                # "Sensys MagZ 3 (T)",
+                                # "Sensys MagX 4 (T)",
+                                # "Sensys MagY 4 (T)",
+                                # "Sensys MagZ 4 (T)",
+                                # "Sensys MagX 5 (T)",
+                                # "Sensys MagY 5 (T)",
+                                # "Sensys MagZ 5 (T)",
+                                # "Sensys MagX 6 (T)",
+                                # "Sensys MagY 6 (T)",
+                                # "Sensys MagZ 6 (T)",
                             ],
                             engine="c",
                             low_memory=False,
-                            #dtype=str
+                            # dtype=str
                             )
         myPworker.start()
         survey_frame_raw = queue.get()
@@ -292,14 +329,14 @@ class ReadMagCSV():
         survey_frame_raw.loc[:, "UTM_Easting"] = converted_easting
         survey_frame_raw.loc[:, "UTM_Northing"] = converted_northings
 
-        survey_frame_raw['datetime'] = pd.to_datetime(survey_frame_raw.pop('Timestamp (s) UTC+0').astype(float), unit='s')
+        survey_frame_raw['datetime'] = pd.to_datetime(survey_frame_raw.pop('Timestamp (s) UTC+0').astype(float),
+                                                      unit='s')
 
         survey_frame_raw["Magnetic_Field"] = np.linalg.norm(survey_frame_raw[[
             "Sensys MagX 1 (T)",
             "Sensys MagY 1 (T)",
             "Sensys MagZ 1 (T)"
-        ]].to_numpy(),axis=1 ) * 1e9
-
+        ]].to_numpy(), axis=1) * 1e9
 
         survey_id = os.path.basename(filename)
         new_survey = Survey(survey_id)
