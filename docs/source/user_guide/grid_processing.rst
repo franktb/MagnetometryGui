@@ -1,4 +1,4 @@
-.. _sec:GridProcessing
+.. _sec:GridProcessing:
 
 Anomaly grid processing
 =======================
