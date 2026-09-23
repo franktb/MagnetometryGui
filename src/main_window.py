@@ -467,8 +467,7 @@ class MainWindow(QMainWindow):
 
             cx.add_basemap(self.mapping_2D_ax,
                            crs="EPSG:32629",
-                           source=cx.providers.OpenStreetMap.Mapnik,
-                           )
+                           source=cx.providers.OpenTopoMap)
 
             # self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', levels=10,
             #                            norm=colors.SymLogNorm(linthresh=10, linscale=1,

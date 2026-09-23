@@ -341,19 +341,19 @@ class SlippyMapNavigationToolbar(NavigationToolbar):
         super().release_pan(*args)
         cx.add_basemap(self.canvas.figure.get_axes()[0],
                        crs="EPSG:32629",
-                       source=cx.providers.OpenStreetMap.Mapnik)
+                       source=cx.providers.OpenTopoMap)
 
 
     def release_zoom(self, *args):
         super().release_zoom(*args)
         cx.add_basemap(self.canvas.figure.get_axes()[0],
                        crs="EPSG:32629",
-                       source=cx.providers.OpenStreetMap.Mapnik,
+                       source=cx.providers.OpenTopoMap,
                        )
 
     def home(self, *args):
         super().home(*args)
         cx.add_basemap(self.canvas.figure.get_axes()[0],
                        crs="EPSG:32629",
-                       source=cx.providers.OpenStreetMap.Mapnik,
+                       source=cx.providers.OpenTopoMap,
                        )
