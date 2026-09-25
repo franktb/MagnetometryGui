@@ -32,10 +32,20 @@ class Ui_FFTWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
+        self.verticalLayout2DMappingCanvas = QVBoxLayout()
+        self.verticalLayout2DMappingCanvas.setObjectName(u"verticalLayout2DMappingCanvas")
+
+        self.gridLayout.addLayout(self.verticalLayout2DMappingCanvas, 0, 1, 4, 1)
+
+        self.listWidget_BathymetryTiffs = QListWidget(self.centralwidget)
+        self.listWidget_BathymetryTiffs.setObjectName(u"listWidget_BathymetryTiffs")
+
+        self.gridLayout.addWidget(self.listWidget_BathymetryTiffs, 0, 0, 3, 1)
+
         self.pushButton_StartIteration = QPushButton(self.centralwidget)
         self.pushButton_StartIteration.setObjectName(u"pushButton_StartIteration")
 
-        self.gridLayout.addWidget(self.pushButton_StartIteration, 2, 2, 1, 1)
+        self.gridLayout.addWidget(self.pushButton_StartIteration, 3, 2, 1, 1)
 
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -154,22 +164,7 @@ class Ui_FFTWindow(object):
         self.verticalLayout.addItem(self.verticalSpacer)
 
 
-        self.gridLayout.addLayout(self.verticalLayout, 0, 2, 2, 1)
-
-        self.pushButton_layer = QPushButton(self.centralwidget)
-        self.pushButton_layer.setObjectName(u"pushButton_layer")
-
-        self.gridLayout.addWidget(self.pushButton_layer, 3, 2, 1, 1)
-
-        self.verticalLayout2DMappingCanvas = QVBoxLayout()
-        self.verticalLayout2DMappingCanvas.setObjectName(u"verticalLayout2DMappingCanvas")
-
-        self.gridLayout.addLayout(self.verticalLayout2DMappingCanvas, 0, 1, 4, 1)
-
-        self.listWidget_BathymetryTiffs = QListWidget(self.centralwidget)
-        self.listWidget_BathymetryTiffs.setObjectName(u"listWidget_BathymetryTiffs")
-
-        self.gridLayout.addWidget(self.listWidget_BathymetryTiffs, 0, 0, 3, 1)
+        self.gridLayout.addLayout(self.verticalLayout, 0, 2, 3, 1)
 
         self.gridLayout.setColumnStretch(1, 1)
         FFTWindow.setCentralWidget(self.centralwidget)
@@ -217,7 +212,6 @@ class Ui_FFTWindow(object):
         self.comboBox_scaleType.setItemText(0, QCoreApplication.translate("FFTWindow", u"Linear scale", None))
         self.comboBox_scaleType.setItemText(1, QCoreApplication.translate("FFTWindow", u"Logarithmic scale", None))
 
-        self.pushButton_layer.setText(QCoreApplication.translate("FFTWindow", u"Do Layer", None))
         self.menuFile.setTitle(QCoreApplication.translate("FFTWindow", u"File", None))
     # retranslateUi
 

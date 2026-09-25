@@ -15,6 +15,8 @@ from util.interpolation_module import MagCube
 from worker import Worker, PWorker
 import numpy as np
 
+from matplotlib.colors import TwoSlopeNorm
+
 
 class FFTWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -38,13 +40,14 @@ class FFTWindow(QMainWindow):
         self.ui.lineEditIterations.textEdited.connect(self.iterationsEdited)
 
         self.ui.pushButton_StartIteration.clicked.connect(self.start_selected_downward)
-        self.ui.pushButton_layer.clicked.connect(self.downward_cube)
 
         self.validator_layer = QIntValidator(0, 10, self)
         self.ui.lineEditLayers.setValidator(self.validator_layer)
         self.ui.lineEditLayers.textEdited.connect(self.lineEditLayers_changed)
         self.lineEditLayers_changed()  # set up the comboBoxDisplayedLayer as well
 
+
+        self.ui.comboBox_scaleType.currentIndexChanged.connect(self.update_scale)
 
         self.ui.comboBoxDisplayedLayer.currentIndexChanged.connect(self.comboBoxDisplayedLayer_changed)
         self.downward_field = None
@@ -87,10 +90,12 @@ class FFTWindow(QMainWindow):
 
     def comboBoxDisplayedLayer_changed(self):
         if self.cube is not None:
-            print("hello")
-            print(self.ui.comboBoxDisplayedLayer.currentIndex())
-            self.update_plot(self.cube[self.ui.comboBoxDisplayedLayer.currentIndex(),:,:])
+            self.displayed_field = self.cube[self.ui.comboBoxDisplayedLayer.currentIndex(),:,:]
+            self.update_plot()
 
+    def update_scale(self,):
+        self.color_scale_type = self.ui.comboBox_scaleType.currentText()
+        self.update_plot()
 
 
     def closeEvent(self, event):
@@ -114,7 +119,8 @@ class FFTWindow(QMainWindow):
                 return
 
             self.downward_field = result
-            self.update_plot(result)
+            self.displayed_field = self.bathymetry_tiff
+            self.update_plot()
 
     def start_selected_downward(self):
         if self.ui.comboBox_display.currentIndex() == 0:
@@ -122,7 +128,6 @@ class FFTWindow(QMainWindow):
         if self.ui.comboBox_display.currentIndex() == 1:
             self.downward_cube(10,30)
         if self.ui.comboBox_display.currentIndex() == 2:
-            print(self.ui.comboBox_display.currentText(),2)
             self.downward_bathymetry()
 
 
@@ -167,12 +172,13 @@ class FFTWindow(QMainWindow):
             cube = np.nan_to_num(cube)
 
             maglayer = self.myMagCube.sample_cube_at_height(cube, layer_heights, depth_grid)
-            self.update_plot(maglayer)
+            self.displayed_field = maglayer
+            self.update_plot()
             self.tiffWriter.write_to_GeoTiff("depth.tif", self.parent.grid_x, self.parent.grid_y, maglayer)
         else:
             QMessageBox.critical(self, "File IO Error", "No bathymetry files imported!", )
 
-    def update_plot(self, downward_field):
+    def update_plot(self,):
         try:
             self.cbar.remove()
         except:
@@ -180,23 +186,35 @@ class FFTWindow(QMainWindow):
 
         self.downward_2D_ax.cla()
 
-        x_min, x_max = np.min(self.parent.grid_x), np.max(self.parent.grid_x)
-        y_min, y_max = np.min(self.parent.grid_y), np.max(self.parent.grid_y)
+        if hasattr(self, 'displayed_field'):
 
-        self.downward_2D_ax.set_xlim([x_min - 0.1, x_max + 0.1])
-        self.downward_2D_ax.set_ylim([y_min - 0.1, y_max + 0.1])
+            x_min, x_max = np.min(self.parent.grid_x), np.max(self.parent.grid_x)
+            y_min, y_max = np.min(self.parent.grid_y), np.max(self.parent.grid_y)
 
-        masked_grid_z = np.ma.masked_invalid(downward_field)
+            self.downward_2D_ax.set_xlim([x_min - 0.1, x_max + 0.1])
+            self.downward_2D_ax.set_ylim([y_min - 0.1, y_max + 0.1])
 
-        self.contourfplot = self.downward_2D_ax.pcolormesh(self.parent.grid_x,
-                                                           self.parent.grid_y,
-                                                           masked_grid_z,  # 250,
-                                                           cmap='RdBu_r',
-                                                           norm="symlog"
-                                                           )
+            masked_grid_z = np.ma.masked_invalid(self.displayed_field)
 
-        self.cbar = self.downward_2D_canvas.figure.colorbar(self.contourfplot, ax=self.downward_2D_ax,
-                                                            orientation="vertical")
 
-        self.cbar.set_label('Anomaly [nT]')
-        self.downward_2D_canvas.draw_idle()
+            if self.color_scale_type == "Linear scale":
+                norm = TwoSlopeNorm(vmin=np.nanmin(masked_grid_z), vcenter=0, vmax=np.nanmax(masked_grid_z))
+                self.contourfplot = self.downward_2D_ax.pcolormesh(self.parent.grid_x,
+                                                                   self.parent.grid_y,
+                                                                   masked_grid_z,  # 250,
+                                                                   cmap='RdBu_r',
+                                                                   norm=norm
+                                                                   )
+            elif self.color_scale_type == "Logarithmic scale":
+                self.contourfplot = self.downward_2D_ax.pcolormesh(self.parent.grid_x,
+                                                                   self.parent.grid_y,
+                                                                   masked_grid_z,  # 250,
+                                                                   cmap='RdBu_r',
+                                                                   norm="symlog"
+                                                               )
+
+            self.cbar = self.downward_2D_canvas.figure.colorbar(self.contourfplot, ax=self.downward_2D_ax,
+                                                                orientation="vertical")
+
+            self.cbar.set_label('Anomaly [nT]')
+            self.downward_2D_canvas.draw_idle()
