@@ -1,6 +1,9 @@
 Downward continuation using bathymetry
 ======================================
 
+
+
+
 .. _fig:FftWindow:
 
 .. figure:: pics/DownwardWindow.png
