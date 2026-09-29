@@ -40,6 +40,8 @@ class FFTWindow(QMainWindow):
         self.depth = float(self.ui.lineEditDepth.text())
         self.ui.lineEditDepth.textEdited.connect(self.depthEdited)
 
+        self.color_scale_type = self.ui.comboBox_scaleType.currentText()
+
         self.n_iterations = int(self.ui.lineEditIterations.text())
         self.ui.lineEditIterations.textEdited.connect(self.iterationsEdited)
 
@@ -159,13 +161,14 @@ class FFTWindow(QMainWindow):
         if not self.fft_queue.empty():
             self.timer.stop()
             result = self.fft_queue.get()
-
+            print("result")
+            print(result)
             if isinstance(result, Exception):
                 print("Worker failed:", result)
                 return
 
-            self.downward_field = result
-            self.displayed_field = self.bathymetry_tiff
+            self.downward_field = result.copy()
+            self.displayed_field = self.downward_field
             self.update_plot()
 
     def start_selected_downward(self):
@@ -241,7 +244,7 @@ class FFTWindow(QMainWindow):
             self.downward_2D_ax.set_ylim([y_min - 0.1, y_max + 0.1])
 
             masked_grid_z = np.ma.masked_invalid(self.displayed_field)
-
+            print(self.displayed_field)
 
             if self.color_scale_type == "Linear scale":
                 norm = TwoSlopeNorm(vmin=np.nanmin(masked_grid_z), vcenter=0, vmax=np.nanmax(masked_grid_z))
