@@ -161,8 +161,6 @@ class FFTWindow(QMainWindow):
         if not self.fft_queue.empty():
             self.timer.stop()
             result = self.fft_queue.get()
-            print("result")
-            print(result)
             if isinstance(result, Exception):
                 print("Worker failed:", result)
                 return
