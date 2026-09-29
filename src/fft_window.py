@@ -31,6 +31,7 @@ class FFTWindow(QMainWindow):
 
         self.ui.actionImport_Bathymetry.triggered.connect(self.select_bathymetry_tiff)
         self.ui.actioncsv.triggered.connect(self.write_to_csv)
+        self.ui.actionGeoTiff.triggered.connect(self.write_to_geotiff)
 
         self.ui.verticalLayout2DMappingCanvas.addWidget(SlippyMapNavigationToolbar(self.downward_2D_canvas, self, ))
         self.ui.verticalLayout2DMappingCanvas.addWidget(self.downward_2D_canvas)
@@ -76,8 +77,8 @@ class FFTWindow(QMainWindow):
             filename += ".csv"
 
         if hasattr(self, 'displayed_field'):
-            flat_x = self.displayed_field.ravel()
-            flat_y = self.displayed_field.ravel()
+            flat_x = self.parent.grid_x.ravel()
+            flat_y = self.parent.grid_y.ravel()
             flat_z = self.displayed_field.ravel()
         df = pd.DataFrame({
             "UTM_Easting": flat_x,
@@ -87,6 +88,25 @@ class FFTWindow(QMainWindow):
         print(df)
         df.to_csv(filename, index=False)
 
+    def write_to_geotiff(self):
+        filename, _ = QFileDialog.getSaveFileName(
+            self,
+            "Save as GeoTIFF",
+            "",
+            "GeoTIFF files (*.tif);;All Files (*)"
+        )
+        if filename:
+            # Ensure the filename ends with .tif
+            if not filename.lower().endswith(".tif"):
+                filename += ".tif"
+
+            if hasattr(self, 'displayed_field'):
+                worker = Worker(self.tiffWriter.write_to_GeoTiff,
+                                filename,
+                                self.parent.grid_x,
+                                self.parent.grid_y,
+                                self.displayed_field)
+                self.parent.threadpool.start(worker)
 
 
     def select_bathymetry_tiff(self):

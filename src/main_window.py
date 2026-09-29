@@ -161,7 +161,7 @@ class MainWindow(QMainWindow):
 
         self.readCSV = ReadMagCSV()
         self.writeCSV = WriteMagCSV()
-        self.writeTif = WriteMag()
+        self.tiffWriter = WriteMag()
 
         self.ProjectIO = ProjectIO()
 
@@ -265,7 +265,7 @@ class MainWindow(QMainWindow):
                                                                            self.grid_y,
                                                                            self.grid_z,
                                                                            self.mask_clip)
-                worker = Worker(self.writeTif.write_to_GeoTiff,
+                worker = Worker(self.tiffWriter.write_to_GeoTiff,
                                 filename,
                                 clipped_grid_x,
                                 clipped_grid_y,
@@ -273,7 +273,7 @@ class MainWindow(QMainWindow):
                 self.threadpool.start(worker)
             else:
                 clipped_grid_z = np.ma.masked_invalid(self.grid_z)
-                worker = Worker(self.writeTif.write_to_GeoTiff,
+                worker = Worker(self.tiffWriter.write_to_GeoTiff,
                                 filename,
                                 self.grid_x,
                                 self.grid_y,
