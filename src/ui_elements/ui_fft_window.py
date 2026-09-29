@@ -28,6 +28,10 @@ class Ui_FFTWindow(object):
         FFTWindow.resize(1390, 892)
         self.actionImport_Bathymetry = QAction(FFTWindow)
         self.actionImport_Bathymetry.setObjectName(u"actionImport_Bathymetry")
+        self.actioncsv = QAction(FFTWindow)
+        self.actioncsv.setObjectName(u"actioncsv")
+        self.actionGeoTiff = QAction(FFTWindow)
+        self.actionGeoTiff.setObjectName(u"actionGeoTiff")
         self.centralwidget = QWidget(FFTWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -173,6 +177,8 @@ class Ui_FFTWindow(object):
         self.menubar.setGeometry(QRect(0, 0, 1390, 24))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
+        self.menuExport_grid = QMenu(self.menuFile)
+        self.menuExport_grid.setObjectName(u"menuExport_grid")
         FFTWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(FFTWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -180,6 +186,9 @@ class Ui_FFTWindow(object):
 
         self.menubar.addAction(self.menuFile.menuAction())
         self.menuFile.addAction(self.actionImport_Bathymetry)
+        self.menuFile.addAction(self.menuExport_grid.menuAction())
+        self.menuExport_grid.addAction(self.actioncsv)
+        self.menuExport_grid.addAction(self.actionGeoTiff)
 
         self.retranslateUi(FFTWindow)
 
@@ -187,8 +196,10 @@ class Ui_FFTWindow(object):
     # setupUi
 
     def retranslateUi(self, FFTWindow):
-        FFTWindow.setWindowTitle(QCoreApplication.translate("FFTWindow", u"MainWindow", None))
+        FFTWindow.setWindowTitle(QCoreApplication.translate("FFTWindow", u"Downward window", None))
         self.actionImport_Bathymetry.setText(QCoreApplication.translate("FFTWindow", u"Import Bathymetry", None))
+        self.actioncsv.setText(QCoreApplication.translate("FFTWindow", u"CSV", None))
+        self.actionGeoTiff.setText(QCoreApplication.translate("FFTWindow", u"GeoTiff", None))
         self.pushButton_StartIteration.setText(QCoreApplication.translate("FFTWindow", u"Do it!", None))
         self.label.setText(QCoreApplication.translate("FFTWindow", u"Depth:", None))
         self.lineEditDepth.setText(QCoreApplication.translate("FFTWindow", u"50.0", None))
@@ -213,5 +224,6 @@ class Ui_FFTWindow(object):
         self.comboBox_scaleType.setItemText(1, QCoreApplication.translate("FFTWindow", u"Logarithmic scale", None))
 
         self.menuFile.setTitle(QCoreApplication.translate("FFTWindow", u"File", None))
+        self.menuExport_grid.setTitle(QCoreApplication.translate("FFTWindow", u"Export grid", None))
     # retranslateUi
 

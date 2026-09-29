@@ -1,6 +1,8 @@
 from multiprocessing import Queue
 from pathlib import Path
 
+import pandas as pd
+
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox
 from PySide6.QtCore import QThreadPool, Slot, Signal, Qt, QTimer
 from figure_wrapper import SlippyMapNavigationToolbar
@@ -28,6 +30,7 @@ class FFTWindow(QMainWindow):
         self.downward_2D_canvas = FigureCanvas(Figure(figsize=(5, 3)))
 
         self.ui.actionImport_Bathymetry.triggered.connect(self.select_bathymetry_tiff)
+        self.ui.actioncsv.triggered.connect(self.write_to_csv)
 
         self.ui.verticalLayout2DMappingCanvas.addWidget(SlippyMapNavigationToolbar(self.downward_2D_canvas, self, ))
         self.ui.verticalLayout2DMappingCanvas.addWidget(self.downward_2D_canvas)
@@ -61,6 +64,29 @@ class FFTWindow(QMainWindow):
         self.tiffWriter = WriteMag()
 
         self.bathymetry_tiff = []
+
+    def write_to_csv(self):
+        filename, _ = QFileDialog.getSaveFileName(
+            self,
+            "Save as text",
+            "",
+            ".csv (*.csv);;All Files (*)"
+        )
+        if not filename.lower().endswith(".csv"):
+            filename += ".csv"
+
+        if hasattr(self, 'displayed_field'):
+            flat_x = self.displayed_field.ravel()
+            flat_y = self.displayed_field.ravel()
+            flat_z = self.displayed_field.ravel()
+        df = pd.DataFrame({
+            "UTM_Easting": flat_x,
+            "UTM_Northing": flat_y,
+            "Value": flat_z
+        })
+        print(df)
+        df.to_csv(filename, index=False)
+
 
 
     def select_bathymetry_tiff(self):
