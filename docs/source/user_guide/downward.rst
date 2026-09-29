@@ -23,3 +23,4 @@ However for negative :math:`z` the operation becomes a ill-posed problem due to 
 
    downward_layer
    downward_bath
+   downward_export
