@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QMainWindow, QLabel, QLineEdit, QPushButton, QDoubleSpinBox
+from PySide6.QtWidgets import QMainWindow, QLabel, QGridLayout, QPushButton, QSpinBox, QDoubleSpinBox
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
@@ -37,22 +37,34 @@ class TimeSeriesWindow(QMainWindow):
         self.float_list = FloatListWidget()
         self.ui.verticalLayout_3.addWidget(self.float_list)
 
-        self.ui.verticalLayout_3.addWidget(QLabel("Layer range:", self))
+        #Small mini-table of layer clipping epsilon and neighbor count
+        layout = QGridLayout()
+
+        # Layer range
+        layout.addWidget(QLabel("Layer range:", self), 0, 0)
+
         self.lineEdit_depth_eps = QDoubleSpinBox()
         self.lineEdit_depth_eps.setDecimals(4)
         self.lineEdit_depth_eps.setRange(-1e9, 1e9)
         self.lineEdit_depth_eps.setSingleStep(0.1)
         self.lineEdit_depth_eps.setValue(1.0)
-        self.ui.verticalLayout_3.addWidget(self.lineEdit_depth_eps)
 
-        self.spinbox_neighbours = QDoubleSpinBox()
-        self.spinbox_neighbours.setDecimals(0)
+        layout.addWidget(self.lineEdit_depth_eps, 0, 1)
+
+        # Neighbours
+        layout.addWidget(QLabel("Neighbours:", self), 1, 0)
+
+        self.spinbox_neighbours = QSpinBox()
         self.spinbox_neighbours.setRange(0, 1e9)
         self.spinbox_neighbours.setSingleStep(1)
-        self.spinbox_neighbours.setValue(10.0)
+        self.spinbox_neighbours.setValue(10)
 
-        self.ui.verticalLayout_3.addWidget(QLabel("Neighbours:", self))
-        self.ui.verticalLayout_3.addWidget(self.spinbox_neighbours)
+        layout.addWidget(self.spinbox_neighbours, 1, 1)
+
+        layout.setHorizontalSpacing(10)
+
+        # Add the small table/layout to your existing vertical layout
+        self.ui.verticalLayout_3.addLayout(layout)
 
         self.clip_button = QPushButton("Clip layer")
         self.clip_button.clicked.connect(self.update_depths_layers)

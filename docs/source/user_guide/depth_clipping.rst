@@ -3,11 +3,19 @@
 Time series depth clipping
 ==========================
 
-Time-series data that contains a depth information (see :ref:`sec:SensysImport`) can be separated into different depth layers.
-Without any depths selected the bottom plot displays the depths values for the whole time-series in black uppon clicking on ``Clip layer``.
-Using this overview, the user can insert in the menu on the right-hand side (see :numref:`fig:depthClipZoom`) depths values :math:`z` (in m) and a distance :math:`\epsilon`.
-This defines an interval :math:`(z-\epsilon, z+\epsilon)` which will be used to clip the region.
-Or in other words, all depths values that fall within that range will be ground as a single layer.
+Time-series data containing depth information (see :ref:`sec:SensysImport`) can be separated into distinct depth layers.
+When ``Clip layer`` is selected without specifying a depth, the bottom plot displays the depth values of the complete time series in black.
+This overview can be used to identify the layers.
+
+A layer is defined in the menu on the right-hand side (see :numref:`fig:depthClipZoom`) by specifying a depth :math:`z` (in m) and a tolerance :math:`\epsilon`.
+These parameters define the interval defines an interval :math:`(z-\epsilon, z+\epsilon)`.
+All data points with depth values within this interval are assigned to the same depth layer.
+To exclude isolated points and points belonging to descending trajectories toward greater depths, a neighborhood size can additionally be specified.
+Only points with at least the required number of neighboring points within the interval :math:`(z-\epsilon,\,z+\epsilon)` are retained.
+Points that do not satisfy this criterion are discarded.
+
+.. note::
+   Neighboring points are evaluated in both the positive and negative time directions relative to the current point.
 
 .. _fig:depthClipZoom:
 

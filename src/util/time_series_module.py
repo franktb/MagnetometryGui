@@ -28,7 +28,7 @@ class TimeSeriesManipulator():
                 depth + eps
             )
 
-            # A point must have `neighbours` valid points
+            # A point must have `neighbors` valid points
             # immediately before AND after it.
             valid = (
                     mask
