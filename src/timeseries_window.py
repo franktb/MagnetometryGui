@@ -43,13 +43,13 @@ class TimeSeriesWindow(QMainWindow):
         # Layer range
         layout.addWidget(QLabel("Layer range:", self), 0, 0)
 
-        self.lineEdit_depth_eps = QDoubleSpinBox()
-        self.lineEdit_depth_eps.setDecimals(4)
-        self.lineEdit_depth_eps.setRange(-1e9, 1e9)
-        self.lineEdit_depth_eps.setSingleStep(0.1)
-        self.lineEdit_depth_eps.setValue(1.0)
+        self.spinbox_depth_eps = QDoubleSpinBox()
+        self.spinbox_depth_eps.setDecimals(4)
+        self.spinbox_depth_eps.setRange(-1e9, 1e9)
+        self.spinbox_depth_eps.setSingleStep(0.1)
+        self.spinbox_depth_eps.setValue(1.0)
 
-        layout.addWidget(self.lineEdit_depth_eps, 0, 1)
+        layout.addWidget(self.spinbox_depth_eps, 0, 1)
 
         # Neighbours
         layout.addWidget(QLabel("Neighbours:", self), 1, 0)
@@ -97,17 +97,17 @@ class TimeSeriesWindow(QMainWindow):
 
 
     def update_depths_layers(self):
-        print("pushed")
         depths = self.float_list.values()
-        layers = TimeSeriesManipulator.clip_depths_layers(self.parent.TreeUtil.selected_df ,depths , self.lineEdit_depth_eps.value())
+        layers = TimeSeriesManipulator.clip_depths_layers(self.parent.TreeUtil.selected_df,
+                                                          depths,
+                                                          self.spinbox_depth_eps.value(),
+                                                          self.spinbox_neighbours.value())
 
         self.time_series_ax.cla()
         self.time_series_ax_depth.plot(self.parent.TreeUtil.selected_df["datetime"],
                                        self.parent.TreeUtil.selected_df["Depth (m)"],
                                        color="black")
         for layer in layers:
-            print("layers:")
-            print(layer)
             self.time_series_ax_depth.plot(layer["datetime"], layer["Depth (m)"])
 
         self.time_series_canvas_depth.draw_idle()
