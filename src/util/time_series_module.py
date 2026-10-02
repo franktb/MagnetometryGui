@@ -16,3 +16,12 @@ class TimeSeriesManipulator():
                                                                                     ambient_win_size)
         df.loc[:, "Magnetic_Field_residual"] = df.loc[:, "Magnetic_Field_Smoothed"] - df.loc[:,
                                                                                       "Magnetic_Field_Ambient"]
+
+
+    @staticmethod
+    def clip_depths_layers(df, depths, eps):
+        layers = []
+        for depth in depths:
+            layer = df[df["Depth (m)"].between(depth - eps, depth + eps)]
+            layers.append(layer)
+        return layers

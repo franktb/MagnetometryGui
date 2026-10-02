@@ -1,12 +1,14 @@
-from figure_wrapper import TimeSeriesNavigationToolbar
-from ui_elements.ui_timeseries_window import Ui_MainWindow
-from PySide6.QtWidgets import QMainWindow, QLabel, QLineEdit
+from PySide6.QtWidgets import QMainWindow, QLabel, QLineEdit, QPushButton, QDoubleSpinBox
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 
-from ui_elements.FloatListWidget import FloatListWidget
+from figure_wrapper import TimeSeriesNavigationToolbar
 
+from ui_elements.FloatListWidget import FloatListWidget
+from ui_elements.ui_timeseries_window import Ui_MainWindow
+
+from util.time_series_module import TimeSeriesManipulator
 
 class TimeSeriesWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -36,7 +38,17 @@ class TimeSeriesWindow(QMainWindow):
         self.ui.verticalLayout_3.addWidget(self.float_list)
 
         self.ui.verticalLayout_3.addWidget(QLabel("Depth layer range", self))
-        #self.ui.verticalLayout_3.addWidget()
+        self.lineEdit_depth_eps = QDoubleSpinBox()
+        self.lineEdit_depth_eps.setDecimals(4)
+        self.lineEdit_depth_eps.setRange(-1e9, 1e9)
+        self.lineEdit_depth_eps.setSingleStep(0.1)
+        self.lineEdit_depth_eps.setValue(1.0)
+        self.ui.verticalLayout_3.addWidget(self.lineEdit_depth_eps)
+
+        self.clip_button = QPushButton("Clip layer")
+        self.clip_button.clicked.connect(self.update_depths_layers)
+        self.ui.verticalLayout_3.addWidget(self.clip_button)
+
 
     def wrapper_1d_select(self):
         self.draw_1d_selected()
@@ -62,3 +74,11 @@ class TimeSeriesWindow(QMainWindow):
         self.time_series_ax_res.set_ylabel(r"Res $B_0 - \bar{B}$ [nT]")
         self.time_series_canvas_res.draw_idle()
 
+
+    def update_depths_layers(self):
+        depths = self.float_list.values()
+        layers = TimeSeriesManipulator.clip_depths_layers(self.parent.TreeUtil.selected_df ,depths , self.lineEdit_depth_eps.value())
+
+        self.time_series_ax.cla()
+        for layer in layers:
+            self.time_series_ax_depth.plot(layer["Depth (m)"])
