@@ -19,9 +19,28 @@ class TimeSeriesManipulator():
 
 
     @staticmethod
-    def clip_depths_layers(df, depths, eps):
+    def clip_depths_layers(df, depths, eps, neighbours=20):
         layers = []
+
         for depth in depths:
-            layer = df[df["Depth (m)"].between(depth - eps, depth + eps)]
-            layers.append(layer)
+            mask = df["Depth (m)"].between(
+                depth - eps,
+                depth + eps
+            )
+
+            # A point must have `neighbours` valid points
+            # immediately before AND after it.
+            valid = (
+                    mask
+                    .rolling(2 * neighbours + 1, center=True)
+                    .sum()
+                    == 2 * neighbours + 1
+            )
+
+            layer = df.loc[mask & valid].copy()
+
+            if not layer.empty:
+                layers.append(layer)
+
         return layers
+

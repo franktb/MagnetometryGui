@@ -30,20 +30,29 @@ class TimeSeriesWindow(QMainWindow):
         self.time_series_ax_res = self.time_series_canvas_res.figure.subplots()
 
         self.time_series_canvas_depth = FigureCanvas(Figure())
-        self.ui.verticalLayoutTimeSeriesCanvasDepth.addWidget(TimeSeriesNavigationToolbar(self.time_series_canvas, self))
+        self.ui.verticalLayoutTimeSeriesCanvasDepth.addWidget(TimeSeriesNavigationToolbar(self.time_series_canvas_depth, self))
         self.ui.verticalLayoutTimeSeriesCanvasDepth.addWidget(self.time_series_canvas_depth)
         self.time_series_ax_depth = self.time_series_canvas_depth.figure.subplots()
 
         self.float_list = FloatListWidget()
         self.ui.verticalLayout_3.addWidget(self.float_list)
 
-        self.ui.verticalLayout_3.addWidget(QLabel("Depth layer range", self))
+        self.ui.verticalLayout_3.addWidget(QLabel("Layer range:", self))
         self.lineEdit_depth_eps = QDoubleSpinBox()
         self.lineEdit_depth_eps.setDecimals(4)
         self.lineEdit_depth_eps.setRange(-1e9, 1e9)
         self.lineEdit_depth_eps.setSingleStep(0.1)
         self.lineEdit_depth_eps.setValue(1.0)
         self.ui.verticalLayout_3.addWidget(self.lineEdit_depth_eps)
+
+        self.spinbox_neighbours = QDoubleSpinBox()
+        self.spinbox_neighbours.setDecimals(0)
+        self.spinbox_neighbours.setRange(0, 1e9)
+        self.spinbox_neighbours.setSingleStep(1)
+        self.spinbox_neighbours.setValue(10.0)
+
+        self.ui.verticalLayout_3.addWidget(QLabel("Neighbours:", self))
+        self.ui.verticalLayout_3.addWidget(self.spinbox_neighbours)
 
         self.clip_button = QPushButton("Clip layer")
         self.clip_button.clicked.connect(self.update_depths_layers)
