@@ -26,6 +26,7 @@ This test data will be used to guide through an example walk-through through the
 
    data_import
    time_series
+   depth_clipping
    grid_processing
    export
    project

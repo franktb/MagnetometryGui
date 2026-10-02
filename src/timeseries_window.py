@@ -76,9 +76,17 @@ class TimeSeriesWindow(QMainWindow):
 
 
     def update_depths_layers(self):
+        print("pushed")
         depths = self.float_list.values()
         layers = TimeSeriesManipulator.clip_depths_layers(self.parent.TreeUtil.selected_df ,depths , self.lineEdit_depth_eps.value())
 
         self.time_series_ax.cla()
+        self.time_series_ax_depth.plot(self.parent.TreeUtil.selected_df["datetime"],
+                                       self.parent.TreeUtil.selected_df["Depth (m)"],
+                                       color="black")
         for layer in layers:
-            self.time_series_ax_depth.plot(layer["Depth (m)"])
+            print("layers:")
+            print(layer)
+            self.time_series_ax_depth.plot(layer["datetime"], layer["Depth (m)"])
+
+        self.time_series_canvas_depth.draw_idle()
