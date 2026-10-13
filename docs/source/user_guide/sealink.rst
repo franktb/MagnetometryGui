@@ -16,7 +16,7 @@ Inside the ``raw``-folder are several files sharing the same filename but differ
 The software is looking for files ending with ``*.XYZ``.
 
 To deal with the huge heterogeneity among SeaLink files the software assume a minimal standard of the imported files which will be outlined in the following.
-This has to be ensured by the user or the custom csv-import (see \ref{sec:customCSVimport}) might be tried.
+This has to be ensured by the user or the custom csv-import (see :ref:`sec:CustomImport`) might be tried.
 
 Currently, the software has two assumptions on the ``*.XYZ`` files.
 First, a homogeneous number of columns within each file is expected since at the moment the software is not able to process files whose number of columns changes mid-file.
