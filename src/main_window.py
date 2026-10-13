@@ -135,29 +135,18 @@ class MainWindow(QMainWindow):
         self.data_coordinates = None
         self.track_lines = None
 
-        self.validator_smooth = QIntValidator(0, 100000, self)
-        self.ui.lineEdit_smoothingWindow.setValidator(self.validator_smooth)
-        self.validator_ambient = QIntValidator(0, 1000000, self)
-        self.ui.lineEdit_ambientWindow.setValidator(self.validator_ambient)
 
-        self.validator_easting = QIntValidator(0, 5000, self)
-        self.validator_northing = QIntValidator(0, 5000, self)
-        self.ui.lineEdit_eastingsSampleRate.setValidator(self.validator_easting)
-        self.ui.lineEdit_northingsSampleRate.setValidator(self.validator_northing)
+        self.smoothing_window_length = self.ui.spinBoxAmbientWindow.value()
+        self.ambient_window_length = self.ui.spinBoxSmoothingWindow.value()
+        self.eastingsSampleRate = self.ui.spinBoxEastings.value()
+        self.northingsSampleRate = self.ui.spinBoxNorthings.value()
 
-        self.validator_nthSelect = QIntValidator(0, 10000, self)
-        self.ui.lineEdit_nthSelectWindow.setValidator(self.validator_nthSelect)
+        self.ui.spinBoxAmbientWindow.valueChanged.connect(self.ambient_changed)
+        self.ui.spinBoxSmoothingWindow.valueChanged.connect(self.smoothing_changed)
+        self.ui.spinBoxEastings.valueChanged.connect(self.eastings_changed)
+        self.ui.spinBoxNorthings.valueChanged.connect(self.northings_changed)
 
-        self.smoothing_window_length = int(self.ui.lineEdit_smoothingWindow.text())
-        self.ambient_window_length = int(self.ui.lineEdit_ambientWindow.text())
-        self.eastingsSampleRate = int(self.ui.lineEdit_eastingsSampleRate.text())
-        self.northingsSampleRate = int(self.ui.lineEdit_northingsSampleRate.text())
 
-        self.ui.lineEdit_ambientWindow.textEdited.connect(self.ambient_lineEdit_change)
-        self.ui.lineEdit_smoothingWindow.textEdited.connect(self.smoothing_lineEdit_change)
-
-        self.ui.lineEdit_northingsSampleRate.textEdited.connect(self.northings_lineEdit_change)
-        self.ui.lineEdit_eastingsSampleRate.textEdited.connect(self.eastings_lineEdit_change)
 
         self.readCSV = ReadMagCSV()
         self.writeCSV = WriteMagCSV()
@@ -283,42 +272,17 @@ class MainWindow(QMainWindow):
     def diurnal_correction(self):
         return 0
 
-    def northings_lineEdit_change(self):
-        state, text = self.lineEdit_validate(self.ui.lineEdit_northingsSampleRate)
-        if state == QIntValidator.Acceptable:
-            print("Valid integer:", text)
-            self.northingsSampleRate = int(text)
-        else:
-            self.ui.lineEdit_northingsSampleRate.setText(str(self.northingsSampleRate))
+    def northings_changed(self):
+        self.northingsSampleRate = self.ui.spinBoxNorthings.value()
 
-    def eastings_lineEdit_change(self):
-        state, text = self.lineEdit_validate(self.ui.lineEdit_eastingsSampleRate)
-        if state == QIntValidator.Acceptable:
-            print("Valid integer:", text)
-            self.eastingsSampleRate = int(text)
-        else:
-            self.ui.lineEdit_eastingsSampleRate.setText(str(self.eastingsSampleRate))
+    def eastings_changed(self):
+        self.eastingsSampleRate = self.ui.spinBoxEastings.value()
 
-    def ambient_lineEdit_change(self):
-        state, text = self.lineEdit_validate(self.ui.lineEdit_ambientWindow)
-        if state == QIntValidator.Acceptable:
-            print("Valid integer:", text)
-            self.ambient_window_length = int(text)
-            self.validator_smooth.setRange(0, self.ambient_window_length)
-        else:
-            self.ui.lineEdit_ambientWindow.setText(str(self.ambient_window_length))
+    def ambient_changed(self):
+        self.ambient_window_length = self.ui.spinBoxAmbientWindow.value()
 
-    def smoothing_lineEdit_change(self):
-        state, text = self.lineEdit_validate(self.ui.lineEdit_smoothingWindow)
-        if state == QIntValidator.Acceptable:
-            print("Valid integer:", text)
-            self.smoothing_window_length = int(text)
-        else:
-            self.ui.lineEdit_smoothingWindow.setText(str(self.smoothing_window_length))
-
-    def lineEdit_validate(self, line_edit):
-        state, text, _ = line_edit.validator().validate(line_edit.text(), 0)
-        return state, text
+    def smoothing_changed(self):
+        self.smoothing_window_length = self.ui.spinBoxSmoothingWindow.value()
 
 
     def update_selected_df(self, item, column):
@@ -351,7 +315,7 @@ class MainWindow(QMainWindow):
 
             QMessageBox.warning(self, "Nan rows", "Nan rows has been removed to continue processing", )
 
-        nth_select = int(self.ui.lineEdit_nthSelectWindow.text())
+        nth_select = int(self.ui.spinBoxTimeRate.value())
         self.data_coordinates = np.array(
             (self.TreeUtil.selected_df["UTM_Easting"].iloc[::nth_select],
              self.TreeUtil.selected_df["UTM_Northing"].iloc[::nth_select]))

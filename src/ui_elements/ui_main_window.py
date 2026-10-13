@@ -16,18 +16,18 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QHeaderView,
-    QLabel, QLineEdit, QListWidget, QListWidgetItem,
-    QMainWindow, QMenu, QMenuBar, QSizePolicy,
-    QStatusBar, QToolBar, QTreeWidget, QTreeWidgetItem,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QDoubleSpinBox, QFormLayout,
+    QGridLayout, QHeaderView, QLabel, QListWidget,
+    QListWidgetItem, QMainWindow, QMenu, QMenuBar,
+    QSizePolicy, QSpinBox, QStatusBar, QToolBar,
+    QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
 import ui_elements.resources_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1585, 889)
+        MainWindow.resize(1598, 1171)
         self.actionblubb = QAction(MainWindow)
         self.actionblubb.setObjectName(u"actionblubb")
         self.actionDinuralCorrection = QAction(MainWindow)
@@ -125,67 +125,104 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.layerWidget)
 
+        self.formLayout = QFormLayout()
+        self.formLayout.setObjectName(u"formLayout")
         self.label_2 = QLabel(self.centralwidget)
         self.label_2.setObjectName(u"label_2")
 
-        self.verticalLayout.addWidget(self.label_2)
+        self.formLayout.setWidget(0, QFormLayout.ItemRole.LabelRole, self.label_2)
 
-        self.lineEdit_smoothingWindow = QLineEdit(self.centralwidget)
-        self.lineEdit_smoothingWindow.setObjectName(u"lineEdit_smoothingWindow")
+        self.spinBoxSmoothingWindow = QSpinBox(self.centralwidget)
+        self.spinBoxSmoothingWindow.setObjectName(u"spinBoxSmoothingWindow")
+        self.spinBoxSmoothingWindow.setMaximum(1000000)
+        self.spinBoxSmoothingWindow.setValue(20)
 
-        self.verticalLayout.addWidget(self.lineEdit_smoothingWindow)
+        self.formLayout.setWidget(0, QFormLayout.ItemRole.FieldRole, self.spinBoxSmoothingWindow)
 
         self.label_3 = QLabel(self.centralwidget)
         self.label_3.setObjectName(u"label_3")
 
-        self.verticalLayout.addWidget(self.label_3)
+        self.formLayout.setWidget(1, QFormLayout.ItemRole.LabelRole, self.label_3)
 
-        self.lineEdit_ambientWindow = QLineEdit(self.centralwidget)
-        self.lineEdit_ambientWindow.setObjectName(u"lineEdit_ambientWindow")
+        self.spinBoxAmbientWindow = QSpinBox(self.centralwidget)
+        self.spinBoxAmbientWindow.setObjectName(u"spinBoxAmbientWindow")
+        self.spinBoxAmbientWindow.setMaximum(10000000)
+        self.spinBoxAmbientWindow.setValue(500)
 
-        self.verticalLayout.addWidget(self.lineEdit_ambientWindow)
+        self.formLayout.setWidget(1, QFormLayout.ItemRole.FieldRole, self.spinBoxAmbientWindow)
 
         self.label_4 = QLabel(self.centralwidget)
         self.label_4.setObjectName(u"label_4")
 
-        self.verticalLayout.addWidget(self.label_4)
+        self.formLayout.setWidget(2, QFormLayout.ItemRole.LabelRole, self.label_4)
 
-        self.lineEdit_nthSelectWindow = QLineEdit(self.centralwidget)
-        self.lineEdit_nthSelectWindow.setObjectName(u"lineEdit_nthSelectWindow")
+        self.spinBoxTimeRate = QSpinBox(self.centralwidget)
+        self.spinBoxTimeRate.setObjectName(u"spinBoxTimeRate")
+        self.spinBoxTimeRate.setMinimum(1)
+        self.spinBoxTimeRate.setMaximum(10000000)
 
-        self.verticalLayout.addWidget(self.lineEdit_nthSelectWindow)
+        self.formLayout.setWidget(2, QFormLayout.ItemRole.FieldRole, self.spinBoxTimeRate)
 
         self.label_6 = QLabel(self.centralwidget)
         self.label_6.setObjectName(u"label_6")
 
-        self.verticalLayout.addWidget(self.label_6)
+        self.formLayout.setWidget(3, QFormLayout.ItemRole.LabelRole, self.label_6)
 
-        self.lineEdit_eastingsSampleRate = QLineEdit(self.centralwidget)
-        self.lineEdit_eastingsSampleRate.setObjectName(u"lineEdit_eastingsSampleRate")
+        self.spinBoxEastings = QSpinBox(self.centralwidget)
+        self.spinBoxEastings.setObjectName(u"spinBoxEastings")
+        self.spinBoxEastings.setMaximum(1000000)
+        self.spinBoxEastings.setValue(1000)
 
-        self.verticalLayout.addWidget(self.lineEdit_eastingsSampleRate)
+        self.formLayout.setWidget(3, QFormLayout.ItemRole.FieldRole, self.spinBoxEastings)
 
         self.label_5 = QLabel(self.centralwidget)
         self.label_5.setObjectName(u"label_5")
 
-        self.verticalLayout.addWidget(self.label_5)
+        self.formLayout.setWidget(4, QFormLayout.ItemRole.LabelRole, self.label_5)
 
-        self.lineEdit_northingsSampleRate = QLineEdit(self.centralwidget)
-        self.lineEdit_northingsSampleRate.setObjectName(u"lineEdit_northingsSampleRate")
+        self.spinBoxNorthings = QSpinBox(self.centralwidget)
+        self.spinBoxNorthings.setObjectName(u"spinBoxNorthings")
+        self.spinBoxNorthings.setMaximum(1000000)
+        self.spinBoxNorthings.setValue(1000)
 
-        self.verticalLayout.addWidget(self.lineEdit_northingsSampleRate)
+        self.formLayout.setWidget(4, QFormLayout.ItemRole.FieldRole, self.spinBoxNorthings)
+
+        self.label_8 = QLabel(self.centralwidget)
+        self.label_8.setObjectName(u"label_8")
+
+        self.formLayout.setWidget(5, QFormLayout.ItemRole.LabelRole, self.label_8)
+
+        self.doubleSpinBoxRasterX = QDoubleSpinBox(self.centralwidget)
+        self.doubleSpinBoxRasterX.setObjectName(u"doubleSpinBoxRasterX")
+        self.doubleSpinBoxRasterX.setMaximum(1000000.000000000000000)
+
+        self.formLayout.setWidget(5, QFormLayout.ItemRole.FieldRole, self.doubleSpinBoxRasterX)
+
+        self.label_9 = QLabel(self.centralwidget)
+        self.label_9.setObjectName(u"label_9")
+
+        self.formLayout.setWidget(6, QFormLayout.ItemRole.LabelRole, self.label_9)
+
+        self.doubleSpinBoxRasterY = QDoubleSpinBox(self.centralwidget)
+        self.doubleSpinBoxRasterY.setObjectName(u"doubleSpinBoxRasterY")
+        self.doubleSpinBoxRasterY.setMaximum(1000000.000000000000000)
+
+        self.formLayout.setWidget(6, QFormLayout.ItemRole.FieldRole, self.doubleSpinBoxRasterY)
 
         self.label_7 = QLabel(self.centralwidget)
         self.label_7.setObjectName(u"label_7")
 
-        self.verticalLayout.addWidget(self.label_7)
+        self.formLayout.setWidget(7, QFormLayout.ItemRole.LabelRole, self.label_7)
 
         self.comboBox_Scale_type = QComboBox(self.centralwidget)
         self.comboBox_Scale_type.addItem("")
         self.comboBox_Scale_type.addItem("")
         self.comboBox_Scale_type.setObjectName(u"comboBox_Scale_type")
 
-        self.verticalLayout.addWidget(self.comboBox_Scale_type)
+        self.formLayout.setWidget(7, QFormLayout.ItemRole.FieldRole, self.comboBox_Scale_type)
+
+
+        self.verticalLayout.addLayout(self.formLayout)
 
 
         self.gridLayout.addLayout(self.verticalLayout, 0, 3, 1, 1)
@@ -209,7 +246,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1585, 24))
+        self.menubar.setGeometry(QRect(0, 0, 1598, 24))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         self.menuOpen_Survey = QMenu(self.menuFile)
@@ -297,16 +334,13 @@ class Ui_MainWindow(object):
         self.actionRename_Project.setText(QCoreApplication.translate("MainWindow", u"Rename Project", None))
         self.actionFrom_SENSYS_CSV.setText(QCoreApplication.translate("MainWindow", u"From SENSYS CSV", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Display Layers:", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Smoothing window size:", None))
-        self.lineEdit_smoothingWindow.setText(QCoreApplication.translate("MainWindow", u"20", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Ambient estimation window size:", None))
-        self.lineEdit_ambientWindow.setText(QCoreApplication.translate("MainWindow", u"500", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Smoothing window:", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Ambient window:", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Time sampling rate:", None))
-        self.lineEdit_nthSelectWindow.setText(QCoreApplication.translate("MainWindow", u"1", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Eastings sampling rate:", None))
-        self.lineEdit_eastingsSampleRate.setText(QCoreApplication.translate("MainWindow", u"1000", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"Northings sampling rate:", None))
-        self.lineEdit_northingsSampleRate.setText(QCoreApplication.translate("MainWindow", u"1000", None))
+        self.label_8.setText(QCoreApplication.translate("MainWindow", u"Rastersize x:", None))
+        self.label_9.setText(QCoreApplication.translate("MainWindow", u"Rastersize y:", None))
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"Scale type:", None))
         self.comboBox_Scale_type.setItemText(0, QCoreApplication.translate("MainWindow", u"Linear scale", None))
         self.comboBox_Scale_type.setItemText(1, QCoreApplication.translate("MainWindow", u"Logarithmic scale", None))
