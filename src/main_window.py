@@ -443,7 +443,6 @@ class MainWindow(QMainWindow):
                 pass
 
             if getattr(self, "x_coords_anomalies", None) is not None:
-                print("first cond meet")
                 self.anomalies = self.mapping_2D_ax.scatter(self.x_coords_anomalies, self.y_coords_anomalies)
 
                 if self.ui.layerWidget.item(2).checkState() == Qt.Checked:
@@ -451,15 +450,12 @@ class MainWindow(QMainWindow):
                 else:
                     self.anomalies.set_visible(False)
 
-            self.cbar = self.mapping_2D_canvas.figure.colorbar(self.contourfplot, ax=self.mapping_2D_ax,
+            self.cbar = self.mapping_2D_canvas.figure.colorbar(self.contourfplot,
+                                                               ax=self.mapping_2D_ax,
                                                                orientation="vertical")
-            self.cbar.set_label('Anomaly [nT]')
-
-            # self.mapping_2D_ax.scatter(489426, 5693316)
-            # self.mapping_2D_ax.scatter(514400,5705500)
+            self.cbar.set_label(r'Res $B_0 - \bar{B}$ [nT]')
 
             self.mapping_2D_canvas.draw_idle()
-            # print("Number of collections:", len(self.contourfplot.collections))
         else:
             QMessageBox.critical(self, "Display Error", "No data to display!", )
 
@@ -520,7 +516,6 @@ class MainWindow(QMainWindow):
                             project=self.TreeUtil
                             )
 
-            # worker.start()
             self.threadpool.start(worker)
         else:
             QMessageBox.critical(self, "File IO Error", "No text file selected!", )
@@ -531,8 +526,6 @@ class MainWindow(QMainWindow):
                                                            options=QFileDialog.Option.ShowDirsOnly)
 
         valid_folder = False
-        print(selected_folder)
-
         folder_content = os.listdir(selected_folder)
         # The raw data of acquired with Sealink is stored in CVXX_YY and a "Raw" subfolder
         if str(os.listdir(selected_folder)[0]) == "Raw":
@@ -580,7 +573,6 @@ class MainWindow(QMainWindow):
                             project=self.TreeUtil
                             )
 
-            # worker.start()
             self.threadpool.start(worker)
         else:
             QMessageBox.critical(self, "File IO Error", "No text file selected!", )
@@ -618,15 +610,9 @@ class MainWindow(QMainWindow):
     def remove_outlier(self):
         @Slot(list)
         def retrieve_user_input(inputs):
-            print(inputs)
-            # print(type(self.TreeUtil.selected_df["UTM_Easting"][0]))
-            print(inputs[-1])
-
             try:
                 max_mag, min_mag, max_long, min_long, max_lat, min_lat = [float(i) for i in inputs[:-1]]
                 if inputs[-1] == "Remove entry":
-                    print(("Here"))
-
                     worker = Worker(self.TreeUtil.dropna_outlier,
                                     max_mag, min_mag, max_long, min_long, max_lat, min_lat
                                     )
