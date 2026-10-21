@@ -1,5 +1,4 @@
 import json
-import pickle
 import sys
 import os
 import time
@@ -13,13 +12,11 @@ import numpy as np
 
 from PySide6.QtWidgets import QListWidgetItem
 from PySide6.QtCore import QTimer
-from PySide6.QtGui import QIntValidator
 from matplotlib.backends.backend_qtagg import FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.colors as colors
 from matplotlib.colors import TwoSlopeNorm
-from skimage import feature, measure
 
 from figure_wrapper import SlippyMapNavigationToolbar
 from TreeWidget import TreeUtil
@@ -75,7 +72,6 @@ class MainWindow(QMainWindow):
         self.mapping_2D_canvas = FigureCanvas(Figure(constrained_layout=True))
         self.mapping_2D_canvas.setFocusPolicy(Qt.StrongFocus)
         self.mapping_2D_canvas.setFocus()
-        # self.mapping_2D_canvas = MplCanvas(self, 5,3,150)
 
         self.ui.verticalLayout2DMappingCanvas.addWidget(SlippyMapNavigationToolbar(self.mapping_2D_canvas, self, ))
         self.ui.verticalLayout2DMappingCanvas.addWidget(self.mapping_2D_canvas)
@@ -97,10 +93,6 @@ class MainWindow(QMainWindow):
 
         self.ui.comboBox_Scale_type.currentIndexChanged.connect(self.update_scale)
         self.color_scale_type = self.ui.comboBox_Scale_type.currentText()
-
-        # self.ui.pushButton.clicked.connect(self.debugTree)
-
-        # self.TreeUtil = TreeUtil(self.ui.treeWidget)
 
         self.selected_df = pd.DataFrame()
         self.TreeUtil = TreeUtil(self.ui.treeWidget, self.selected_df)
@@ -135,7 +127,6 @@ class MainWindow(QMainWindow):
         self.data_coordinates = None
         self.track_lines = None
 
-
         self.smoothing_window_length = self.ui.spinBoxAmbientWindow.value()
         self.ambient_window_length = self.ui.spinBoxSmoothingWindow.value()
         self.eastingsSampleRate = self.ui.spinBoxEastings.value()
@@ -146,8 +137,6 @@ class MainWindow(QMainWindow):
         self.ui.spinBoxEastings.valueChanged.connect(self.eastings_changed)
         self.ui.spinBoxNorthings.valueChanged.connect(self.northings_changed)
 
-
-
         self.readCSV = ReadMagCSV()
         self.writeCSV = WriteMagCSV()
         self.tiffWriter = WriteMag()
@@ -155,7 +144,6 @@ class MainWindow(QMainWindow):
         self.ProjectIO = ProjectIO()
 
         self.bath_IO = Bathymetry()
-        # self.ui.treeWidget.setHeaderHidden(True)
         self.threadpool = QThreadPool()
 
         self.grid_queue = Queue()
@@ -179,29 +167,14 @@ class MainWindow(QMainWindow):
 
     def detect_anomalies(self):
         magnitude = sobel(self.grid_z)
-        threshold = np.percentile(magnitude, self.ui.doubleSpinBoxSobel.value()*100)  # or fixed value
+        threshold = np.percentile(magnitude, self.ui.doubleSpinBoxSobel.value() * 100)  # or fixed value
         mask = magnitude >= threshold
 
-        print(mask)
-        # Step 4: Get coordinates
         y_indices, x_indices = np.where(mask)
-        # magnitudes_filtered = magnitude[mask]
 
         self.x_coords_anomalies = self.grid_x[y_indices, x_indices]
         self.y_coords_anomalies = self.grid_y[y_indices, x_indices]
-        #self.anomalies = self.mapping_2D_ax.scatter(self.x_coords_anomalies, self.y_coords_anomalies)
-
-        """
-        masked_grid_z = np.ma.masked_invalid(self.grid_z)
-        edges = feature.canny(masked_grid_z)
-        # self.anomalies = self.mapping_2D_ax.scatter(edges1)
-        contours = measure.find_contours(edges, level=0.99)
-        for contour in contours:
-            self.mapping_2D_ax.plot(contour[:, 1], contour[:, 0])
-        # self.anomalies = self.mapping_2D_ax.scatter(x_coords, y_coords)
-        """
-        self.mapping_2D_canvas.draw_idle()
-        print("anno done")
+        self.update_plot()
 
     def write_to_csv(self):
         filename, _ = QFileDialog.getSaveFileName(
@@ -283,7 +256,6 @@ class MainWindow(QMainWindow):
 
     def smoothing_changed(self):
         self.smoothing_window_length = self.ui.spinBoxSmoothingWindow.value()
-
 
     def update_selected_df(self, item, column):
         print("debug1", item.name, column)
@@ -445,8 +417,9 @@ class MainWindow(QMainWindow):
             # Tracklines can be masked if the user clips a certain area
             # If the user clipped a region only the trackline therein will be used for rendering
             if (
-                getattr(self, "masked_tracklines", None) is not None #Tracklines can be masked if the user clips a certain area
-                and self.ui.layerWidget.item(4).checkState() == Qt.Checked
+                    getattr(self, "masked_tracklines",
+                            None) is not None  # Tracklines can be masked if the user clips a certain area
+                    and self.ui.layerWidget.item(4).checkState() == Qt.Checked
             ):
                 self.track_lines = self.mapping_2D_ax.scatter(self.masked_tracklines[0, :],
                                                               self.masked_tracklines[1, :], color="black", s=1)
@@ -458,7 +431,6 @@ class MainWindow(QMainWindow):
                 self.track_lines.set_visible(True)
             else:
                 self.track_lines.set_visible(False)
-
 
             try:
                 self.anomalies.remove()
@@ -607,8 +579,6 @@ class MainWindow(QMainWindow):
             self.threadpool.start(worker)
         else:
             QMessageBox.critical(self, "File IO Error", "No text file selected!", )
-
-
 
     def calc_residuals(self):
         TimeSeriesManipulator.smoothing_and_residual_calculation(self.TreeUtil.selected_df,
