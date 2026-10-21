@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1598</width>
+    <width>1523</width>
     <height>1171</height>
    </rect>
   </property>
@@ -175,6 +175,32 @@
           </item>
          </widget>
         </item>
+        <item row="8" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>Sobel threshold:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="1">
+         <widget class="QDoubleSpinBox" name="doubleSpinBoxSobel">
+          <property name="toolTip">
+           <string>Percentile threshold for Sobel gradient magnitude used to detect anomalies.</string>
+          </property>
+          <property name="decimals">
+           <number>3</number>
+          </property>
+          <property name="maximum">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>0.000100000000000</double>
+          </property>
+          <property name="value">
+           <double>0.999000000000000</double>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
      </layout>
@@ -192,7 +218,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1598</width>
+     <width>1523</width>
      <height>24</height>
     </rect>
    </property>

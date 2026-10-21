@@ -28,6 +28,7 @@ This test data will be used to guide through an example walk-through through the
    time_series
    depth_clipping
    grid_processing
+   anomaly_detection
    export
    project
    downward

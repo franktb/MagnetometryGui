@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1598, 1171)
+        MainWindow.resize(1523, 1171)
         self.actionblubb = QAction(MainWindow)
         self.actionblubb.setObjectName(u"actionblubb")
         self.actionDinuralCorrection = QAction(MainWindow)
@@ -221,6 +221,20 @@ class Ui_MainWindow(object):
 
         self.formLayout.setWidget(7, QFormLayout.ItemRole.FieldRole, self.comboBox_Scale_type)
 
+        self.label_10 = QLabel(self.centralwidget)
+        self.label_10.setObjectName(u"label_10")
+
+        self.formLayout.setWidget(8, QFormLayout.ItemRole.LabelRole, self.label_10)
+
+        self.doubleSpinBoxSobel = QDoubleSpinBox(self.centralwidget)
+        self.doubleSpinBoxSobel.setObjectName(u"doubleSpinBoxSobel")
+        self.doubleSpinBoxSobel.setDecimals(3)
+        self.doubleSpinBoxSobel.setMaximum(1.000000000000000)
+        self.doubleSpinBoxSobel.setSingleStep(0.000100000000000)
+        self.doubleSpinBoxSobel.setValue(0.999000000000000)
+
+        self.formLayout.setWidget(8, QFormLayout.ItemRole.FieldRole, self.doubleSpinBoxSobel)
+
 
         self.verticalLayout.addLayout(self.formLayout)
 
@@ -246,7 +260,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1598, 24))
+        self.menubar.setGeometry(QRect(0, 0, 1523, 24))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         self.menuOpen_Survey = QMenu(self.menuFile)
@@ -345,6 +359,10 @@ class Ui_MainWindow(object):
         self.comboBox_Scale_type.setItemText(0, QCoreApplication.translate("MainWindow", u"Linear scale", None))
         self.comboBox_Scale_type.setItemText(1, QCoreApplication.translate("MainWindow", u"Logarithmic scale", None))
 
+        self.label_10.setText(QCoreApplication.translate("MainWindow", u"Sobel threshold:", None))
+#if QT_CONFIG(tooltip)
+        self.doubleSpinBoxSobel.setToolTip(QCoreApplication.translate("MainWindow", u"Percentile threshold for Sobel gradient magnitude used to detect anomalies.", None))
+#endif // QT_CONFIG(tooltip)
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"&File", None))
         self.menuOpen_Survey.setTitle(QCoreApplication.translate("MainWindow", u"Import Survey", None))
         self.menuExport_Grid.setTitle(QCoreApplication.translate("MainWindow", u"Export Grid", None))

@@ -179,7 +179,7 @@ class MainWindow(QMainWindow):
 
     def detect_anomalies(self):
         magnitude = sobel(self.grid_z)
-        threshold = np.percentile(magnitude, 98)  # or fixed value
+        threshold = np.percentile(magnitude, self.ui.doubleSpinBoxSobel.value()*100)  # or fixed value
         mask = magnitude >= threshold
 
         print(mask)
