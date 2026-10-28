@@ -612,6 +612,10 @@ class MainWindow(QMainWindow):
         def retrieve_user_input(inputs):
             try:
                 max_mag, min_mag, max_long, min_long, max_lat, min_lat = [float(i) for i in inputs[:-1]]
+
+                max_mag, min_mag, max_long, min_long, max_lat, min_lat = [float(i) for i in inputs[:-1]]
+                max_long = -7.0
+                min_long = -9.0
                 if inputs[-1] == "Remove entry":
                     worker = Worker(self.TreeUtil.dropna_outlier,
                                     max_mag, min_mag, max_long, min_long, max_lat, min_lat

@@ -102,12 +102,12 @@ class RemoveOutlierDlg(QDialog):
 
     def send_data(self):
         inputs = [
-            self.ui.lineEdit_maxMagField.text(),
-            self.ui.lineEdit_minMagField.text(),
-            self.ui.lineEdit_maxLongVal.text(),
-            self.ui.lineEdit_minLongVal.text(),
-            self.ui.lineEdit_maxLatVal.text(),
-            self.ui.lineEdit_minLatVal.text(),
+            self.ui.doubleSpinBox_maxMagField.value(),
+            self.ui.doubleSpinBox_minMagField.value(),
+            self.ui.doubleSpinBox_maxLong.value(),
+            self.ui.doubleSpinBox_minLong.value(),
+            self.ui.doubleSpinBox_maxLat.value(),
+            self.ui.doubleSpinBox_minLat.value(),
             self.ui.comboBox.currentText()
         ]
         self.data_signal.emit(inputs)
