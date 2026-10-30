@@ -1,19 +1,31 @@
-.. InfoMag documentation master file, created by
-   sphinx-quickstart on Mon Sep 14 09:49:09 2026.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 InfoMag documentation
 =====================
 
-Add your content using ``reStructuredText`` syntax. See the
-`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html>`_
-documentation for details.
+
+.. grid:: 2
+   :gutter: 3
+
+   .. grid-item-card:: User guide
+      :link: user_guide/usage
+      :link-type: doc
+      :class-card: intro-card
+      :shadow: md
+
+      New to InfoMag and just want to use it? Start here to learn about its functionality.
+
+   .. grid-item-card:: Building from source
+      :link: building/building
+      :link-type: doc
+      :class-card: intro-card
+      :shadow: md
+
+      Want to build it? Start here for a description of how to build the project from source.
 
 
 .. toctree::
    :maxdepth: 2
    :caption: User Guide
+   :hidden:
 
    user_guide/usage
    building/building

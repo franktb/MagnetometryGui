@@ -28,6 +28,7 @@ extensions = [
     "sphinx_autodoc_typehints",
     "sphinx_copybutton",
     "numpydoc",
+    "sphinx_design",
 ]
 
 templates_path = ['_templates']
