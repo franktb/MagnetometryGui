@@ -10,7 +10,7 @@ Anomaly grid processing
 .. |scissor-icon| image:: ../_static/icons/cut-scissor-icon.png
    :height: 1em
 
-.. |select_icon| image:: ../_static/icons/object-select-icon.png
+.. |select-icon| image:: ../_static/icons/object-select-icon.png
    :height: 1em
 
 The next step is the creation of the anomaly map.
@@ -49,14 +49,14 @@ This process is illustrated in :numref:`fig:lassoSelectAnomaly`.
 
    Free-hand curves (red dashed line) allows selecting undesired data points to be removed.
 
-For a more fine selection, a polynomial select tool |select_icon| is provided.
+For a more fine selection, a polynomial select tool |select-icon| is provided.
 
 .. _fig:polySelect:
 
 .. figure:: pics/ClippingTool.png
    :width: 100%
 
-   |select_icon| allows to clip a desired region using a polygon. The clipped region will be used for further processing and export.
+   |select-icon| allows to clip a desired region using a polygon. The clipped region will be used for further processing and export.
 
 
 .. _fig:clipedRegion:
@@ -64,4 +64,4 @@ For a more fine selection, a polynomial select tool |select_icon| is provided.
 .. figure:: pics/ClippedRegion.png
    :width: 100%
 
-   A zoomed view on the clipped region using the |select_icon| as indicated in :numref:`fig:polySelect`.
+   A zoomed view on the clipped region using the |select-icon| as indicated in :numref:`fig:polySelect`.
