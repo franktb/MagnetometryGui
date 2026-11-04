@@ -9,6 +9,7 @@ from ui_elements.FloatListWidget import FloatListWidget
 from ui_elements.ui_timeseries_window import Ui_MainWindow
 
 from util.time_series_module import TimeSeriesManipulator
+from data_model import ExtractedDepthLayer
 
 class TimeSeriesWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -107,7 +108,12 @@ class TimeSeriesWindow(QMainWindow):
         self.time_series_ax_depth.plot(self.parent.TreeUtil.selected_df["datetime"],
                                        self.parent.TreeUtil.selected_df["Depth (m)"],
                                        color="black")
+        self.parent.ui.depth_layers.clear()
+        i =0
         for layer in layers:
+            currentLayer = ExtractedDepthLayer(str(depths[i])+" [m]", layer)
+            self.parent.ui.depth_layers.addItem(currentLayer)
             self.time_series_ax_depth.plot(layer["datetime"], layer["Depth (m)"])
+            i = i+1
 
         self.time_series_canvas_depth.draw_idle()

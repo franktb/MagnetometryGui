@@ -34,7 +34,6 @@ from util.time_series_module import TimeSeriesManipulator
 from window_manager import WindowManager
 from worker import Worker, PWorker
 
-
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -122,6 +121,9 @@ class MainWindow(QMainWindow):
         self.ui.layerWidget.addItem(fifthlayer)
 
         self.ui.layerWidget.itemChanged.connect(self.update_plot)
+
+        #depthlayer = QListWidgetItem("Test layer")
+        #self.ui.depth_layers.addItem(depthlayer)
 
         self.data_manipulator = DataManipulator()
         self.data_coordinates = None

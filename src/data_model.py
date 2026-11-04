@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QTreeWidgetItem
+from PySide6.QtWidgets import QTreeWidgetItem, QListWidgetItem
 from PySide6.QtCore import Qt
 
 
@@ -11,7 +11,6 @@ class MyQTreeWidgetItem(QTreeWidgetItem):
 
     def change_text(self):
         self.name = self.text(0)
-
 
 
 
@@ -41,3 +40,15 @@ class Anomaly(MyQTreeWidgetItem):
         self.coordinates = coordinates
         self.user_defined = user_defined
 
+
+class MyQListWidgetItem(QListWidgetItem):
+    def __init__(self, name):
+        super().__init__()
+        self.setText(name)
+
+
+class ExtractedDepthLayer(MyQListWidgetItem):
+    def __init__(self, name, data_frame):
+        super().__init__(name)
+        self.data_frame = data_frame
+        self.setCheckState(Qt.Checked)

@@ -221,7 +221,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QListView" name="listView"/>
+       <widget class="QListWidget" name="depth_layers"/>
       </item>
      </layout>
     </item>

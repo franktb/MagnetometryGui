@@ -17,11 +17,10 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QDoubleSpinBox, QFormLayout,
-    QGridLayout, QHeaderView, QLabel, QListView,
-    QListWidget, QListWidgetItem, QMainWindow, QMenu,
-    QMenuBar, QSizePolicy, QSpinBox, QStatusBar,
-    QToolBar, QTreeWidget, QTreeWidgetItem, QVBoxLayout,
-    QWidget)
+    QGridLayout, QHeaderView, QLabel, QListWidget,
+    QListWidgetItem, QMainWindow, QMenu, QMenuBar,
+    QSizePolicy, QSpinBox, QStatusBar, QToolBar,
+    QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
 import ui_elements.resources_rc
 
 class Ui_MainWindow(object):
@@ -259,10 +258,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addWidget(self.label_11)
 
-        self.listView = QListView(self.centralwidget)
-        self.listView.setObjectName(u"listView")
+        self.depth_layers = QListWidget(self.centralwidget)
+        self.depth_layers.setObjectName(u"depth_layers")
 
-        self.verticalLayout_2.addWidget(self.listView)
+        self.verticalLayout_2.addWidget(self.depth_layers)
 
 
         self.gridLayout.addLayout(self.verticalLayout_2, 0, 0, 1, 1)
