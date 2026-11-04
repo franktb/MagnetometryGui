@@ -222,6 +222,17 @@ class Ui_MainWindow(object):
 
         self.formLayout.setWidget(8, QFormLayout.ItemRole.FieldRole, self.doubleSpinBoxSobel)
 
+        self.label_12 = QLabel(self.centralwidget)
+        self.label_12.setObjectName(u"label_12")
+
+        self.formLayout.setWidget(9, QFormLayout.ItemRole.LabelRole, self.label_12)
+
+        self.comboBox_layerSelect = QComboBox(self.centralwidget)
+        self.comboBox_layerSelect.addItem("")
+        self.comboBox_layerSelect.setObjectName(u"comboBox_layerSelect")
+
+        self.formLayout.setWidget(9, QFormLayout.ItemRole.FieldRole, self.comboBox_layerSelect)
+
 
         self.verticalLayout.addLayout(self.formLayout)
 
@@ -377,6 +388,12 @@ class Ui_MainWindow(object):
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"Sobel threshold:", None))
 #if QT_CONFIG(tooltip)
         self.doubleSpinBoxSobel.setToolTip(QCoreApplication.translate("MainWindow", u"Percentile threshold for Sobel gradient magnitude used to detect anomalies.", None))
+#endif // QT_CONFIG(tooltip)
+        self.label_12.setText(QCoreApplication.translate("MainWindow", u"Displayed depth layer:", None))
+        self.comboBox_layerSelect.setItemText(0, QCoreApplication.translate("MainWindow", u"Default", None))
+
+#if QT_CONFIG(tooltip)
+        self.comboBox_layerSelect.setToolTip("")
 #endif // QT_CONFIG(tooltip)
         self.label_11.setText(QCoreApplication.translate("MainWindow", u"Extracted layers:", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"&File", None))

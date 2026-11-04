@@ -321,6 +321,14 @@ class MainWindow(QMainWindow):
         self.timer.timeout.connect(self.check_worker_result)
         self.timer.start(100)
 
+
+        #for i in range(self.ui.depth_layers.count()): #0 if no depth layers have been defined
+        #    item = self.ui.depth_layers.item(i)
+        #    TimeSeriesManipulator.smoothing_and_residual_calculation(item.data_frame,
+        #                                                             self.smoothing_window_length,
+        #                                                             self.ambient_window_length)
+
+
     def update_plot(self, ):
 
         try:

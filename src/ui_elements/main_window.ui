@@ -189,6 +189,25 @@
           </property>
          </widget>
         </item>
+        <item row="9" column="0">
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>Displayed depth layer:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="1">
+         <widget class="QComboBox" name="comboBox_layerSelect">
+          <property name="toolTip">
+           <string/>
+          </property>
+          <item>
+           <property name="text">
+            <string>Default</string>
+           </property>
+          </item>
+         </widget>
+        </item>
        </layout>
       </item>
      </layout>
