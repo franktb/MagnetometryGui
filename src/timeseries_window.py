@@ -103,7 +103,7 @@ class TimeSeriesWindow(QMainWindow):
                                                           self.spinbox_depth_eps.value(),
                                                           self.spinbox_neighbours.value())
 
-        self.time_series_ax.cla()
+        self.time_series_ax_depth.cla()
         self.time_series_ax_depth.plot(self.parent.TreeUtil.selected_df["datetime"],
                                        self.parent.TreeUtil.selected_df["Depth (m)"],
                                        color="black")

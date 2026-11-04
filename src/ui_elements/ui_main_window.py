@@ -17,10 +17,11 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QDoubleSpinBox, QFormLayout,
-    QGridLayout, QHeaderView, QLabel, QListWidget,
-    QListWidgetItem, QMainWindow, QMenu, QMenuBar,
-    QSizePolicy, QSpinBox, QStatusBar, QToolBar,
-    QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
+    QGridLayout, QHeaderView, QLabel, QListView,
+    QListWidget, QListWidgetItem, QMainWindow, QMenu,
+    QMenuBar, QSizePolicy, QSpinBox, QStatusBar,
+    QToolBar, QTreeWidget, QTreeWidgetItem, QVBoxLayout,
+    QWidget)
 import ui_elements.resources_rc
 
 class Ui_MainWindow(object):
@@ -100,19 +101,6 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.treeWidget = QTreeWidget(self.centralwidget)
-        __qtreewidgetitem = QTreeWidgetItem()
-        __qtreewidgetitem.setText(0, u"File Tree");
-        self.treeWidget.setHeaderItem(__qtreewidgetitem)
-        self.treeWidget.setObjectName(u"treeWidget")
-
-        self.gridLayout.addWidget(self.treeWidget, 0, 0, 1, 1)
-
-        self.verticalLayout2DMappingCanvas = QVBoxLayout()
-        self.verticalLayout2DMappingCanvas.setObjectName(u"verticalLayout2DMappingCanvas")
-
-        self.gridLayout.addLayout(self.verticalLayout2DMappingCanvas, 0, 1, 1, 2)
-
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.label = QLabel(self.centralwidget)
@@ -241,15 +229,43 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addLayout(self.verticalLayout, 0, 3, 1, 1)
 
+        self.verticalLayoutTimeSeriesCanvas_2 = QVBoxLayout()
+        self.verticalLayoutTimeSeriesCanvas_2.setObjectName(u"verticalLayoutTimeSeriesCanvas_2")
+
+        self.gridLayout.addLayout(self.verticalLayoutTimeSeriesCanvas_2, 1, 2, 1, 2)
+
+        self.verticalLayout2DMappingCanvas = QVBoxLayout()
+        self.verticalLayout2DMappingCanvas.setObjectName(u"verticalLayout2DMappingCanvas")
+
+        self.gridLayout.addLayout(self.verticalLayout2DMappingCanvas, 0, 1, 1, 2)
+
         self.verticalLayoutTimeSeriesCanvas = QVBoxLayout()
         self.verticalLayoutTimeSeriesCanvas.setObjectName(u"verticalLayoutTimeSeriesCanvas")
 
         self.gridLayout.addLayout(self.verticalLayoutTimeSeriesCanvas, 1, 0, 1, 2)
 
-        self.verticalLayoutTimeSeriesCanvas_2 = QVBoxLayout()
-        self.verticalLayoutTimeSeriesCanvas_2.setObjectName(u"verticalLayoutTimeSeriesCanvas_2")
+        self.verticalLayout_2 = QVBoxLayout()
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.treeWidget = QTreeWidget(self.centralwidget)
+        __qtreewidgetitem = QTreeWidgetItem()
+        __qtreewidgetitem.setText(0, u"File Tree");
+        self.treeWidget.setHeaderItem(__qtreewidgetitem)
+        self.treeWidget.setObjectName(u"treeWidget")
 
-        self.gridLayout.addLayout(self.verticalLayoutTimeSeriesCanvas_2, 1, 2, 1, 2)
+        self.verticalLayout_2.addWidget(self.treeWidget)
+
+        self.label_11 = QLabel(self.centralwidget)
+        self.label_11.setObjectName(u"label_11")
+
+        self.verticalLayout_2.addWidget(self.label_11)
+
+        self.listView = QListView(self.centralwidget)
+        self.listView.setObjectName(u"listView")
+
+        self.verticalLayout_2.addWidget(self.listView)
+
+
+        self.gridLayout.addLayout(self.verticalLayout_2, 0, 0, 1, 1)
 
         self.gridLayout.setRowStretch(0, 3)
         self.gridLayout.setRowStretch(1, 1)
@@ -363,6 +379,7 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(tooltip)
         self.doubleSpinBoxSobel.setToolTip(QCoreApplication.translate("MainWindow", u"Percentile threshold for Sobel gradient magnitude used to detect anomalies.", None))
 #endif // QT_CONFIG(tooltip)
+        self.label_11.setText(QCoreApplication.translate("MainWindow", u"Extracted layers:", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"&File", None))
         self.menuOpen_Survey.setTitle(QCoreApplication.translate("MainWindow", u"Import Survey", None))
         self.menuExport_Grid.setTitle(QCoreApplication.translate("MainWindow", u"Export Grid", None))
