@@ -34,6 +34,7 @@ from util.time_series_module import TimeSeriesManipulator
 from window_manager import WindowManager
 from worker import Worker, PWorker
 
+
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -122,9 +123,6 @@ class MainWindow(QMainWindow):
 
         self.ui.layerWidget.itemChanged.connect(self.update_plot)
 
-        #depthlayer = QListWidgetItem("Test layer")
-        #self.ui.depth_layers.addItem(depthlayer)
-
         self.data_manipulator = DataManipulator()
         self.data_coordinates = None
         self.track_lines = None
@@ -149,6 +147,9 @@ class MainWindow(QMainWindow):
         self.threadpool = QThreadPool()
 
         self.grid_queue = Queue()
+        self.grid_queue_layers = Queue()
+
+        self.depth_layers_grid_list = []
 
     def spawn_fft_window(self):
         WindowManager.open_or_focus_window(self,
@@ -321,12 +322,40 @@ class MainWindow(QMainWindow):
         self.timer.timeout.connect(self.check_worker_result)
         self.timer.start(100)
 
+        self.depth_layers_grid_list = []
+        for i in range(self.ui.depth_layers.count()):  # 0 if no depth layers have been defined
+            item = self.ui.depth_layers.item(i)
+            TimeSeriesManipulator.smoothing_and_residual_calculation(item.data_frame,
+                                                                     self.smoothing_window_length,
+                                                                     self.ambient_window_length)
+            item.dropna(inplace=True)
 
-        #for i in range(self.ui.depth_layers.count()): #0 if no depth layers have been defined
-        #    item = self.ui.depth_layers.item(i)
-        #    TimeSeriesManipulator.smoothing_and_residual_calculation(item.data_frame,
-        #                                                             self.smoothing_window_length,
-        #                                                             self.ambient_window_length)
+            data_coordinates_layers = np.array(
+                (item.data_frame["UTM_Easting"].iloc[::nth_select],
+                 item.data_frame["UTM_Northing"].iloc[::nth_select]))
+
+            x_min = np.min(item.data_frame["UTM_Easting"])
+            x_max = np.max(item.data_frame["UTM_Easting"])
+
+            y_min = np.min(item.data_frame["UTM_Northing"])
+            y_max = np.max(item.data_frame["UTM_Northing"])
+
+            layer_grid_x, layer_grid_y, layer_grid_z = grid(
+                item.data_frame["Magnetic_Field_residual"].iloc[::nth_select],
+                data_coordinates_layers,
+                x_min,
+                x_max,
+                complex(0, self.eastingsSampleRate),
+                y_max,
+                y_min,
+                complex(0, self.northingsSampleRate), "linear")
+
+            layer_grid_dict = {"grid_x": layer_grid_x,
+                               "grid_y": layer_grid_y,
+                               "grid_z": layer_grid_z}
+
+            self.depth_layers_grid_list.append(layer_grid_dict)
+
 
 
     def update_plot(self, ):
