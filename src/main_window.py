@@ -137,6 +137,8 @@ class MainWindow(QMainWindow):
         self.ui.spinBoxEastings.valueChanged.connect(self.eastings_changed)
         self.ui.spinBoxNorthings.valueChanged.connect(self.northings_changed)
 
+        self.ui.comboBox_layerSelect.currentIndexChanged.connect(self.update_plot)
+
         self.readCSV = ReadMagCSV()
         self.writeCSV = WriteMagCSV()
         self.tiffWriter = WriteMag()
@@ -323,12 +325,18 @@ class MainWindow(QMainWindow):
         self.timer.start(100)
 
         self.depth_layers_grid_list = []
+
+        for i in range(self.ui.comboBox_layerSelect.count() - 1, 0, -1):
+            self.ui.comboBox_layerSelect.removeItem(i)
+        self.ui.comboBox_layerSelect.setCurrentIndex(0)
+
         for i in range(self.ui.depth_layers.count()):  # 0 if no depth layers have been defined
+            self.ui.comboBox_layerSelect.addItems([self.ui.depth_layers.item(i).name])
             item = self.ui.depth_layers.item(i)
             TimeSeriesManipulator.smoothing_and_residual_calculation(item.data_frame,
                                                                      self.smoothing_window_length,
                                                                      self.ambient_window_length)
-            item.dropna(inplace=True)
+            item.data_frame.dropna(inplace=True)
 
             data_coordinates_layers = np.array(
                 (item.data_frame["UTM_Easting"].iloc[::nth_select],
@@ -350,16 +358,112 @@ class MainWindow(QMainWindow):
                 y_min,
                 complex(0, self.northingsSampleRate), "linear")
 
+            trackline = np.array(
+                (item.data_frame["UTM_Easting"].iloc[::nth_select],
+                 item.data_frame["UTM_Northing"].iloc[::nth_select]))
+
             layer_grid_dict = {"grid_x": layer_grid_x,
                                "grid_y": layer_grid_y,
-                               "grid_z": layer_grid_z}
+                               "grid_z": layer_grid_z,
+                               "trackline":trackline}
 
             self.depth_layers_grid_list.append(layer_grid_dict)
 
-
-
     def update_plot(self, ):
+        clipped_grid_x = None
+        clipped_grid_y = None
+        clipped_grid_z = None
+        track_line_x = None
+        track_line_y = None
 
+        displayed_layer_index = self.ui.comboBox_layerSelect.currentIndex()
+        print("displayerindex", displayed_layer_index)
+        if displayed_layer_index == 0:  # corresponds to the default, i.e. whole grid
+            if hasattr(self, 'grid_x'):
+                clipped_grid_x = self.grid_x
+                clipped_grid_y = self.grid_y
+                clipped_grid_z = np.ma.masked_invalid(self.grid_z)
+                track_line_x = self.data_coordinates[0, :]
+                track_line_y = self.data_coordinates[1, :]
+
+            elif hasattr(self, 'mask_clip') and self.mask_clip is not None and self.ui.layerWidget.item(
+                    4).checkState() == Qt.Checked:
+                clipped_grid_x, clipped_grid_y, clipped_grid_z = clip_grid(self.grid_x,
+                                                                           self.grid_y,
+                                                                           self.grid_z,
+                                                                           self.mask_clip)
+
+                #TODO: super unhappy with that. REFACTOR!!!
+                if (
+                    getattr(self, "masked_tracklines",
+                            None) is not None  # Tracklines can be masked if the user clips a certain area
+                    and self.ui.layerWidget.item(4).checkState() == Qt.Checked
+                ):
+                    track_line_x = self.masked_tracklines[0, :]
+                    track_line_y = self.masked_tracklines[1, :]
+                else:
+                    track_line_x = self.data_coordinates[0, :]
+                    track_line_y = self.data_coordinates[1, :]
+
+        else:
+            layer = self.depth_layers_grid_list[displayed_layer_index - 1]
+            clipped_grid_x = layer["grid_x"]
+            clipped_grid_y = layer["grid_y"]
+            clipped_grid_z = np.ma.masked_invalid(layer["grid_z"])
+            track_line_x = layer["trackline"][0,:]
+            track_line_y = layer["trackline"][1,:]
+
+        if clipped_grid_x is not None:
+            self.plot2Dgrid(clipped_grid_x, clipped_grid_y, clipped_grid_z, track_line_x, track_line_y)
+        else:
+            QMessageBox.critical(self, "Display Error", "No data to display!", )
+
+        """
+        try:
+            self.track_lines.remove()
+        except:
+            pass
+
+        # Tracklines can be masked if the user clips a certain area
+        # If the user clipped a region only the trackline therein will be used for rendering
+        if (
+                getattr(self, "masked_tracklines",
+                        None) is not None  # Tracklines can be masked if the user clips a certain area
+                and self.ui.layerWidget.item(4).checkState() == Qt.Checked
+        ):
+            self.track_lines = self.mapping_2D_ax.scatter(self.masked_tracklines[0, :],
+                                                          self.masked_tracklines[1, :], color="black", s=1)
+        else:
+            self.track_lines = self.mapping_2D_ax.scatter(self.data_coordinates[0, :],
+                                                          self.data_coordinates[1, :], color="black", s=1)
+
+        if self.ui.layerWidget.item(3).checkState() == Qt.Checked:
+            self.track_lines.set_visible(True)
+        else:
+            self.track_lines.set_visible(False)
+
+        try:
+            self.anomalies.remove()
+        except:
+            pass
+
+        if getattr(self, "x_coords_anomalies", None) is not None:
+            self.anomalies = self.mapping_2D_ax.scatter(self.x_coords_anomalies, self.y_coords_anomalies)
+
+            if self.ui.layerWidget.item(2).checkState() == Qt.Checked:
+                self.anomalies.set_visible(True)
+            else:
+                self.anomalies.set_visible(False)
+
+        self.cbar = self.mapping_2D_canvas.figure.colorbar(self.contourfplot,
+                                                           ax=self.mapping_2D_ax,
+                                                           orientation="vertical")
+        self.cbar.set_label(r'Res $B_0 - \bar{B}$ [nT]')
+
+        self.mapping_2D_canvas.draw_idle()
+        """
+
+    def plot2Dgrid(self, grid_x, grid_y, grid_z, track_line_x, track_line_y):
         try:
             self.cbar.remove()
         except:
@@ -367,136 +471,61 @@ class MainWindow(QMainWindow):
 
         self.mapping_2D_ax.cla()
 
-        if hasattr(self, 'grid_x'):
-            x_min, x_max = np.min(self.grid_x), np.max(self.grid_x)
-            y_min, y_max = np.min(self.grid_y), np.max(self.grid_y)
+        x_min, x_max = np.nanmin(grid_x), np.nanmax(grid_x)
+        y_min, y_max = np.nanmin(grid_y), np.nanmax(grid_y)
 
-            # Compute ranges
-            x_range = x_max - x_min
-            y_range = y_max - y_min
+        # Compute ranges
+        x_range = x_max - x_min
+        y_range = y_max - y_min
 
-            # Apply 5% padding
-            x_pad = 0.05 * x_range
-            y_pad = 0.05 * y_range
+        # Apply 5% padding
+        x_pad = 0.05 * x_range
+        y_pad = 0.05 * y_range
 
-            # self.mapping_2D_ax.imshow(grid_z.T, origin='lower', extent=(x_min , x_max, y_min, y_max ))
-            self.mapping_2D_ax.set_xlim([x_min - x_pad, x_max + x_pad])
-            self.mapping_2D_ax.set_ylim([y_min - y_pad, y_max + y_pad])
+        self.mapping_2D_ax.set_xlim([x_min - x_pad, x_max + x_pad])
+        self.mapping_2D_ax.set_ylim([y_min - y_pad, y_max + y_pad])
 
-            # Mask invalid Z values
-            masked_grid_z = np.ma.masked_invalid(self.grid_z)
+        self.mapping_2D_ax.set_xlabel("Eastings [m]")
+        self.mapping_2D_ax.set_ylabel("Northings [m]")
 
-            self.mapping_2D_ax.set_xlabel("Eastings [m]")
-            self.mapping_2D_ax.set_ylabel("Northings [m]")
-            # self.mapping_2D_ax.imshow(grid_z.T, origin='lower', extent=(x_min, x_max, y_min, y_max))
+        if self.color_scale_type == "Linear scale":
+            norm = TwoSlopeNorm(vmin=np.nanmin(grid_z), vcenter=0, vmax=np.nanmax(grid_z))
+            self.contourfplot = self.mapping_2D_ax.pcolormesh(grid_x,
+                                                              grid_y,
+                                                              grid_z,
+                                                              cmap='RdBu_r',
+                                                              norm=norm)
+        elif self.color_scale_type == "Logarithmic scale":
+            self.contourfplot = self.mapping_2D_ax.pcolormesh(grid_x,
+                                                              grid_y,
+                                                              grid_z,
+                                                              cmap='RdBu_r',
+                                                              norm="symlog"
+                                                              )
 
-            bounds = np.array([-300, -200, -100, -50, -20, -10., -5, 0, 5, 10, 20, 50, 100, 200, 300])
-            norm = colors.BoundaryNorm(boundaries=bounds, ncolors=256)
-            # self.contourfplot = self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', extent=(x_min, x_max, y_min, y_max),
-            #           cmap='RdBu_r' )
+        cx.add_basemap(self.mapping_2D_ax,
+                       crs="EPSG:32629",
+                       source=cx.providers.OpenTopoMap)
 
-            start = time.time()
+        self.cbar = self.mapping_2D_canvas.figure.colorbar(self.contourfplot,
+                                                           ax=self.mapping_2D_ax,
+                                                           orientation="vertical")
+        self.cbar.set_label(r'Res $B_0 - \bar{B}$ [nT]')
 
-            # norm = colors.SymLogNorm(linthresh=1e-3, linscale=1.0, vmin=grid_z.min(), vmax=grid_z.max())
-            # masked_grid_z = np.ma.masked_invalid(self.grid_z)
+        try:
+            self.track_lines.remove()
+        except:
+            pass
 
-            if hasattr(self, 'mask_clip') and self.mask_clip is not None and self.ui.layerWidget.item(
-                    4).checkState() == Qt.Checked:
-                clipped_grid_x, clipped_grid_y, clipped_grid_z = clip_grid(self.grid_x,
-                                                                           self.grid_y,
-                                                                           self.grid_z,
-                                                                           self.mask_clip)
+        self.track_lines = self.mapping_2D_ax.scatter(track_line_x,
+                                                      track_line_y, color="black", s=1)
 
-                x_min, x_max = np.min(clipped_grid_x), np.max(clipped_grid_x)
-                y_min, y_max = np.min(clipped_grid_y), np.max(clipped_grid_y)
-
-                # Compute ranges
-                x_range = x_max - x_min
-                y_range = y_max - y_min
-
-                # Apply 5% padding
-                x_pad = 0.05 * x_range
-                y_pad = 0.05 * y_range
-
-                self.mapping_2D_ax.set_xlim([x_min - x_pad, x_max + x_pad])
-                self.mapping_2D_ax.set_ylim([y_min - y_pad, y_max + y_pad])
-
-            else:
-                clipped_grid_x = self.grid_x
-                clipped_grid_y = self.grid_y
-                clipped_grid_z = np.ma.masked_invalid(self.grid_z)
-
-            if self.color_scale_type == "Linear scale":
-                norm = TwoSlopeNorm(vmin=np.nanmin(clipped_grid_z), vcenter=0, vmax=np.nanmax(clipped_grid_z))
-                self.contourfplot = self.mapping_2D_ax.pcolormesh(clipped_grid_x,
-                                                                  clipped_grid_y,
-                                                                  clipped_grid_z,
-                                                                  cmap='RdBu_r',
-                                                                  norm=norm)
-
-            elif self.color_scale_type == "Logarithmic scale":
-                self.contourfplot = self.mapping_2D_ax.pcolormesh(clipped_grid_x,
-                                                                  clipped_grid_y,
-                                                                  clipped_grid_z,
-                                                                  cmap='RdBu_r',
-                                                                  norm="symlog"
-                                                                  )
-
-            end = time.time()
-            print(end - start)
-
-            cx.add_basemap(self.mapping_2D_ax,
-                           crs="EPSG:32629",
-                           source=cx.providers.OpenTopoMap)
-
-            # self.mapping_2D_ax.contourf(grid_x,grid_y,grid_z, origin='lower', levels=10,
-            #                            norm=colors.SymLogNorm(linthresh=10, linscale=1,
-            #                                                   vmin=np.nanmin(grid_z), vmax=np.nanmax(grid_z), base=10))
-
-            try:
-                self.track_lines.remove()
-            except:
-                pass
-
-            # Tracklines can be masked if the user clips a certain area
-            # If the user clipped a region only the trackline therein will be used for rendering
-            if (
-                    getattr(self, "masked_tracklines",
-                            None) is not None  # Tracklines can be masked if the user clips a certain area
-                    and self.ui.layerWidget.item(4).checkState() == Qt.Checked
-            ):
-                self.track_lines = self.mapping_2D_ax.scatter(self.masked_tracklines[0, :],
-                                                              self.masked_tracklines[1, :], color="black", s=1)
-            else:
-                self.track_lines = self.mapping_2D_ax.scatter(self.data_coordinates[0, :],
-                                                              self.data_coordinates[1, :], color="black", s=1)
-
-            if self.ui.layerWidget.item(3).checkState() == Qt.Checked:
-                self.track_lines.set_visible(True)
-            else:
-                self.track_lines.set_visible(False)
-
-            try:
-                self.anomalies.remove()
-            except:
-                pass
-
-            if getattr(self, "x_coords_anomalies", None) is not None:
-                self.anomalies = self.mapping_2D_ax.scatter(self.x_coords_anomalies, self.y_coords_anomalies)
-
-                if self.ui.layerWidget.item(2).checkState() == Qt.Checked:
-                    self.anomalies.set_visible(True)
-                else:
-                    self.anomalies.set_visible(False)
-
-            self.cbar = self.mapping_2D_canvas.figure.colorbar(self.contourfplot,
-                                                               ax=self.mapping_2D_ax,
-                                                               orientation="vertical")
-            self.cbar.set_label(r'Res $B_0 - \bar{B}$ [nT]')
-
-            self.mapping_2D_canvas.draw_idle()
+        if self.ui.layerWidget.item(3).checkState() == Qt.Checked:
+            self.track_lines.set_visible(True)
         else:
-            QMessageBox.critical(self, "Display Error", "No data to display!", )
+            self.track_lines.set_visible(False)
+
+        self.mapping_2D_canvas.draw_idle()
 
     def create_new_project(self):
         project_name, ok = QInputDialog.getText(self, 'Input Dialog', 'Enter project name:')
@@ -650,8 +679,6 @@ class MainWindow(QMainWindow):
         @Slot(list)
         def retrieve_user_input(inputs):
             try:
-                max_mag, min_mag, max_long, min_long, max_lat, min_lat = [float(i) for i in inputs[:-1]]
-
                 max_mag, min_mag, max_long, min_long, max_lat, min_lat = [float(i) for i in inputs[:-1]]
                 max_long = -7.0
                 min_long = -9.0
