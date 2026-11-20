@@ -35,6 +35,9 @@ This is due to the fact that at the moment the software interpolates the anomaly
    Gridding the processed time-series of ``CV_16_01``, ``CV_16_02`` and ``CV_16_04`` will interpolate an anomaly map within the convex hull of the remaining data points.
    Outliers might cause artifacts as depicted.
 
+Spatial outlier removal
+-----------------------
+
 Outliers, such as the single point located near the coast will cause undesired artifacts as shown in :numref:`fig:initialAnomaly`.
 Those can be removed using the the scissor tool |scissor-icon|.
 Upon, activation the user can lasso-select an arbitrary set of points which will be removed.
@@ -65,3 +68,21 @@ For a more fine selection, a polynomial select tool |select-icon| is provided.
    :width: 100%
 
    A zoomed view on the clipped region using the |select-icon| as indicated in :numref:`fig:polySelect`.
+
+
+
+Depth layer visualisation
+-------------------------
+
+If depth layers has been specified (see ref:`sec:DepthClipping`), they can be visualized accordingly by selecting the corresponding layer in the combo box (see the red box in :numref:`fig:visDepthLayer`).
+
+.. note::
+   The default layer corresponds to all data combined, independent of the depth.
+
+.. _fig:visDepthLayer:
+
+.. figure:: pics/depth_layer_anomaly_grid.png
+   :width: 100%
+
+   The combobox allows for selecting a desired depth layer to be visualised.
+

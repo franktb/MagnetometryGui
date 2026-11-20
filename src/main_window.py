@@ -419,34 +419,6 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "Display Error", "No data to display!", )
 
         """
-        try:
-            self.track_lines.remove()
-        except:
-            pass
-
-        # Tracklines can be masked if the user clips a certain area
-        # If the user clipped a region only the trackline therein will be used for rendering
-        if (
-                getattr(self, "masked_tracklines",
-                        None) is not None  # Tracklines can be masked if the user clips a certain area
-                and self.ui.layerWidget.item(4).checkState() == Qt.Checked
-        ):
-            self.track_lines = self.mapping_2D_ax.scatter(self.masked_tracklines[0, :],
-                                                          self.masked_tracklines[1, :], color="black", s=1)
-        else:
-            self.track_lines = self.mapping_2D_ax.scatter(self.data_coordinates[0, :],
-                                                          self.data_coordinates[1, :], color="black", s=1)
-
-        if self.ui.layerWidget.item(3).checkState() == Qt.Checked:
-            self.track_lines.set_visible(True)
-        else:
-            self.track_lines.set_visible(False)
-
-        try:
-            self.anomalies.remove()
-        except:
-            pass
-
         if getattr(self, "x_coords_anomalies", None) is not None:
             self.anomalies = self.mapping_2D_ax.scatter(self.x_coords_anomalies, self.y_coords_anomalies)
 
